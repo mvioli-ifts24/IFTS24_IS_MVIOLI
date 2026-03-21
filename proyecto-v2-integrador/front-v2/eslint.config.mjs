@@ -1,4 +1,3 @@
-import { defineConfig, globalIgnores } from 'eslint/config'
 import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 import prettierConfig from 'eslint-config-prettier'
@@ -6,6 +5,7 @@ import pluginImport from 'eslint-plugin-import'
 import pluginReact from 'eslint-plugin-react'
 import pluginReactHooks from 'eslint-plugin-react-hooks'
 import pluginUnusedImports from 'eslint-plugin-unused-imports'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -38,7 +38,7 @@ const eslintConfig = defineConfig([
         }
       ],
       ...pluginReactHooks.configs.recommended.rules,
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
@@ -48,19 +48,13 @@ const eslintConfig = defineConfig([
           groups: [
             'type',
             'builtin',
-            'object',
-            'external',
+            ['external', 'object'],
             'internal',
             'parent',
             'sibling',
             'index'
           ],
           pathGroups: [
-            {
-              pattern: '@sportclub/**',
-              group: 'internal',
-              position: 'before'
-            },
             {
               pattern: '~/**',
               group: 'external',
@@ -70,7 +64,7 @@ const eslintConfig = defineConfig([
           pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
           alphabetize: {
-            order: 'asc',
+            order: 'ignore',
             caseInsensitive: true
           }
         }
