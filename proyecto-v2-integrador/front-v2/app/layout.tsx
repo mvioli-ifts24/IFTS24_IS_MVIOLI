@@ -33,7 +33,6 @@ export default function RootLayout({
     <html
       suppressHydrationWarning
       className={`${montserrat.variable} ${roboto.variable} h-full scroll-smooth antialiased`}
-      data-scroll-behavior="smooth"
       lang="es"
     >
       <body>

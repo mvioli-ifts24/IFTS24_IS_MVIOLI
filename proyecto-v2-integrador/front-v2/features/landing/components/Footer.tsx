@@ -1,4 +1,4 @@
-import { Text } from '@/components'
+import { Text } from '@/ui'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()

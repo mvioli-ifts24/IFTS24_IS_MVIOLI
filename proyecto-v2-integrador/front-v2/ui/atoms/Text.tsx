@@ -3,7 +3,7 @@ import { type ReactNode } from 'react'
 /**
  * Tamaños disponibles para el componente Text
  */
-export type TextSize = 'xs' | 's' | 'm' | 'l' | 'xl'
+export type TextSize = 'xs' | 'sm' | 'm' | 'lg' | 'xl'
 
 /**
  * Variantes de color para el componente Text
@@ -53,10 +53,10 @@ export interface TextProps {
   className?: string
 
   /**
-   * Si es true, renderiza como span en lugar de p
-   * @default false
+   * Si se debe renderizar como un elemento en línea (span) o bloque (p)
+   *  @default 'p'
    */
-  inline?: boolean
+  as?: 'p' | 'span'
 
   /**
    * Alineación del texto
@@ -69,9 +69,9 @@ export interface TextProps {
  */
 const sizeClasses: Record<TextSize, string> = {
   xs: 'text-xs md:text-sm',
-  s: 'text-sm md:text-base',
+  sm: 'text-sm md:text-base',
   m: 'text-base md:text-lg',
-  l: 'text-lg md:text-xl',
+  lg: 'text-lg md:text-xl',
   xl: 'text-xl md:text-2xl'
 }
 
@@ -80,9 +80,9 @@ const sizeClasses: Record<TextSize, string> = {
  */
 const variantClasses: Record<TextVariant, string> = {
   default: 'text-foreground',
-  primary: 'text-primary-400 dark:text-primary-300',
-  secondary: 'text-secondary-400 dark:text-secondary-300',
-  muted: 'text-neutral-500 dark:text-neutral-400'
+  primary: 'text-primary-400',
+  secondary: 'text-secondary-400',
+  muted: 'text-neutral-600'
 }
 
 /**
@@ -93,15 +93,6 @@ const weightClasses: Record<TextWeight, string> = {
   medium: 'font-medium',
   semibold: 'font-semibold',
   bold: 'font-bold'
-}
-
-/**
- * Mapeo de alineación a clases de Tailwind
- */
-const alignClasses = {
-  left: 'text-left',
-  center: 'text-center',
-  right: 'text-right'
 }
 
 /**
@@ -117,11 +108,7 @@ const alignClasses = {
  * </Text>
  * ```
  *
- * @example
- * ```tsx
- * <Text size="s" variant="muted" inline>
- *   Last updated: March 2026
- * </Text>
+
  * ```
  */
 export function Text({
@@ -130,10 +117,9 @@ export function Text({
   weight = 'normal',
   children,
   className = '',
-  inline = false,
-  align
+  as = 'p'
 }: TextProps) {
-  const Component = inline ? 'span' : 'p'
+  const Component = as ? 'span' : 'p'
 
   const classes = [
     'transition-colors',
@@ -141,7 +127,6 @@ export function Text({
     sizeClasses[size],
     variantClasses[variant],
     weightClasses[weight],
-    align && alignClasses[align],
     className
   ]
     .filter(Boolean)

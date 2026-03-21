@@ -1,6 +1,6 @@
 import { StarIcon, UserIcon } from '@phosphor-icons/react/dist/ssr'
 
-import { AnimatedCounter, Button, Heading, Text } from '@/components'
+import { AnimatedCounter, Button, Heading, Text } from '@/ui'
 
 /**
  * Datos mockup de reviews de usuarios
@@ -65,7 +65,7 @@ function ReviewCard({ review }: ReviewCardProps) {
           <UserIcon className="text-white" size={20} weight="fill" />
         </div>
         <div>
-          <Text size="s" weight="medium">
+          <Text size="sm" weight="medium">
             {review.user}
           </Text>
           <Text size="xs" variant="muted">
@@ -89,7 +89,7 @@ function ReviewCard({ review }: ReviewCardProps) {
       </div>
 
       {/* Comment */}
-      <Text className="leading-relaxed" size="s" variant="muted">
+      <Text className="leading-relaxed" size="sm" variant="muted">
         &ldquo;{review.comment}&rdquo;
       </Text>
     </div>
@@ -111,10 +111,10 @@ function StatItem({ stat }: StatItemProps) {
       <div className="from-primary-100 to-primary-100 border-primary-400/20 dark:from-primary-400/10 dark:to-secondary-400/10 inline-flex rounded-xl border bg-linear-to-r p-3">
         <Icon className="text-primary-400" size={24} />
       </div>
-      <Heading level="h3" size="l" variant="primary">
+      <Heading level="h3" size="lg" variant="primary">
         <AnimatedCounter duration={2000} suffix={stat.suffix} targetNumber={stat.value} />
       </Heading>
-      <Text size="s" variant="muted">
+      <Text size="sm" variant="muted">
         {stat.label}
       </Text>
     </div>
@@ -147,7 +147,7 @@ export function HeroSection() {
               TU VOZ IMPORTA EN RANK.
             </Heading>
 
-            <Text className="mx-auto max-w-3xl" size="xl" variant="muted">
+            <Text className="mx-auto max-w-3xl" size="xl">
               Comparte tus reseñas de juegos, descubre nuevos títulos y conecta con gamers
               apasionados. Opiniones verificadas, comunidad activa y todo lo que necesitas para tu
               experiencia gaming.
@@ -156,10 +156,10 @@ export function HeroSection() {
 
           {/* CTAs */}
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button href="/register" size="l" variant="filled">
+            <Button href="/register" size="m" variant="filled">
               Escribir mi Primera Reseña
             </Button>
-            <Button href="/reviews" size="l" variant="outlined">
+            <Button href="/reviews" size="m" variant="outlined">
               Explorar Reseñas
             </Button>
           </div>
@@ -175,7 +175,7 @@ export function HeroSection() {
         {/* Reviews Section */}
         <div className="space-y-8">
           <div className="text-center">
-            <Heading className="mb-4" level="h2" size="l" variant="primary">
+            <Heading className="mb-4" level="h2" size="lg" variant="primary">
               LO QUE DICEN NUESTROS GAMERS
             </Heading>
             <Text size="m" variant="muted">

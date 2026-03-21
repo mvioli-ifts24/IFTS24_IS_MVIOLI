@@ -1,6 +1,6 @@
 import { ArrowLeftIcon, GameControllerIcon } from '@phosphor-icons/react/dist/ssr'
 
-import { Button } from '@/components'
+import { Button } from '@/ui'
 
 export default function NotFound() {
   return (
@@ -39,13 +39,11 @@ export default function NotFound() {
 
         {/* Actions */}
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button href="/" variant="filled">
-            <ArrowLeftIcon size={20} weight="bold" />
+          <Button href="/" iconLeft={<ArrowLeftIcon size={20} />} variant="filled">
             Volver al Inicio
           </Button>
 
-          <Button href="/games" variant="outlined">
-            <GameControllerIcon size={20} weight="fill" />
+          <Button href="/games" iconLeft={<GameControllerIcon size={20} />} variant="outlined">
             Ver Juegos
           </Button>
         </div>

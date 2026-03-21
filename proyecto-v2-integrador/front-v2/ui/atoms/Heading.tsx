@@ -3,7 +3,7 @@ import { type ElementType, type ReactNode } from 'react'
 /**
  * Tamaños disponibles para el componente Heading
  */
-export type HeadingSize = 'xs' | 's' | 'm' | 'l' | 'xl'
+export type HeadingSize = 'xs' | 'sm' | 'm' | 'lg' | 'xl'
 
 /**
  * Variantes de color para el componente Heading
@@ -58,9 +58,9 @@ export interface HeadingProps {
  */
 const sizeClasses: Record<HeadingSize, string> = {
   xs: 'text-xl md:text-2xl',
-  s: 'text-2xl md:text-3xl',
+  sm: 'text-2xl md:text-3xl',
   m: 'text-3xl md:text-4xl',
-  l: 'text-4xl md:text-5xl',
+  lg: 'text-4xl md:text-5xl',
   xl: 'text-5xl md:text-6xl'
 }
 
@@ -87,13 +87,8 @@ const variantClasses: Record<HeadingVariant, string> = {
  * </Heading>
  * ```
  *
- * @example
- * ```tsx
- * <Heading level="h2" size="l" variant="primary">
- *   Featured Games
- * </Heading>
- * ```
  */
+
 export function Heading({
   level = 'h2',
   size = 'm',
