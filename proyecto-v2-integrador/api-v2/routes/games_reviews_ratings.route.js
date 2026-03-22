@@ -1,8 +1,8 @@
-const express = require('express')
-const controller = require('#controllers/games_reviews_ratings.controller.js')
+import { index } from "#controllers/games_reviews_ratings.controller.js";
+import express from "express";
 
-const gamesReviewsRatingsRoutesGroup = express.Router()
+const gamesReviewsRatingsRoutesGroup = express.Router();
 
-gamesReviewsRatingsRoutesGroup.get('/', controller.index)
+gamesReviewsRatingsRoutesGroup.get("/", index);
 
-module.exports = gamesReviewsRatingsRoutesGroup
+export default gamesReviewsRatingsRoutesGroup;

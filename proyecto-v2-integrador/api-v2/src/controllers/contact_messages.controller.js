@@ -1,12 +1,12 @@
-const Database = require("#database");
+import { connection as Database } from "#database";
 
 const index = async (req, res) => {
   try {
     const user_id = req.user_id;
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "SELECT contact_messages.*, users.email as user_email FROM `contact_messages` JOIN `users` on contact_messages.user_id = users.id WHERE user_id = ?",
-      [user_id]
+      [user_id],
     );
 
     return res.send({ data: results, error: null });
@@ -19,8 +19,8 @@ const index = async (req, res) => {
 
 const admin_index = async (req, res) => {
   try {
-    const [results] = await Database.query(
-      "SELECT contact_messages.*, users.email as user_email FROM `contact_messages` JOIN `users` on contact_messages.user_id = users.id"
+    const [results] = await Database.execute(
+      "SELECT contact_messages.*, users.email as user_email FROM `contact_messages` JOIN `users` on contact_messages.user_id = users.id",
     );
 
     return res.send({ data: results, error: null });
@@ -40,9 +40,9 @@ const store = async (req, res) => {
       throw "Para crear un registro es obligatorio el campo message.";
     }
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "INSERT INTO `contact_messages` (message, user_id) VALUES (?, ?)",
-      [message, user_id]
+      [message, user_id],
     );
 
     return res.send({ data: { message, id: results.insertId }, error: null });
@@ -63,14 +63,14 @@ const admin_response = async (req, res) => {
       throw "Para contestar un mensaje es necesario el campo de response.";
     }
 
-    await Database.query(
+    await Database.execute(
       `UPDATE contact_messages SET response = ? WHERE id = ?`,
-      [response, id]
+      [response, id],
     );
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "SELECT * FROM `contact_messages` WHERE id = ?",
-      [id]
+      [id],
     );
 
     return res.send({ data: results.length ? results[0] : null, error: null });
@@ -85,9 +85,9 @@ const destroy = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "DELETE FROM `contact_messages` WHERE id = ?",
-      [id]
+      [id],
     );
 
     return res.send({ data: null, error: null });
@@ -98,10 +98,4 @@ const destroy = async (req, res) => {
   }
 };
 
-module.exports = {
-  admin_index,
-  index,
-  store,
-  admin_response,
-  destroy,
-};
+export { admin_index, admin_response, destroy, index, store };

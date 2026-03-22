@@ -18,10 +18,11 @@ const genderSchema = z
   })
 
 const profilePictureSchema = z
-  .instanceof(File, { message: 'Debes seleccionar una foto de perfil' })
-  .refine(file => file.size <= MAX_PROFILE_PICTURE_SIZE, 'La imagen no puede superar 5MB')
+  .instanceof(File)
+  .optional()
+  .refine(file => !file || file.size <= MAX_PROFILE_PICTURE_SIZE, 'La imagen no puede superar 5MB')
   .refine(
-    file => ACCEPTED_PROFILE_PICTURE_TYPES.includes(file.type),
+    file => !file || ACCEPTED_PROFILE_PICTURE_TYPES.includes(file.type),
     'Solo se permiten imágenes JPG, PNG o WEBP'
   )
 
@@ -56,7 +57,7 @@ export const registerSchema = z
       .max(100, 'La contraseña es muy larga'),
     confirmPassword: z.string().min(6, 'La confirmación debe tener al menos 6 caracteres'),
     gender_id: genderSchema,
-    accept_newsletter: z
+    accept_newsletter: z.coerce
       .boolean()
       .refine(value => value === true, 'Debes aceptar la suscripción al newsletter'),
     profile_picture: profilePictureSchema

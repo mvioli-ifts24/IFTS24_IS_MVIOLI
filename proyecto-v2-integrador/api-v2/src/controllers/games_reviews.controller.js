@@ -1,4 +1,4 @@
-const Database = require("#database");
+import { connection as Database } from "#database";
 
 const indexGameReviews = async (req, res) => {
   try {
@@ -8,14 +8,14 @@ const indexGameReviews = async (req, res) => {
     const QUERY_BASE =
       "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id WHERE api_game_id = ?";
 
-    const [results] = await Database.query(`${QUERY_BASE} AND users.id != ?`, [
-      game_id,
-      user_id,
-    ]);
+    const [results] = await Database.execute(
+      `${QUERY_BASE} AND users.id != ?`,
+      [game_id, user_id],
+    );
 
-    const [resultsOwn] = await Database.query(
+    const [resultsOwn] = await Database.execute(
       `${QUERY_BASE} AND users.id = ?`,
-      [game_id, user_id]
+      [game_id, user_id],
     );
 
     return res.send({
@@ -39,9 +39,9 @@ const indexOwnReviews = async (req, res) => {
     const QUERY_BASE =
       "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id";
 
-    const [resultsOwn] = await Database.query(
+    const [resultsOwn] = await Database.execute(
       `${QUERY_BASE} AND users.id = ?`,
-      [user_id]
+      [user_id],
     );
 
     return res.send({ data: resultsOwn, error: null });
@@ -59,7 +59,7 @@ const indexUserReviews = async (req, res) => {
     const QUERY_BASE =
       "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id";
 
-    const [results] = await Database.query(`${QUERY_BASE} AND users.id = ?`, [
+    const [results] = await Database.execute(`${QUERY_BASE} AND users.id = ?`, [
       user_id,
     ]);
 
@@ -80,9 +80,9 @@ const store = async (req, res) => {
       throw "Para crear un registro son obligatorios tres campos: titulo, reseña, id de juego api y puntuación.";
     }
 
-    const [resultsCachedGames] = await Database.query(
+    const [resultsCachedGames] = await Database.execute(
       "SELECT * FROM `cached_games` WHERE api_id = ?",
-      [api_game_id]
+      [api_game_id],
     );
 
     /* Si es la primera vez que se sube una review de este juego
@@ -91,18 +91,18 @@ const store = async (req, res) => {
 
     if (!resultsCachedGames.length) {
       const preflight = await fetch(
-        `https://www.freetogame.com/api/game?id=${api_game_id}`
+        `https://www.freetogame.com/api/game?id=${api_game_id}`,
       );
       const { title, thumbnail } = await preflight.json();
-      await Database.query(
+      await Database.execute(
         "INSERT INTO `cached_games` (title, thumbnail, api_id) VALUES (?,?,?)",
-        [title, thumbnail, api_game_id]
+        [title, thumbnail, api_game_id],
       );
     }
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "INSERT INTO `games_reviews` (title, description, api_game_id, rating_id, user_id) VALUES (?,?,?,?,?)",
-      [title, description, api_game_id, rating_id, user_id]
+      [title, description, api_game_id, rating_id, user_id],
     );
 
     return res.send({
@@ -132,14 +132,14 @@ const update = async (req, res) => {
       throw "Para actualizar un registro son obligatorios tres campos: titulo, reseña, id de juego api y puntuación.";
     }
 
-    await Database.query(
+    await Database.execute(
       `UPDATE games_reviews SET title = ?, description = ?, api_game_id = ?, rating_id = ? WHERE id = ?`,
-      [title, description, api_game_id, rating_id, id]
+      [title, description, api_game_id, rating_id, id],
     );
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "SELECT * FROM `games_reviews` WHERE id = ?",
-      [id]
+      [id],
     );
 
     return res.send({ data: results.length ? results[0] : null, error: null });
@@ -154,9 +154,9 @@ const destroy = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "DELETE FROM `games_reviews` WHERE id = ?",
-      [id]
+      [id],
     );
 
     return res.send({ data: null, error: null });
@@ -167,11 +167,11 @@ const destroy = async (req, res) => {
   }
 };
 
-module.exports = {
-  indexOwnReviews,
+export {
+  destroy,
   indexGameReviews,
+  indexOwnReviews,
   indexUserReviews,
   store,
   update,
-  destroy,
 };

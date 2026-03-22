@@ -1,20 +1,24 @@
 import chalk from "chalk";
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
+
 dotenv.config();
 
-// Crear la conexión con la base de datos usando `mysql2` y `Promise`.
-let connection;
+const connection = mysql.createPool({
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASS,
+  database: process.env.MYSQL_DB,
+  waitForConnections: true,
+  connectionLimit: 10,
+});
 
-async function connectToDatabase() {
-  try {
-    connection = await mysql.createConnection({
-      host: process.env.MYSQL_HOST,
-      port: process.env.MYSQL_PORT,
-      user: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASS,
-      database: process.env.MYSQL_DB,
-    });
+// Verificar conexión al iniciar
+connection
+  .getConnection()
+  .then((conn) => {
+    conn.release();
     console.log(
       chalk.green.inverse.bold(
         " ------------------------------------ \n" +
@@ -22,7 +26,8 @@ async function connectToDatabase() {
           "\n ------------------------------------ ",
       ),
     );
-  } catch (err) {
+  })
+  .catch(() => {
     console.error(
       chalk.red.inverse.bold(
         " ---------------------------------------------- \n" +
@@ -30,9 +35,6 @@ async function connectToDatabase() {
           "\n ---------------------------------------------- ",
       ),
     );
-  }
-}
-
-connectToDatabase();
+  });
 
 export { connection };

@@ -1,12 +1,12 @@
-const express = require("express");
-const controller = require("#controllers/users.controller.js");
-const upload = require("#middlewares/profile.multer.middleware.js");
+import { disable, index, show, update } from "#controllers/users.controller.js";
+import { upload } from "#middlewares/profile.multer.middleware.js";
+import express from "express";
 
 const usersRouteGroup = express.Router();
 
-usersRouteGroup.get("/", controller.index);
-usersRouteGroup.get("/:id", controller.show);
-usersRouteGroup.put("/", upload.single("profile_picture"), controller.update);
-usersRouteGroup.patch("/", controller.disable);
+usersRouteGroup.get("/", index);
+usersRouteGroup.get("/:id", show);
+usersRouteGroup.put("/", upload.single("profile_picture"), update);
+usersRouteGroup.patch("/", disable);
 
-module.exports = usersRouteGroup;
+export default usersRouteGroup;

@@ -1,6 +1,12 @@
 {
+  "type": "module",
   "scripts": {
-    "dev": "nodemon --watch . server.js"
+    "dev": "nodemon --watch . server.js",
+    "start": "node server.js",
+    "db:init": "node database/init.js",
+    "db:check": "node database/check.js",
+    "db:reset": "mysql -u $MYSQL_USER -p$MYSQL_PASS -e 'DROP DATABASE IF EXISTS rank; CREATE DATABASE rank;' && npm run db:init",
+    "setup": "npm install && npm run db:reset"
   },
   "imports": {
     "#database": "./database/connection.js",

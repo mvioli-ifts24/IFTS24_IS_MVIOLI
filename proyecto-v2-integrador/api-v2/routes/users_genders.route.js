@@ -1,8 +1,8 @@
-const express = require('express')
-const controller = require('#controllers/users_genders.controller.js')
+import { index } from "#controllers/users_genders.controller.js";
+import express from "express";
 
-const usersGendersRouteGroup = express.Router()
+const usersGendersRouteGroup = express.Router();
 
-usersGendersRouteGroup.get('/', controller.index)
+usersGendersRouteGroup.get("/", index);
 
-module.exports = usersGendersRouteGroup
+export default usersGendersRouteGroup;

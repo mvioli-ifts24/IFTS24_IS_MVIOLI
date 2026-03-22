@@ -1,14 +1,10 @@
-const express = require("express");
-const controller = require("#controllers/auth.controller.js");
-const upload = require("#middlewares/profile.multer.middleware.js");
+import { login, register } from "#controllers/auth.controller.js";
+import { upload } from "#middlewares/profile.multer.middleware.js";
+import express from "express";
 
 const authRoutesGroup = express.Router();
 
-authRoutesGroup.post(
-  "/register",
-  upload.single("profile_picture"),
-  controller.register
-);
-authRoutesGroup.post("/login", controller.login);
+authRoutesGroup.post("/register", upload.single("profile_picture"), register);
+authRoutesGroup.post("/login", login);
 
-module.exports = authRoutesGroup;
+export default authRoutesGroup;

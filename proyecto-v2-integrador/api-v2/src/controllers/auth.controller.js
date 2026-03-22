@@ -1,7 +1,6 @@
-const Database = require("#database");
-const Luxon = require("luxon");
-const crypto = require("node:crypto");
-const jwt = require("jsonwebtoken");
+import { connection as Database } from "#database";
+import jwt from "jsonwebtoken";
+import crypto from "node:crypto";
 
 const encryptPassword = (plainPassword) =>
   crypto
@@ -10,15 +9,34 @@ const encryptPassword = (plainPassword) =>
 
 const register = async (req, res) => {
   try {
-    const { email, password, gender_id, accept_newsletter } = req.body;
-
-    if (!email || !password || !gender_id || !accept_newsletter || !req.file) {
-      throw "Para crear un registro son obligatorios cinco campos: email, contraseña, foto de perfil, genero, y suscripción.";
+    const {
+      name,
+      surname,
+      email,
+      password,
+      confirmPassword,
+      birthDate,
+      gender_id,
+      accept_newsletter,
+    } = req.body;
+    console.log("req.body", req.body);
+    if (
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !gender_id ||
+      !accept_newsletter
+    ) {
+      throw "Para crear un registro son obligatorios los campos requeridos.";
     }
 
-    const [resultsEmailValidation] = await Database.query(
+    if (password !== confirmPassword) {
+      throw "Las contraseñas no coinciden.";
+    }
+
+    const [resultsEmailValidation] = await Database.execute(
       "SELECT * FROM `users` WHERE email = ?",
-      [email]
+      [email],
     );
 
     if (resultsEmailValidation.length) {
@@ -27,23 +45,27 @@ const register = async (req, res) => {
 
     const encryptedPassword = encryptPassword(password);
 
-    const [results] = await Database.query(
-      "INSERT INTO `users` (email, password, gender_id, accept_newsletter, profile_picture_filename) VALUES (?, ?, ?, ?, ?)",
+    const [results] = await Database.execute(
+      "INSERT INTO `users` (name, surname, email, password, birth_date, gender_id, role, accept_newsletter, profile_picture_filename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
+        name || null,
+        surname || null,
         email,
         encryptedPassword,
+        birthDate ? new Date(birthDate).toISOString().split("T")[0] : null,
         gender_id,
+        "user",
         accept_newsletter ? 1 : 0,
         req.file.filename,
-      ]
+      ],
     );
 
     const token = jwt.sign(
-      { id: results.insertId, email, gender_id, is_admin: 0 },
+      { id: results.insertId, email, gender_id, role: "user" },
       process.env.SECRET_KEY,
       {
         expiresIn: "24h",
-      }
+      },
     );
 
     return res.send({ data: { token }, error: null });
@@ -62,9 +84,9 @@ const login = async (req, res) => {
       throw "Para iniciar sesión son obligatorios dos campos: email y contraseña.";
     }
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "SELECT * FROM `users` WHERE email = ?",
-      [email]
+      [email],
     );
 
     if (!results.length) {
@@ -86,14 +108,14 @@ const login = async (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
-        is_admin: user.is_admin,
+        role: user.role,
         gender_id: user.gender_id,
         email: user.email,
       },
       process.env.SECRET_KEY,
       {
         expiresIn: "24h",
-      }
+      },
     );
 
     return res.send({ data: { token }, error: null });
@@ -104,7 +126,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = {
-  register,
-  login,
-};
+export { login, register };

@@ -1,6 +1,6 @@
-const multer = require("multer");
-const path = require("path");
-const crypto = require("crypto");
+import crypto from "crypto";
+import multer from "multer";
+import path from "path";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -19,7 +19,7 @@ const upload = multer({
     const fileTypes = /jpg|jpeg|png/;
     const mimetype = fileTypes.test(file.mimetype);
     const extname = fileTypes.test(
-      path.extname(file.originalname).toLowerCase()
+      path.extname(file.originalname).toLowerCase(),
     );
     if (mimetype && path.extname) {
       return cb(null, true);
@@ -29,4 +29,4 @@ const upload = multer({
   limits: { fileSize: 1024 * 1024 * 1 },
 });
 
-module.exports = upload;
+export { upload };

@@ -1,9 +1,9 @@
-const express = require("express");
-const controller = require("#controllers/games.controller.js");
+import { index, show } from "#controllers/games.controller.js";
+import express from "express";
 
 const gamesRoutesGroup = express.Router();
 
-gamesRoutesGroup.get("/", controller.index);
-gamesRoutesGroup.get("/:game_id", controller.show);
+gamesRoutesGroup.get("/", index);
+gamesRoutesGroup.get("/:game_id", show);
 
-module.exports = gamesRoutesGroup;
+export default gamesRoutesGroup;

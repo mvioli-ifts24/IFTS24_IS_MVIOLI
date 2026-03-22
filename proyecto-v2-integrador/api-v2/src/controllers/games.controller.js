@@ -1,5 +1,3 @@
-const Database = require("#database");
-
 const index = async (req, res) => {
   try {
     const preflight = await fetch("https://www.freetogame.com/api/games");
@@ -18,7 +16,7 @@ const show = async (req, res) => {
     const { game_id } = req.params;
 
     const preflight = await fetch(
-      `https://www.freetogame.com/api/game?id=${game_id}`
+      `https://www.freetogame.com/api/game?id=${game_id}`,
     );
     const response = await preflight.json();
 
@@ -30,7 +28,4 @@ const show = async (req, res) => {
   }
 };
 
-module.exports = {
-  index,
-  show,
-};
+export { index, show };

@@ -1,17 +1,17 @@
-const Database = require("#database");
+import { connection as Database } from "#database";
 
-module.exports = async (req, res, next) => {
+export const adminMiddleware = async (req, res, next) => {
   try {
     const user_id = req.user_id;
 
-    const [results] = await Database.query(
+    const [results] = await Database.execute(
       "SELECT * FROM `users` WHERE id = ?",
       [user_id],
     );
 
     const user = results[0];
 
-    if (!user.is_admin) {
+    if (user.role !== "admin") {
       throw "El usuario logueado no es administrador.";
     }
 

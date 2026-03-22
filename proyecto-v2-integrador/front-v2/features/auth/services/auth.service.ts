@@ -14,10 +14,12 @@ export const AuthService = {
     formData.append('confirmPassword', data.confirmPassword)
     formData.append('gender_id', data.gender_id)
     formData.append('accept_newsletter', String(data.accept_newsletter))
-    formData.append('profile_picture', data.profile_picture)
     formData.append('birthDate', data.birthDate.toISOString())
+    if (data.profile_picture) {
+      formData.append('profile_picture', data.profile_picture)
+    }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
       method: 'POST',
       body: formData
     })

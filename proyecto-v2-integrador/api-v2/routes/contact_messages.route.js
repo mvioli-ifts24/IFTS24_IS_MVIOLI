@@ -1,10 +1,14 @@
-const express = require("express");
-const controller = require("#controllers/contact_messages.controller.js");
+import {
+  destroy,
+  index,
+  store,
+} from "#controllers/contact_messages.controller.js";
+import express from "express";
 
 const contactMessagesRoutesGroup = express.Router();
 
-contactMessagesRoutesGroup.get("/", controller.index);
-contactMessagesRoutesGroup.post("/", controller.store);
-contactMessagesRoutesGroup.delete("/:id", controller.destroy);
+contactMessagesRoutesGroup.get("/", index);
+contactMessagesRoutesGroup.post("/", store);
+contactMessagesRoutesGroup.delete("/:id", destroy);
 
-module.exports = contactMessagesRoutesGroup;
+export default contactMessagesRoutesGroup;
