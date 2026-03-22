@@ -10,6 +10,9 @@
  * Esto mejora la mantenibilidad y escalabilidad del proyecto a medida que crece.
  */
 
+// Tipos compartidos
+export type { ColorVariant, Size, StyleVariant, Weight } from './types'
+
 // ================================
 // ATOMS - Componentes básicos
 // ================================
@@ -28,6 +31,14 @@ export {
   type InputState,
   type InputVariant
 } from './atoms/Input'
+
+export { DatePicker, type DatePickerProps } from './atoms/DatePicker'
+
+export { Select, type SelectProps } from './atoms/Select'
+
+export { Checkbox, type CheckboxProps } from './atoms/Checkbox'
+
+export { Avatar, type AvatarFallback, type AvatarProps, type AvatarSize } from './atoms/Avatar'
 
 export {
   Heading,
@@ -54,7 +65,11 @@ export { Logo, type LogoProps } from './atoms/Logo'
 export { Separator, type SeparatorProps } from './atoms/Separator'
 
 // ================================
-// MOLECULES - Combinación de átomos
+// MOLECULES - Componentes compuestos
 // ================================
+
+export { CardBorderGlow, type CardBorderGlowProps } from './molecules/CardBorderGlow'
+
+export { AvatarUpload, type AvatarUploadProps } from './molecules/AvatarUpload'
 
 export { ThemeToggle, type ThemeToggleProps } from './molecules/ThemeToggle'

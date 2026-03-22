@@ -13,6 +13,7 @@ export interface ThemeToggleProps {
   /**
    * Tamaño del toggle
    * @default 'sm'
+   * Equivalencias de texto: xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
    */
   size?: ButtonSize
 

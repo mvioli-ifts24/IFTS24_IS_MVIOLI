@@ -5,20 +5,20 @@ import { Button, Logo, Text, ThemeToggle } from '@/ui'
 
 export default function LandingLayout({ children }: { children: ReactNode }) {
   return (
-    <>
-      <nav className="flex justify-between p-2">
-        <Button href="/" iconLeft={<CaretLeftIcon />} variant="action">
+    <main className="flex min-h-screen flex-col justify-between gap-8">
+      <div className="flex justify-between p-2">
+        <Button href="/" iconLeft={<CaretLeftIcon />} size="m" variant="action" weight="normal">
           Volver
         </Button>
-        <ThemeToggle />
-      </nav>
-      <main className="bg-background flex min-h-screen flex-col items-center justify-center gap-8 px-8">
+        <ThemeToggle size="m" />
+      </div>
+      <div className="flex w-full flex-col items-center justify-center gap-8 mask-no-clip px-8">
         <Logo size="m" />
         {children}
-        <Text className="text-center" size="sm" variant="muted" weight="light">
-          Al continuar, aceptas nuestros Términos de Servicio y Política de Privacidad.
-        </Text>
-      </main>
-    </>
+      </div>
+      <Text className="px-8 pb-8 text-center" size="sm" variant="muted" weight="light">
+        Al continuar, aceptas nuestros Términos de Servicio y Política de Privacidad.
+      </Text>
+    </main>
   )
 }

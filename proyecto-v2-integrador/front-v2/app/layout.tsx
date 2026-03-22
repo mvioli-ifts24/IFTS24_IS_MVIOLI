@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Montserrat, Roboto } from 'next/font/google'
 
 import { ThemeProvider } from '@/shared/providers/ThemeProvider'
+
 import './globals.css'
 
 const montserrat = Montserrat({
@@ -35,7 +36,7 @@ export default function RootLayout({
       className={`${montserrat.variable} ${roboto.variable} h-full scroll-smooth antialiased`}
       lang="es"
     >
-      <body>
+      <body className="h-full w-full">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

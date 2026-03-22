@@ -12,18 +12,52 @@ export type CardWrapperElevation = '0' | '1' | '2' | '3'
 
 /**
  * Radio de esquinas del CardWrapper.
+ *  none = 0px, sm = 8px, md = 12px, lg = 16px, xl = 24px
  */
-export type CardWrapperRadius = 'sm' | 'md' | 'lg' | 'xl' | 'none'
+export type CardWrapperRadius =
+  /** 8px */
+  | 'sm'
+  /** 12px */
+  | 'md'
+  /** 16px */
+  | 'lg'
+  /** 24px */
+  | 'xl'
+  /** 0px */
+  | 'none'
 
 /**
  * Padding interno del CardWrapper.
+ *  none = 0px, sm = 8px, md = 16px, lg = 24px, xl = 32px
  */
-export type CardWrapperPadding = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+export type CardWrapperPadding =
+  /** 0px */
+  | 'none'
+  /** 8px */
+  | 'sm'
+  /** 16px */
+  | 'md'
+  /** 24px */
+  | 'lg'
+  /** 32px */
+  | 'xl'
 
 export interface CardWrapperProps {
   children: ReactNode
   elevation?: CardWrapperElevation
+
+  /**
+   * Radio de esquinas
+   *  none = 0px, sm = 8px, md = 12px, lg = 16px, xl = 24px
+   * @default 'lg'
+   */
   radius?: CardWrapperRadius
+
+  /**
+   * Espaciado interno
+   *  none = 0px, sm = 8px, md = 16px, lg = 24px, xl = 32px
+   * @default 'md'
+   */
   padding?: CardWrapperPadding
   /**
    * Si es true, aplica un cursor pointer y un efecto hover interactivo.

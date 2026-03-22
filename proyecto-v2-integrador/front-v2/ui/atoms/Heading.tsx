@@ -1,14 +1,16 @@
 import { type ElementType, type ReactNode } from 'react'
 
+import { type ColorVariant, type Size, type Weight } from '../types'
+
 /**
  * Tamaños disponibles para el componente Heading
  */
-export type HeadingSize = 'xs' | 'sm' | 'm' | 'lg' | 'xl'
+export type HeadingSize = Size
 
 /**
  * Variantes de color para el componente Heading
  */
-export type HeadingVariant = 'default' | 'primary' | 'secondary' | 'gradient'
+export type HeadingVariant = ColorVariant
 
 /**
  * Niveles semánticos del heading (h1-h6)
@@ -18,7 +20,7 @@ export type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 /**
  * Peso de fuente para el componente Heading
  */
-export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold'
+export type HeadingWeight = Weight
 
 /**
  * Props para el componente Heading
@@ -33,6 +35,7 @@ export interface HeadingProps {
   /**
    * Tamaño visual del heading
    * @default 'm'
+   * Equivalencias (desktop): xs = 24px, sm = 30px, m = 36px, lg = 48px, xl = 60px
    */
   size?: HeadingSize
 
@@ -79,10 +82,12 @@ const variantClasses: Record<HeadingVariant, string> = {
   default: 'text-foreground',
   primary: 'text-primary-400 ',
   secondary: 'text-secondary-400 ',
+  muted: 'text-neutral-600',
   gradient: 'bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent'
 }
 
 const weightClasses: Record<HeadingWeight, string> = {
+  light: 'font-light',
   normal: 'font-normal',
   medium: 'font-medium',
   semibold: 'font-semibold',

@@ -1,5 +1,7 @@
 import { type InputHTMLAttributes, type ReactNode } from 'react'
 
+import { type Size } from '../types'
+
 /**
  * Estados disponibles para el componente Input
  */
@@ -8,7 +10,7 @@ export type InputState = 'default' | 'error' | 'success' | 'warning'
 /**
  * Tamaños disponibles para el componente Input
  */
-export type InputSize = 'sm' | 'm' | 'lg'
+export type InputSize = Size
 
 /**
  * Variantes de estilo para el componente Input
@@ -22,7 +24,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   /**
    * Tamaño del input
    * @default 'm'
-   * sm: pequeño, m: mediano, lg: grande
+   *  xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
    */
   size?: InputSize
 
@@ -54,9 +56,9 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   iconRight?: ReactNode
 
   /**
-   * Mensaje de error, éxito o advertencia
+   * Mensaje de error a mostrar debajo del input
    */
-  message?: string
+  errorMessage?: string
 
   /**
    * Clases CSS adicionales
@@ -73,9 +75,11 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
  * Mapeo de tamaños a clases de Tailwind
  */
 const sizeClasses: Record<InputSize, string> = {
+  xs: 'px-2 py-1 text-xs',
   sm: 'px-2.5 py-1.5 text-sm',
   m: 'px-2.5 py-2.5 text-base',
-  lg: 'px-3 py-3 text-lg'
+  lg: 'px-3 py-3 text-lg',
+  xl: 'px-3.5 py-3.5 text-xl'
 }
 
 const stateClasses: Record<InputState, string> = {
@@ -118,7 +122,7 @@ export function Input({
   label,
   iconLeft,
   iconRight,
-  message,
+  errorMessage,
   className = '',
   id,
   placeholder = ' ',
@@ -170,7 +174,9 @@ export function Input({
         {iconRight && <div className={`${iconContainerClasses} inset-e-2.5`}>{iconRight}</div>}
       </div>
 
-      {message && <p className={`mt-1 text-xs ${messageColorClasses[state]}`}>{message}</p>}
+      {errorMessage && state === 'error' && (
+        <p className={`mt-1 text-xs ${messageColorClasses[state]}`}>{errorMessage}</p>
+      )}
     </div>
   )
 }

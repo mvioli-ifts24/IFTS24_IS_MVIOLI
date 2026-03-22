@@ -1,19 +1,21 @@
 import { type ReactNode } from 'react'
 
+import { type ColorVariant, type Size, type Weight } from '../types'
+
 /**
  * Tamaños disponibles para el componente Text
  */
-export type TextSize = 'xs' | 'sm' | 'm' | 'lg' | 'xl'
+export type TextSize = Size
 
 /**
  * Variantes de color para el componente Text
  */
-export type TextVariant = 'default' | 'primary' | 'secondary' | 'muted'
+export type TextVariant = ColorVariant
 
 /**
  * Peso de fuente para el componente Text
  */
-export type TextWeight = 'light' | 'normal' | 'medium' | 'semibold' | 'bold'
+export type TextWeight = Weight
 
 /**
  * Props para el componente Text
@@ -22,7 +24,7 @@ export interface TextProps {
   /**
    * Tamaño del texto
    * @default 'm'
-   * xs: 12px, sm: 14px, m: 16px, lg: 18px, xl: 20px
+   *  xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
    */
   size?: TextSize
 
@@ -67,7 +69,8 @@ const variantClasses: Record<TextVariant, string> = {
   default: 'text-foreground',
   primary: 'text-primary-400',
   secondary: 'text-secondary-400',
-  muted: 'text-neutral-600 '
+  muted: 'text-neutral-600 ',
+  gradient: 'bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent'
 }
 
 const weightClasses: Record<TextWeight, string> = {

@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ReactNode } from 'react'
 
+import { type Size, type StyleVariant, type Weight } from '../types'
+
 /**
  * Variantes de estilo para el botón
  */
-export type ButtonVariant = 'filled' | 'outlined' | 'text' | 'action'
+export type ButtonVariant = StyleVariant
 
 /**
  * Colores disponibles para el botón
@@ -14,7 +16,12 @@ export type ButtonColor = 'primary' | 'secondary'
 /**
  * Tamaños disponibles para el botón
  */
-export type ButtonSize = 'xs' | 'sm' | 'm' | 'lg' | 'xl'
+export type ButtonSize = Size
+
+/**
+ * Pesos de fuente disponibles para el botón
+ */
+export type ButtonWeight = Weight
 
 /**
  * Props base compartidas entre botón y link
@@ -35,7 +42,7 @@ interface BaseButtonProps {
   /**
    * Tamaño del botón
    * @default 'm'
-   * xs: 12px, s: 14px, m: 16px, l: 18px, xl: 20px
+   *  xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
    */
   size?: ButtonSize
 
@@ -70,6 +77,12 @@ interface BaseButtonProps {
    * @default false
    */
   disabled?: boolean
+
+  /**
+   * Peso de fuente del botón
+   * @default 'medium'
+   */
+  weight?: ButtonWeight
 }
 
 /**
@@ -141,19 +154,28 @@ export function Button({
   iconLeft,
   iconRight,
   size = 'sm',
+  weight = 'medium',
   variant = 'filled',
   ...props
 }: ButtonProps) {
+  const weightClasses: Record<ButtonWeight, string> = {
+    light: 'font-light',
+    normal: 'font-normal',
+    medium: 'font-medium',
+    semibold: 'font-semibold',
+    bold: 'font-bold'
+  }
+
   const classes = [
     'inline-flex',
     'items-center',
     'justify-center',
     'gap-2',
-    'font-medium',
     'transition-all',
     'duration-300',
     'ease-out',
     'cursor-pointer',
+    weightClasses[weight],
     getVariantClasses(variant, color),
     sizeClasses[size],
     fullWidth && 'w-full',
