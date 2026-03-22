@@ -4,7 +4,7 @@ import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ReactNode } 
 /**
  * Variantes de estilo para el botón
  */
-export type ButtonVariant = 'filled' | 'outlined' | 'text'
+export type ButtonVariant = 'filled' | 'outlined' | 'text' | 'action'
 
 /**
  * Colores disponibles para el botón
@@ -94,18 +94,16 @@ export type ButtonProps = BaseButtonProps | ButtonAsLink
 function getVariantClasses(variant: ButtonVariant, color: ButtonColor): string {
   const colorMap = {
     primary: {
-      filled:
-        'bg-primary-400 text-white hover:bg-primary-300 shadow-lg shadow-primary-400/30 dark:bg-primary-400 dark:text-black dark:hover:bg-primary-300',
-      outlined:
-        'border-2 border-primary-400 text-primary-400 hover:bg-primary-400 hover:text-white dark:border-primary-300 dark:text-primary-300 dark:hover:bg-primary-400/20',
-      text: 'text-primary-400 hover:bg-primary-50 dark:text-primary-300 dark:hover:bg-primary-400/10'
+      filled: 'bg-primary-400 text-background hover:bg-primary-300',
+      outlined: 'border-2 border-primary-400 text-primary-400  hover:bg-primary-400/10',
+      text: 'text-primary-400  hover:bg-primary-400/10',
+      action: 'text-foreground hover:text-primary-400 hover:underline underline-offset-3 '
     },
     secondary: {
-      filled:
-        'bg-secondary-400 text-black hover:bg-secondary-300 shadow-lg shadow-secondary-400/30 dark:bg-secondary-400 dark:text-black dark:hover:bg-secondary-300',
-      outlined:
-        'border-2 border-secondary-400 text-secondary-400 hover:bg-secondary-400 hover:text-black dark:border-secondary-300 dark:text-secondary-300 dark:hover:bg-secondary-400/20',
-      text: 'text-neutral-800 hover:bg-secondary-50 hover:text-secondary-400 dark:text-secondary-200 dark:hover:bg-secondary-400/10'
+      filled: 'bg-secondary-400 text-background hover:bg-secondary-300  ',
+      outlined: 'border-2 border-secondary-400 text-secondary-400  hover:bg-secondary-400/10',
+      text: 'text-secondary-400  hover:bg-secondary-400/10',
+      action: 'text-foreground hover:text-secondary-300 hover:underline underline-offset-3 '
     }
   }
 
@@ -173,7 +171,6 @@ export function Button({
     </>
   )
 
-  // Si tiene href, renderiza como Link de Next.js
   if ('href' in props && props.href) {
     const { href, ...linkProps } = props
 
@@ -188,7 +185,6 @@ export function Button({
     )
   }
 
-  // Si no, renderiza como button
   return (
     <button
       className={classes}

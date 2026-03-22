@@ -47,6 +47,12 @@ export {
 
 export { AnimatedCounter } from './atoms/AnimatedCounter'
 
+export { CardWrapper, type CardWrapperProps } from './atoms/CardWrapper'
+
+export { Logo, type LogoProps } from './atoms/Logo'
+
+export { Separator, type SeparatorProps } from './atoms/Separator'
+
 // ================================
 // MOLECULES - Combinación de átomos
 // ================================

@@ -55,10 +55,10 @@ export function AnimatedCounter({
       const elapsed = currentTime - startTime
       const progress = Math.min(elapsed / duration, 1)
 
-      // Easing function para animación más natural (ease-out)
+      // Ease-out cúbico para animación más natural
       const easedProgress = 1 - Math.pow(1 - progress, 3)
-      const currentCount =
-        Math.floor(targetNumber * easedProgress * Math.pow(10, decimals)) / Math.pow(10, decimals)
+      const factor = Math.pow(10, decimals)
+      const currentCount = Math.floor(targetNumber * easedProgress * factor) / factor
 
       setCount(currentCount)
 
@@ -73,9 +73,9 @@ export function AnimatedCounter({
   }, [targetNumber, duration, decimals])
 
   return (
-    <>
+    <span style={{ willChange: 'contents' }}>
       {count.toFixed(decimals)}
       {suffix}
-    </>
+    </span>
   )
 }

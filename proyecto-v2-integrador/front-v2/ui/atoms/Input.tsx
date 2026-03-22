@@ -62,6 +62,11 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
    * Clases CSS adicionales
    */
   className?: string
+
+  /**
+   * ID del input para asociar con la etiqueta
+   */
+  id: string
 }
 
 /**
@@ -73,20 +78,13 @@ const sizeClasses: Record<InputSize, string> = {
   lg: 'px-3 py-3 text-lg'
 }
 
-/**
- * Mapeo de estados a estilos de borde
- */
 const stateClasses: Record<InputState, string> = {
-  default:
-    'border-neutral-300 focus:border-primary-400 dark:border-neutral-600 dark:focus:border-primary-300',
-  error: 'border-error focus:border-error dark:border-error dark:focus:border-error',
-  success: 'border-success focus:border-success dark:border-success dark:focus:border-success',
-  warning: 'border-warning focus:border-warning dark:border-warning dark:focus:border-warning'
+  default: 'border-neutral-300 focus:border-primary-400 ',
+  error: 'border-error focus:border-error',
+  success: 'border-success focus:border-success',
+  warning: 'border-warning focus:border-warning '
 }
 
-/**
- * Mapeo de estados a colores de mensaje
- */
 const messageColorClasses: Record<InputState, string> = {
   default: 'text-foreground',
   error: 'text-error',
@@ -111,15 +109,7 @@ const messageColorClasses: Record<InputState, string> = {
  * />
  * ```
  *
- * @example
- * ```tsx
- * <Input
- *   label="Contraseña"
- *   type="password"
- *   iconLeft={<LockIcon />}
- *   size="lg"
- * />
- * ```
+
  */
 export function Input({
   size = 'm',
@@ -130,7 +120,7 @@ export function Input({
   iconRight,
   message,
   className = '',
-  id = 'input_field',
+  id,
   placeholder = ' ',
   ...props
 }: InputProps) {
@@ -147,35 +137,40 @@ export function Input({
     .filter(Boolean)
     .join(' ')
 
-  const containerClasses = 'relative mb-2'
   const iconContainerClasses =
     'absolute top-1/2 -translate-y-1/2 flex items-center justify-center text-foreground'
 
   return (
     <div className="w-full">
-      <div className={containerClasses}>
-        {/* Input */}
+      <div className="relative mb-2">
         <input className={inputClasses} id={id} placeholder={placeholder} {...props} />
 
-        {/* Label flotante */}
         {label && (
           <label
-            className="bg-background text-foreground peer-focus:text-primary-400 dark:peer-focus:text-primary-300 absolute inset-s-2.5 top-2 z-10 inline-flex origin-left -translate-y-4 scale-75 transform items-center px-2 text-sm duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
+            className={[
+              'absolute inset-s-2.5 top-2 z-10',
+              'inline-flex origin-left -translate-y-4 scale-75 transform items-center',
+              'px-2 text-sm duration-300',
+              'text-foreground peer-focus:text-primary-400',
+              'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100',
+              'peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2',
+              'rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4',
+              // Fondo que coincide con el contenedor, separado del bg-background hardcodeado
+              'bg-background'
+            ]
+              .filter(Boolean)
+              .join(' ')}
             htmlFor={id}
           >
             {label}
           </label>
         )}
 
-        {/* Icono izquierdo */}
-        {iconLeft && <div className={`${iconContainerClasses} start-2.5`}>{iconLeft}</div>}
-
-        {/* Icono derecho */}
-        {iconRight && <div className={`${iconContainerClasses} end-2.5`}>{iconRight}</div>}
+        {iconLeft && <div className={`${iconContainerClasses} inset-s-2.5`}>{iconLeft}</div>}
+        {iconRight && <div className={`${iconContainerClasses} inset-e-2.5`}>{iconRight}</div>}
       </div>
 
-      {/* Mensaje de estado */}
-      {message && <p className={`text-xs ${messageColorClasses[state]} mt-1`}>{message}</p>}
+      {message && <p className={`mt-1 text-xs ${messageColorClasses[state]}`}>{message}</p>}
     </div>
   )
 }

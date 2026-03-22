@@ -16,6 +16,11 @@ export type HeadingVariant = 'default' | 'primary' | 'secondary' | 'gradient'
 export type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
 /**
+ * Peso de fuente para el componente Heading
+ */
+export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold'
+
+/**
  * Props para el componente Heading
  */
 export interface HeadingProps {
@@ -36,6 +41,12 @@ export interface HeadingProps {
    * @default 'default'
    */
   variant?: HeadingVariant
+
+  /**
+   * Peso de fuente del heading
+   * @default 'normal'
+   */
+  weight?: HeadingWeight
 
   /**
    * Contenido del heading
@@ -64,14 +75,18 @@ const sizeClasses: Record<HeadingSize, string> = {
   xl: 'text-5xl md:text-6xl'
 }
 
-/**
- * Mapeo de variantes a clases de Tailwind
- */
 const variantClasses: Record<HeadingVariant, string> = {
-  default: 'text-foreground font-bold',
-  primary: 'text-primary-400 dark:text-primary-400 font-bold',
-  secondary: 'text-secondary-400 dark:text-secondary-400 font-bold',
+  default: 'text-foreground',
+  primary: 'text-primary-400 ',
+  secondary: 'text-secondary-400 ',
   gradient: 'bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent'
+}
+
+const weightClasses: Record<HeadingWeight, string> = {
+  normal: 'font-normal',
+  medium: 'font-medium',
+  semibold: 'font-semibold',
+  bold: 'font-bold'
 }
 
 /**
@@ -95,16 +110,17 @@ export function Heading({
   variant = 'default',
   children,
   className = '',
+  weight = 'normal',
   id
 }: HeadingProps) {
   const Component = level as ElementType
 
   const classes = [
-    'font-display', // Usar Montserrat para headings
-    'font-bold',
+    'font-display',
     'tracking-tight',
     'transition-all',
     'duration-300',
+    weightClasses[weight],
     sizeClasses[size],
     variantClasses[variant],
     className

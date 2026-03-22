@@ -13,7 +13,7 @@ export type TextVariant = 'default' | 'primary' | 'secondary' | 'muted'
 /**
  * Peso de fuente para el componente Text
  */
-export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold'
+export type TextWeight = 'light' | 'normal' | 'medium' | 'semibold' | 'bold'
 
 /**
  * Props para el componente Text
@@ -22,11 +22,7 @@ export interface TextProps {
   /**
    * Tamaño del texto
    * @default 'm'
-   * xs: 12px en móvil, 14px en desktop
-   * s: 14px en móvil, 16px en desktop
-   * m: 16px en móvil, 18px en desktop
-   * l: 18px en móvil, 20px en desktop
-   * xl: 20px en móvil, 24px en desktop
+   * xs: 12px, sm: 14px, m: 16px, lg: 18px, xl: 20px
    */
   size?: TextSize
 
@@ -57,16 +53,8 @@ export interface TextProps {
    *  @default 'p'
    */
   as?: 'p' | 'span'
-
-  /**
-   * Alineación del texto
-   */
-  align?: 'left' | 'center' | 'right'
 }
 
-/**
- * Mapeo de tamaños a clases de Tailwind
- */
 const sizeClasses: Record<TextSize, string> = {
   xs: 'text-xs md:text-sm',
   sm: 'text-sm md:text-base',
@@ -75,52 +63,29 @@ const sizeClasses: Record<TextSize, string> = {
   xl: 'text-xl md:text-2xl'
 }
 
-/**
- * Mapeo de variantes a clases de Tailwind
- */
 const variantClasses: Record<TextVariant, string> = {
   default: 'text-foreground',
   primary: 'text-primary-400',
   secondary: 'text-secondary-400',
-  muted: 'text-neutral-600'
+  muted: 'text-neutral-600 '
 }
 
-/**
- * Mapeo de pesos a clases de Tailwind
- */
 const weightClasses: Record<TextWeight, string> = {
+  light: 'font-light',
   normal: 'font-normal',
   medium: 'font-medium',
   semibold: 'font-semibold',
   bold: 'font-bold'
 }
 
-/**
- * Text Component
- *
- * Componente atómico para texto y párrafos.
- * Sigue el principio de Responsabilidad Única (SRP) del patrón SOLID.
- *
- * @example
- * ```tsx
- * <Text size="l" variant="primary" weight="medium">
- *   Discover the best games of 2024
- * </Text>
- * ```
- *
-
- * ```
- */
 export function Text({
-  size = 'm',
+  size = 'sm',
   variant = 'default',
   weight = 'normal',
   children,
   className = '',
-  as = 'p'
+  as: Component = 'p'
 }: TextProps) {
-  const Component = as ? 'span' : 'p'
-
   const classes = [
     'transition-colors',
     'duration-200',

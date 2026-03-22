@@ -64,14 +64,7 @@ function useIsMounted() {
  * ```tsx
  * <ThemeToggle size="sm" />
  * ```
- *
- * @example
- * ```tsx
- * <ThemeToggle
- *   size="m"
- *   iconLight={<CustomSunIcon />}
- *   iconDark={<CustomMoonIcon />}
- * />
+
  * ```
  */
 export function ThemeToggle({
@@ -84,10 +77,10 @@ export function ThemeToggle({
   const { theme, setTheme } = useTheme()
   const mounted = useIsMounted()
 
-  if (!mounted) return <div className="h-9 w-9" />
+  if (!mounted) return <div aria-hidden="true" className="h-9 w-9" role="presentation" />
 
-  const lightIcon = iconLight || <SunIcon />
-  const darkIcon = iconDark || <MoonIcon />
+  const lightIcon = iconLight || <SunIcon className="text-amber-200" />
+  const darkIcon = iconDark || <MoonIcon className="text-blue-400" />
 
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
@@ -98,6 +91,7 @@ export function ThemeToggle({
 
   return (
     <Button
+      aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
       className={className}
       iconLeft={theme === 'dark' ? lightIcon : darkIcon}
       onClick={handleThemeToggle}
