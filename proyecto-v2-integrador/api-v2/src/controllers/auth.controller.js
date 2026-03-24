@@ -60,15 +60,35 @@ const register = async (req, res) => {
       ],
     );
 
+    const userId = results.insertId;
     const token = jwt.sign(
-      { id: results.insertId, email, gender_id, role: "user" },
+      { id: userId, email, gender_id, role: "user" },
       process.env.SECRET_KEY,
       {
         expiresIn: "24h",
       },
     );
 
-    return res.send({ data: { token }, error: null });
+    return res.send({
+      data: {
+        token,
+        user: {
+          id: userId,
+          name: name || null,
+          surname: surname || null,
+          email,
+          role: "user",
+          gender_id,
+          about: null,
+          profile_picture_filename: req.file.filename,
+          accept_newsletter: accept_newsletter ? 1 : 0,
+          birth_date: birthDate
+            ? new Date(birthDate).toISOString().split("T")[0]
+            : null,
+        },
+      },
+      error: null,
+    });
   } catch (err) {
     return res
       .status(400)
@@ -118,7 +138,24 @@ const login = async (req, res) => {
       },
     );
 
-    return res.send({ data: { token }, error: null });
+    return res.send({
+      data: {
+        token,
+        user: {
+          id: user.id,
+          name: user.name,
+          surname: user.surname,
+          email: user.email,
+          role: user.role,
+          gender_id: user.gender_id,
+          about: user.about,
+          profile_picture_filename: user.profile_picture_filename,
+          accept_newsletter: user.accept_newsletter,
+          birth_date: user.birth_date,
+        },
+      },
+      error: null,
+    });
   } catch (err) {
     return res
       .status(400)

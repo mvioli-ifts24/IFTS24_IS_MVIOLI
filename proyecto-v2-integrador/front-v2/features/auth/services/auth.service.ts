@@ -1,10 +1,28 @@
+import type { LoginFormData } from '../schemas/login'
+import type { RegisterFormData } from '../schemas/register'
+
 import { ApiResponse } from '@/shared/types/api.types'
 import { User } from '@/shared/types/user.types'
 
-import { RegisterFormData } from '../schemas/register'
+export type AuthResponse = {
+  token: string
+  user: User
+}
 
 export const AuthService = {
-  async register(data: RegisterFormData): Promise<ApiResponse<User>> {
+  async login(data: LoginFormData): Promise<ApiResponse<AuthResponse>> {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    return await response.json()
+  },
+
+  async register(data: RegisterFormData): Promise<ApiResponse<AuthResponse>> {
     const formData = new FormData()
 
     formData.append('name', data.name)

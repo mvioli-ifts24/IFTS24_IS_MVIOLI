@@ -75,7 +75,7 @@ const elevationClasses: Record<CardWrapperElevation, string> = {
   0: 'bg-neutral-50 dark:bg-neutral-50 border border-transparent',
   1: 'bg-background dark:bg-neutral-50 border border-neutral-100 dark:border-neutral-100',
   2: 'bg-background dark:bg-neutral-50  border border-neutral-100 dark:border-neutral-100 shadow-md shadow-foreground/10 ',
-  3: 'bg-white/8 dark:bg-white/4 border border-white/12 dark:border-white/8 backdrop-blur-xl[backdrop-filter:blur(20px)_saturate(180%)]'
+  3: 'bg-white/8 backdrop-blur-lg dark:bg-white/4 border border-white/12 dark:border-white/8 '
 }
 
 const interactiveClasses: Record<CardWrapperElevation, string> = {

@@ -20,6 +20,12 @@
   --error: #ef4444;
   --warning: #f59e0b;
 
+  --danger-50: #fef2f2;
+  --danger-100: #fee2e2;
+  --danger-200: #fecaca;
+  --danger-300: #fca5a5;
+  --danger-400: #f87171;
+
   --neutral-50: #fafafa;
   --neutral-100: #f5f5f5;
   --neutral-200: #e5e5e5;
@@ -55,6 +61,12 @@
   --error: #f87171;
   --warning: #fcd34d;
 
+  --danger-50: #7f1d1d;
+  --danger-100: #991b1b;
+  --danger-200: #b91c1c;
+  --danger-300: #dc2626;
+  --danger-400: #ef4444;
+
   --neutral-50: #1e1d26;
   --neutral-100: #2a2937;
   --neutral-200: #3e3d4a;
@@ -89,6 +101,12 @@
   --color-success: var(--success);
   --color-error: var(--error);
   --color-warning: var(--warning);
+
+  --color-danger-50: var(--danger-50);
+  --color-danger-100: var(--danger-100);
+  --color-danger-200: var(--danger-200);
+  --color-danger-300: var(--danger-300);
+  --color-danger-400: var(--danger-400);
 
   --color-neutral-50: var(--neutral-50);
   --color-neutral-100: var(--neutral-100);

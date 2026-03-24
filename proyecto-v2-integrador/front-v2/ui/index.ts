@@ -56,6 +56,8 @@ export {
   type TextWeight
 } from './atoms/Text'
 
+export { Tag, type TagProps, type TagVariant } from './atoms/Tag'
+
 export { AnimatedCounter } from './atoms/AnimatedCounter'
 
 export { CardWrapper, type CardWrapperProps } from './atoms/CardWrapper'
@@ -73,3 +75,19 @@ export { CardBorderGlow, type CardBorderGlowProps } from './molecules/CardBorder
 export { AvatarUpload, type AvatarUploadProps } from './molecules/AvatarUpload'
 
 export { ThemeToggle, type ThemeToggleProps } from './molecules/ThemeToggle'
+
+// ================================
+// ORGANISMS - Componentes complejos
+// ================================
+
+export { Navbar } from './organisms/Navbar'
+
+export { UserMenu } from './organisms/UserMenu'
+
+export { Sidebar } from './organisms/Sidebar'
+
+// ================================
+// LAYOUTS - Estructuras de página
+// ================================
+
+export { UserDashboard } from './layouts/UserDashboard'

@@ -3,7 +3,7 @@ import { Button, CardBorderGlow, Heading, Separator, Text } from '@/ui'
 
 import { RegisterForm } from '../components/RegisterForm'
 
-export default function RegisterPage() {
+export function RegisterPage() {
   return (
     <CardBorderGlow className="min-w-full p-6 md:min-w-2xl">
       <div className="flex flex-col gap-8 pt-2">

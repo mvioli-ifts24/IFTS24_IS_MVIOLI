@@ -11,7 +11,7 @@ export type ButtonVariant = StyleVariant
 /**
  * Colores disponibles para el botón
  */
-export type ButtonColor = 'primary' | 'secondary'
+export type ButtonColor = 'primary' | 'secondary' | 'danger' | 'muted'
 
 /**
  * Tamaños disponibles para el botón
@@ -117,6 +117,19 @@ function getVariantClasses(variant: ButtonVariant, color: ButtonColor): string {
       outlined: 'border-2 border-secondary-400 text-secondary-400  hover:bg-secondary-400/10',
       text: 'text-secondary-400  hover:bg-secondary-400/10',
       action: 'text-foreground hover:text-secondary-300 hover:underline underline-offset-3 '
+    },
+    danger: {
+      filled: 'bg-danger-400 text-background hover:bg-danger-300',
+      outlined: 'border-2 border-danger-400 text-danger-400  hover:bg-danger-400/10',
+      text: 'text-danger-400  hover:bg-danger-400/10',
+      action: 'text-foreground hover:text-danger-400 hover:underline underline-offset-3 '
+    },
+    muted: {
+      filled: 'bg-foreground/70 text-background hover:bg-foreground/90',
+      outlined:
+        'border border-foreground/50 text-foreground/70  hover:text-foreground/90  hover:bg-foreground/5 ',
+      text: 'text-foreground/70 hover:text-foreground/90 hover:bg-foreground/5 ',
+      action: 'text-foreground/70 hover:text-foreground/90 hover:underline underline-offset-3  '
     }
   }
 

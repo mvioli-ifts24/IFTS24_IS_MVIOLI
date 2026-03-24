@@ -31,11 +31,6 @@ export interface AvatarProps {
   fallback?: AvatarFallback
 
   /**
-   * Iniciales manuales para fallback
-   */
-  initials?: string
-
-  /**
    * Nombre para generar iniciales automáticamente
    */
   name?: string
@@ -59,11 +54,7 @@ const sizeClasses: Record<AvatarSize, string> = {
   xl: 'h-20 w-20 text-xl'
 }
 
-function resolveInitials(initials?: string, name?: string, surname?: string) {
-  if (initials?.trim()) {
-    return initials.trim().slice(0, 2).toUpperCase()
-  }
-
+function resolveInitials(name?: string, surname?: string) {
   const first = name?.trim().charAt(0) || ''
   const last = surname?.trim().charAt(0) || ''
 
@@ -75,19 +66,18 @@ export function Avatar({
   alt = 'Avatar de usuario',
   size = 'm',
   fallback = 'initials',
-  initials,
   name,
   surname,
   className = ''
 }: AvatarProps) {
-  const resolvedInitials = resolveInitials(initials, name, surname)
+  const resolvedInitials = resolveInitials(name, surname)
   const iconNode = <UserIcon />
 
   return (
     <div
       aria-label={alt}
       className={[
-        'bg-background relative aspect-square overflow-hidden rounded-full border border-neutral-100 text-neutral-300',
+        'bg-background relative flex aspect-square items-center justify-center overflow-hidden rounded-full border border-neutral-100 text-neutral-500',
         sizeClasses[size],
         className
       ]

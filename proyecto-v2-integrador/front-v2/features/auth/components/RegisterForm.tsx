@@ -4,15 +4,15 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+import { AvatarUpload, Button, Checkbox, DatePicker, Input, Select } from '@/ui'
+
 import {
   GENDERS,
   GENDER_LABELS,
   registerSchema,
   type RegisterFormData,
   type RegisterFormInput
-} from '@/features/auth/schemas/register'
-import { AvatarUpload, Button, Checkbox, DatePicker, Input, Select } from '@/ui'
-
+} from '../schemas/register'
 import { AuthService } from '../services/auth.service'
 import { useAuthStore } from '../store/auth.store'
 
@@ -47,9 +47,16 @@ export function RegisterForm() {
         return
       }
 
-      setAuth(result.data!.token, null) // guardás el token
+      const { token, user } = result.data!
+
+      setAuth(token, user)
+
       toast.success('Cuenta creada exitosamente')
-      router.push('/dashboard')
+
+      // Redirigir según rol
+      const dashboard = user.role === 'admin' ? '/admin/dashboard' : '/dashboard'
+
+      router.push(dashboard)
     } catch (error) {
       toast.error('Error de conexión, intentá de nuevo')
     }
