@@ -99,7 +99,6 @@ export function AvatarUpload({
   state = 'default',
   avatarSize = 'lg',
   fallback = 'initials',
-  initials,
   name,
   surname,
   initialPreviewUrl,
@@ -137,7 +136,6 @@ export function AvatarUpload({
             alt="Avatar de perfil"
             className=""
             fallback={fallback}
-            initials={initials}
             name={name}
             size={avatarSize}
             src={previewUrl}

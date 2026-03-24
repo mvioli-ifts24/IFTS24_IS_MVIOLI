@@ -6,6 +6,7 @@ import { SignOutIcon } from '@phosphor-icons/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { useAuthStore } from '@/features/auth/store/auth.store'
 import { Avatar, Button, CardWrapper, Separator, Tag, Text } from '@/ui'
 
 type UserMenuProps = {
@@ -15,10 +16,10 @@ type UserMenuProps = {
 export function UserMenu({ user }: UserMenuProps) {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+  const logout = useAuthStore(state => state.logout)
 
   const handleLogout = () => {
-    // logout()
-    // cookieUtils.remove('token')
+    logout()
     setIsOpen(false)
     router.push('/login')
   }

@@ -1,9 +1,20 @@
+'use client'
+
 import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 
-import { Button, Logo, Text, ThemeToggle } from '@/ui'
+import { useAuthRouteGuard } from '@/shared/hooks/useAuthRouteGuard'
+import { Button, Logo, SpinLoader, Text, ThemeToggle } from '@/ui'
 
-export default function LandingLayout({ children }: { children: ReactNode }) {
+export default function AuthLayout({ children }: { children: ReactNode }) {
+  const { canRender } = useAuthRouteGuard({
+    redirectAuthenticatedToDashboard: true
+  })
+
+  if (!canRender) {
+    return <SpinLoader />
+  }
+
   return (
     <main className="flex min-h-screen flex-col justify-between gap-8">
       <div className="flex justify-between p-2">
@@ -17,7 +28,7 @@ export default function LandingLayout({ children }: { children: ReactNode }) {
         {children}
       </div>
       <Text className="px-8 pb-8 text-center" size="sm" variant="muted" weight="light">
-        Al continuar, aceptas nuestros Términos de Servicio y Política de Privacidad.
+        Al continuar, aceptás nuestros Términos de Servicio y Política de Privacidad.
       </Text>
     </main>
   )

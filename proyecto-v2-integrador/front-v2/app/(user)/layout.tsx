@@ -1,3 +1,5 @@
+'use client'
+
 import { UserDashboard } from '@/ui'
 
 export default function UserLayout({ children }: { children: React.ReactNode }) {

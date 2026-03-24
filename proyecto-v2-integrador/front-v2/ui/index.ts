@@ -56,6 +56,8 @@ export {
   type TextWeight
 } from './atoms/Text'
 
+export { SpinLoader, type SpinLoaderProps, type SpinLoaderSize } from './atoms/SpinLoader'
+
 export { Tag, type TagProps, type TagVariant } from './atoms/Tag'
 
 export { AnimatedCounter } from './atoms/AnimatedCounter'
