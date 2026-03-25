@@ -1,14 +1,19 @@
 export type User = {
   id: number
-  name: string
-  surname: string
+  name: string | null
+  surname: string | null
   email: string
-  birthDate: string
+  birth_date?: string | null
   gender_id: number
-  profilePictureUrl?: string | null
-  newsletterSubscribed: boolean
+  profile_picture_url?: string | null
+  accept_newsletter?: number
+  favorite_game_id?: number | null
+  favorite_game_title?: string | null
+  favorite_game_thumbnail?: string | null
+  email_verified?: number
+  about?: string | null
   role: UserRole
-  deletedAt?: string | null
+  deleted_at?: string | null
 }
 
 export type UserRole = 'admin' | 'moderator' | 'user'

@@ -3,6 +3,8 @@ import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ReactNode } 
 
 import { type Size, type StyleVariant, type Weight } from '../types'
 
+import { SpinLoader } from './SpinLoader'
+
 /**
  * Variantes de estilo para el botón
  */
@@ -77,6 +79,13 @@ interface BaseButtonProps {
    * @default false
    */
   disabled?: boolean
+
+  /**
+   * Estado de carga del botón.
+   * Muestra un spinner a la izquierda del contenido y deshabilita interacción.
+   * @default false
+   */
+  loading?: boolean
 
   /**
    * Peso de fuente del botón
@@ -163,6 +172,7 @@ export function Button({
   className = '',
   color = 'primary',
   disabled = false,
+  loading = false,
   fullWidth = false,
   iconLeft,
   iconRight,
@@ -179,6 +189,16 @@ export function Button({
     bold: 'font-bold'
   }
 
+  const isDisabled = disabled || loading
+
+  const loaderSize: Record<ButtonSize, 'xs' | 'sm' | 'm'> = {
+    xs: 'xs',
+    sm: 'xs',
+    m: 'sm',
+    lg: 'sm',
+    xl: 'm'
+  }
+
   const classes = [
     'inline-flex',
     'items-center',
@@ -192,7 +212,7 @@ export function Button({
     getVariantClasses(variant, color),
     sizeClasses[size],
     fullWidth && 'w-full',
-    disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
+    isDisabled && 'opacity-50 cursor-not-allowed pointer-events-none',
     className
   ]
     .filter(Boolean)
@@ -200,7 +220,11 @@ export function Button({
 
   const content = (
     <>
-      {iconLeft && <span className="flex items-center justify-center">{iconLeft}</span>}
+      {loading ? (
+        <SpinLoader fullScreen={false} size={loaderSize[size]} />
+      ) : (
+        iconLeft && <span className="flex items-center justify-center">{iconLeft}</span>
+      )}
       {children}
       {iconRight && <span className="flex items-center justify-center">{iconRight}</span>}
     </>
@@ -211,6 +235,7 @@ export function Button({
 
     return (
       <Link
+        aria-disabled={isDisabled}
         className={classes}
         href={href}
         {...(linkProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
@@ -223,7 +248,7 @@ export function Button({
   return (
     <button
       className={classes}
-      disabled={disabled}
+      disabled={isDisabled}
       type="button"
       {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}
     >

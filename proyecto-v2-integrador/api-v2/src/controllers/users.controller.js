@@ -1,16 +1,84 @@
 import { connection as Database } from "#database";
+import crypto from "node:crypto";
 
-const PROFILE_PICTURES_PATH =
-  process.env.API_HOST + "/storage/uploads/profile_pictures/";
+const API_HOST = (process.env.API_HOST || "").replace(/\/+$/, "");
+const PROFILE_PICTURES_PATH = API_HOST + "/storage/uploads/profile_pictures/";
+
+const encryptPassword = (plainPassword) =>
+  crypto
+    .pbkdf2Sync(plainPassword, process.env.SECRET_KEY, 10000, 64, "sha512")
+    .toString("base64");
+
+const USER_SELECT = `
+  SELECT
+    users.id,
+    users.name,
+    users.surname,
+    users.email,
+    users.birth_date,
+    users.gender_id,
+    users.role,
+    users.email_verified,
+    users.accept_newsletter,
+    users.favorite_game_id,
+    users.about,
+    users.deleted_at,
+    users_genders.label as gender_label,
+    CONCAT(?, users.profile_picture_filename) as profile_picture_url
+  FROM users
+  JOIN users_genders ON users_genders.id = users.gender_id
+`;
+
+const enrichFavoriteGame = async (user) => {
+  if (!user || !user.favorite_game_id) {
+    return {
+      ...user,
+      favorite_game_title: null,
+      favorite_game_thumbnail: null,
+    };
+  }
+
+  try {
+    const preflight = await fetch(
+      `https://www.freetogame.com/api/game?id=${user.favorite_game_id}`,
+    );
+
+    if (!preflight.ok) {
+      return {
+        ...user,
+        favorite_game_title: null,
+        favorite_game_thumbnail: null,
+      };
+    }
+
+    const game = await preflight.json();
+
+    return {
+      ...user,
+      favorite_game_title: game?.title || null,
+      favorite_game_thumbnail: game?.thumbnail || null,
+    };
+  } catch (_) {
+    return {
+      ...user,
+      favorite_game_title: null,
+      favorite_game_thumbnail: null,
+    };
+  }
+};
 
 const index = async (req, res) => {
   try {
     const [results] = await Database.execute(
-      "SELECT *, CONCAT(?, profile_picture_filename) as profile_picture_url FROM `users`",
+      `${USER_SELECT} ORDER BY users.id`,
       [PROFILE_PICTURES_PATH],
     );
 
-    return res.send({ data: results, error: null });
+    const enrichedUsers = await Promise.all(
+      results.map((user) => enrichFavoriteGame(user)),
+    );
+
+    return res.send({ data: enrichedUsers, error: null });
   } catch (err) {
     return res
       .status(400)
@@ -25,11 +93,10 @@ const show = async (req, res) => {
       id = req.user_id;
     }
     const [results] = await Database.execute(
-      "SELECT users.*, CONCAT(?, profile_picture_filename) as profile_picture_url, users_genders.label as gender_label FROM `users` JOIN users_genders ON users_genders.id = users.gender_id WHERE users.id = ?",
+      `${USER_SELECT} WHERE users.id = ?`,
       [PROFILE_PICTURES_PATH, id],
     );
-    const user = results.length ? results[0] : null;
-    delete user.password;
+    const user = results.length ? await enrichFavoriteGame(results[0]) : null;
 
     return res.send({ data: user, error: null });
   } catch (err) {
@@ -43,32 +110,129 @@ const update = async (req, res) => {
   try {
     const user_id = req.user_id;
 
-    const { gender_id, about, accept_newsletter } = req.body;
+    const {
+      about,
+      accept_newsletter,
+      favorite_game_id,
+      birth_date,
+      gender_id,
+    } = req.body;
 
-    if (!gender_id || !about) {
-      throw "Para actualizar un registro es obligatorio los campos: genero, suscripcion y sobre mí.";
+    const updates = [];
+    const values = [];
+
+    if (about !== undefined) {
+      if (String(about).length > 150) {
+        throw "El campo sobre mí no puede superar los 150 caracteres.";
+      }
+
+      updates.push("about = ?");
+      values.push(about || null);
     }
 
-    const values_to_insert = [gender_id, about, accept_newsletter ? 1 : 0];
+    if (accept_newsletter !== undefined) {
+      updates.push("accept_newsletter = ?");
+      values.push(accept_newsletter ? 1 : 0);
+    }
 
-    let sql_sentence = `UPDATE users SET gender_id = ?, about = ?, accept_newsletter = ?`;
+    if (favorite_game_id !== undefined) {
+      updates.push("favorite_game_id = ?");
+      values.push(favorite_game_id ? Number(favorite_game_id) : null);
+    }
+
+    if (birth_date !== undefined) {
+      updates.push("birth_date = ?");
+      values.push(birth_date ? String(birth_date) : null);
+    }
+
+    if (gender_id !== undefined) {
+      const parsedGenderId = Number(gender_id);
+
+      if (!parsedGenderId) {
+        throw "El género seleccionado es inválido.";
+      }
+
+      const [genderResults] = await Database.execute(
+        "SELECT id FROM users_genders WHERE id = ?",
+        [parsedGenderId],
+      );
+
+      if (!genderResults.length) {
+        throw "El género seleccionado no existe.";
+      }
+
+      updates.push("gender_id = ?");
+      values.push(parsedGenderId);
+    }
 
     if (req.file) {
-      values_to_insert.push(req.file.filename);
-      sql_sentence += ", profile_picture_filename = ?";
+      updates.push("profile_picture_filename = ?");
+      values.push(req.file.filename);
     }
 
-    await Database.execute(`${sql_sentence} WHERE id = ?`, [
-      ...values_to_insert,
-      user_id,
-    ]);
+    if (!updates.length) {
+      throw "No se enviaron campos válidos para actualizar el perfil.";
+    }
+
+    await Database.execute(
+      `UPDATE users SET ${updates.join(", ")} WHERE id = ?`,
+      [...values, user_id],
+    );
 
     const [results] = await Database.execute(
-      "SELECT * FROM `users` WHERE id = ?",
+      `${USER_SELECT} WHERE users.id = ?`,
+      [PROFILE_PICTURES_PATH, user_id],
+    );
+    const user = results.length ? await enrichFavoriteGame(results[0]) : null;
+
+    return res.send({ data: user, error: null });
+  } catch (err) {
+    return res
+      .status(400)
+      .send({ data: null, error: "Error al consultar la DB: " + err });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const { current_password, new_password, confirm_password } = req.body;
+
+    if (!current_password || !new_password || !confirm_password) {
+      throw "Para cambiar la contraseña son obligatorios current_password, new_password y confirm_password.";
+    }
+
+    if (new_password !== confirm_password) {
+      throw "La nueva contraseña y su confirmación no coinciden.";
+    }
+
+    if (String(new_password).length < 6) {
+      throw "La nueva contraseña debe tener al menos 6 caracteres.";
+    }
+
+    const [results] = await Database.execute(
+      "SELECT password FROM users WHERE id = ?",
       [user_id],
     );
 
-    return res.send({ data: results.length ? results[0] : null, error: null });
+    if (!results.length) {
+      throw "No se encontró el usuario autenticado.";
+    }
+
+    const currentEncrypted = encryptPassword(current_password);
+
+    if (results[0].password !== currentEncrypted) {
+      throw "La contraseña actual es incorrecta.";
+    }
+
+    const nextEncrypted = encryptPassword(new_password);
+
+    await Database.execute("UPDATE users SET password = ? WHERE id = ?", [
+      nextEncrypted,
+      user_id,
+    ]);
+
+    return res.send({ data: { updated: true }, error: null });
   } catch (err) {
     return res
       .status(400)
@@ -178,6 +342,7 @@ const deleteUser = async (req, res) => {
 
 export {
   assignModerator,
+  changePassword,
   createAdmin,
   deleteUser,
   disable,

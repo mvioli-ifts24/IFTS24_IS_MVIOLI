@@ -69,9 +69,9 @@ async function initializeDatabase() {
     }
     const migrations = [
       "users_genders.sql",
+      "cached_games.sql",
       "users.sql",
       "games_reviews_ratings.sql",
-      "cached_games.sql",
       "games_reviews.sql",
       "contact_messages.sql",
       "banners.sql",
@@ -99,6 +99,46 @@ async function initializeDatabase() {
       }
 
       console.log(chalk.green(`✅ ${migration}`));
+    }
+
+    // Asegurar columnas modernas de perfil en instalaciones existentes.
+    const [emailVerifiedColumn] = await connection.execute(
+      "SHOW COLUMNS FROM users LIKE 'email_verified'",
+    );
+
+    if (emailVerifiedColumn.length === 0) {
+      await connection.execute(
+        "ALTER TABLE users ADD COLUMN email_verified TINYINT NOT NULL DEFAULT 0 AFTER role",
+      );
+    }
+
+    const [favoriteGameColumn] = await connection.execute(
+      "SHOW COLUMNS FROM users LIKE 'favorite_game_id'",
+    );
+
+    if (favoriteGameColumn.length === 0) {
+      await connection.execute(
+        "ALTER TABLE users ADD COLUMN favorite_game_id BIGINT UNSIGNED NULL AFTER accept_newsletter",
+      );
+    }
+
+    const [aboutColumn] = await connection.execute(
+      "SHOW COLUMNS FROM users LIKE 'about'",
+    );
+
+    if (aboutColumn.length > 0) {
+      await connection.execute(
+        "ALTER TABLE users MODIFY COLUMN about VARCHAR(150) DEFAULT NULL",
+      );
+    }
+
+    // El perfil ya no depende de cached_games. Se elimina la FK si existe.
+    try {
+      await connection.execute(
+        "ALTER TABLE users DROP CONSTRAINT users_cached_games_FK",
+      );
+    } catch (_) {
+      // Ignorar si no existe
     }
 
     // Ejecutar seeders

@@ -32,7 +32,8 @@ export function UserMenu({ user }: UserMenuProps) {
           className="cursor-pointer hover:border-neutral-200"
           name={user.email}
           size="m"
-          surname={user.surname}
+          src={user.profile_picture_url || undefined}
+          surname={user.surname ?? undefined}
         />
       </button>
 
@@ -42,27 +43,26 @@ export function UserMenu({ user }: UserMenuProps) {
           {/* Overlay */}
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           {/* Dropdown Menu */}
-          <CardWrapper className="absolute! right-0 z-50 mt-4 flex flex-col gap-2" elevation="3">
+          <CardWrapper className="absolute! right-0 z-50 mt-4 flex flex-col gap-6" elevation="3">
             {/* User Info Header */}
-            <div className="mb-3 flex items-center gap-3">
-              <div className="min-w-0 flex-1">
-                <Text size="m">
-                  {user.name} {user.surname}
-                </Text>
-                <Text className="truncate text-ellipsis" variant="muted">
-                  {user.email}
-                </Text>
-              </div>
+            <div className="flex flex-col">
+              <Text size="m">
+                {user.name} {user.surname}
+              </Text>
+              <Text className="mb-2 truncate text-ellipsis" variant="muted">
+                {user.email}
+              </Text>
+              {user.role && user.role !== 'user' && (
+                <Tag variant={user.role === 'admin' ? 0 : 3}>
+                  {user.role === 'admin'
+                    ? 'Administrador'
+                    : user.role === 'moderator'
+                      ? 'Moderador'
+                      : 'Usuario'}
+                </Tag>
+              )}
             </div>
-            {user.role && user.role !== 'user' && (
-              <Tag variant={user.role === 'admin' ? 1 : 2}>
-                {user.role === 'admin'
-                  ? 'Administrador'
-                  : user.role === 'moderator'
-                    ? 'Moderador'
-                    : 'Usuario'}
-              </Tag>
-            )}
+
             <Separator />
             {/* Menu Items */}
             <div className="flex flex-col gap-1">
@@ -70,7 +70,10 @@ export function UserMenu({ user }: UserMenuProps) {
                 fullWidth
                 className="justify-start"
                 color="muted"
-                onClick={() => router.push('/profile')}
+                onClick={() => {
+                  router.push('/dashboard/profile')
+                  setIsOpen(false)
+                }}
                 variant="text"
               >
                 Ver perfil
@@ -78,7 +81,7 @@ export function UserMenu({ user }: UserMenuProps) {
               <Button
                 fullWidth
                 className="justify-start"
-                color="muted"
+                color="danger"
                 iconLeft={<SignOutIcon size={18} />}
                 onClick={handleLogout}
                 variant="text"

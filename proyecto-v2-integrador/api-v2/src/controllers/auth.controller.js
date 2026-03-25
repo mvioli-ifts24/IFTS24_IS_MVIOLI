@@ -7,6 +7,8 @@ const encryptPassword = (plainPassword) =>
     .pbkdf2Sync(plainPassword, process.env.SECRET_KEY, 10000, 64, "sha512")
     .toString("base64");
 
+const API_HOST = (process.env.API_HOST || "").replace(/\/+$/, "");
+
 const register = async (req, res) => {
   try {
     const {
@@ -62,7 +64,13 @@ const register = async (req, res) => {
 
     const userId = results.insertId;
     const token = jwt.sign(
-      { id: userId, email, gender_id, role: "user" },
+      {
+        id: userId,
+        email,
+        gender_id,
+        role: "user",
+        email_verified: 0,
+      },
       process.env.SECRET_KEY,
       {
         expiresIn: "24h",
@@ -79,8 +87,13 @@ const register = async (req, res) => {
           email,
           role: "user",
           gender_id,
+          favorite_game_id: null,
+          favorite_game_title: null,
+          favorite_game_thumbnail: null,
+          email_verified: 0,
           about: null,
-          profile_picture_filename: req.file.filename,
+          profile_picture_url:
+            API_HOST + "/storage/uploads/profile_pictures/" + req.file.filename,
           accept_newsletter: accept_newsletter ? 1 : 0,
           birth_date: birthDate
             ? new Date(birthDate).toISOString().split("T")[0]
@@ -131,6 +144,7 @@ const login = async (req, res) => {
         role: user.role,
         gender_id: user.gender_id,
         email: user.email,
+        email_verified: user.email_verified,
       },
       process.env.SECRET_KEY,
       {
@@ -148,8 +162,15 @@ const login = async (req, res) => {
           email: user.email,
           role: user.role,
           gender_id: user.gender_id,
+          email_verified: user.email_verified,
+          favorite_game_id: user.favorite_game_id,
+          favorite_game_title: user.favorite_game_title || null,
+          favorite_game_thumbnail: user.favorite_game_thumbnail || null,
           about: user.about,
-          profile_picture_filename: user.profile_picture_filename,
+          profile_picture_url:
+            API_HOST +
+            "/storage/uploads/profile_pictures/" +
+            user.profile_picture_filename,
           accept_newsletter: user.accept_newsletter,
           birth_date: user.birth_date,
         },
@@ -163,4 +184,30 @@ const login = async (req, res) => {
   }
 };
 
-export { login, register };
+const verifyAccount = async (req, res) => {
+  try {
+    const user_id = req.user_id;
+
+    await Database.execute("UPDATE users SET email_verified = 1 WHERE id = ?", [
+      user_id,
+    ]);
+
+    const [results] = await Database.execute(
+      "SELECT email_verified FROM users WHERE id = ?",
+      [user_id],
+    );
+
+    return res.send({
+      data: {
+        email_verified: results.length ? results[0].email_verified : 0,
+      },
+      error: null,
+    });
+  } catch (err) {
+    return res
+      .status(400)
+      .send({ data: null, error: "Error al consultar la DB: " + err });
+  }
+};
+
+export { login, register, verifyAccount };

@@ -42,9 +42,8 @@ export function LoginPage() {
       toast.success('Sesión iniciada exitosamente')
 
       // Redirigir según rol
-      const dashboard = user.role === 'admin' ? '/admin/dashboard' : '/dashboard'
 
-      router.push(dashboard)
+      router.push('/dashboard')
     } catch (error) {
       toast.error('Error de conexión, intentá de nuevo')
     }

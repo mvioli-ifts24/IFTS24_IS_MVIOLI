@@ -54,9 +54,8 @@ export function RegisterForm() {
       toast.success('Cuenta creada exitosamente')
 
       // Redirigir según rol
-      const dashboard = user.role === 'admin' ? '/admin/dashboard' : '/dashboard'
 
-      router.push(dashboard)
+      router.push('dashboard')
     } catch (error) {
       toast.error('Error de conexión, intentá de nuevo')
     }

@@ -58,20 +58,23 @@ function resolveInitials(name?: string, surname?: string) {
   const first = name?.trim().charAt(0) || ''
   const last = surname?.trim().charAt(0) || ''
 
-  return `${first}${last}`.toUpperCase() || '??'
+  const initials = `${first}${last}`.toUpperCase().trim()
+
+  return initials || null
 }
 
 export function Avatar({
   src,
   alt = 'Avatar de usuario',
   size = 'm',
-  fallback = 'initials',
+  fallback = 'icon',
   name,
   surname,
   className = ''
 }: AvatarProps) {
   const resolvedInitials = resolveInitials(name, surname)
   const iconNode = <UserIcon />
+  const shouldShowInitials = Boolean(resolvedInitials)
 
   return (
     <div
@@ -87,10 +90,10 @@ export function Avatar({
     >
       {src ? (
         <Image alt={alt} className="h-full w-full" height={80} src={src} width={80} />
-      ) : fallback === 'icon' ? (
-        <span className="flex h-full w-full items-center justify-center text-2xl">{iconNode}</span>
-      ) : (
+      ) : shouldShowInitials && fallback !== 'icon' ? (
         <span>{resolvedInitials}</span>
+      ) : (
+        <span className="flex h-full w-full items-center justify-center text-2xl">{iconNode}</span>
       )}
     </div>
   )

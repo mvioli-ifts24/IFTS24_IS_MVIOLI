@@ -92,6 +92,7 @@ export function Text({
   const classes = [
     'transition-colors',
     'duration-200',
+    'cursor-default',
     sizeClasses[size],
     variantClasses[variant],
     weightClasses[weight],

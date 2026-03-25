@@ -37,7 +37,7 @@ const indexOwnReviews = async (req, res) => {
     const user_id = req.user_id;
 
     const QUERY_BASE =
-      "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id";
+      "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id WHERE 1 = 1";
 
     const [resultsOwn] = await Database.execute(
       `${QUERY_BASE} AND users.id = ?`,
@@ -57,7 +57,7 @@ const indexUserReviews = async (req, res) => {
     const { user_id } = req.params;
 
     const QUERY_BASE =
-      "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id";
+      "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id WHERE 1 = 1";
 
     const [results] = await Database.execute(`${QUERY_BASE} AND users.id = ?`, [
       user_id,

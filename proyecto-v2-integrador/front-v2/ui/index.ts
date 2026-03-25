@@ -68,6 +68,10 @@ export { Logo, type LogoProps } from './atoms/Logo'
 
 export { Separator, type SeparatorProps } from './atoms/Separator'
 
+export { Modal, type ModalProps } from './atoms/Modal'
+
+export { SearchInput, type SearchInputProps } from './atoms/SearchInput'
+
 // ================================
 // MOLECULES - Componentes compuestos
 // ================================

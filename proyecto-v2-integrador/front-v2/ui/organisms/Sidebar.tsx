@@ -1,12 +1,12 @@
 'use client'
 
 import {
-  BookIcon,
   FolderOpenIcon,
   GraduationCapIcon,
   HashIcon,
   HouseIcon,
   MagnifyingGlassIcon,
+  UserCircleGearIcon,
   UserIcon,
   UsersIcon
 } from '@phosphor-icons/react'
@@ -15,21 +15,50 @@ import { usePathname } from 'next/navigation'
 
 import { Button } from '@/ui'
 
-import { User } from '../../shared/types/user.types'
+import { User, UserRole } from '../../shared/types/user.types'
 
-const REVIEWER_NAV = [
+type NavItem = {
+  label: string
+  href: string
+  icon: typeof HouseIcon
+  allowedRoles?: UserRole[]
+}
+
+const NAV_ITEMS: NavItem[] = [
+  // Inicio - accesible por todos
   { label: 'Inicio', href: '/dashboard', icon: HouseIcon },
-  { label: 'Búsqueda', href: '/dashboard/search', icon: MagnifyingGlassIcon },
-  { label: 'Perfil', href: '/dashboard/profile', icon: UserIcon },
-  { label: 'Sobre Nosotros', href: '/dashboard/about', icon: GraduationCapIcon }
-]
 
-const ADMIN_NAV = [
-  { label: 'Dashboard', href: '/admin/dashboard', icon: HouseIcon },
-  { label: 'Usuarios', href: '/admin/users', icon: UsersIcon },
-  { label: 'Reviewers', href: '/admin/reviewers', icon: BookIcon },
-  { label: 'Banners', href: '/admin/banners', icon: FolderOpenIcon },
-  { label: 'Sponsors', href: '/admin/sponsors', icon: HashIcon }
+  // Rutas compartidas
+  {
+    label: 'Búsqueda',
+    href: '/dashboard/search',
+    icon: MagnifyingGlassIcon,
+    allowedRoles: ['user', 'moderator']
+  },
+  { label: 'Perfil', href: '/dashboard/profile', icon: UserIcon },
+  { label: 'Sobre Nosotros', href: '/dashboard/about', icon: GraduationCapIcon },
+  {
+    label: 'Ayuda',
+    href: '/dashboard/help',
+    icon: GraduationCapIcon,
+    allowedRoles: ['user', 'moderator']
+  },
+
+  // Rutas administrativas
+  { label: 'Usuarios', href: '/dashboard/admin/users', icon: UsersIcon, allowedRoles: ['admin'] },
+  {
+    label: 'Administradores',
+    href: '/dashboard/admin/admins',
+    icon: UserCircleGearIcon,
+    allowedRoles: ['admin']
+  },
+  {
+    label: 'Banners',
+    href: '/dashboard/admin/banners',
+    icon: FolderOpenIcon,
+    allowedRoles: ['admin']
+  },
+  { label: 'Sponsors', href: '/dashboard/admin/sponsors', icon: HashIcon, allowedRoles: ['admin'] }
 ]
 
 type SidebarProps = {
@@ -41,11 +70,11 @@ type SidebarProps = {
 export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
 
-  // Default to REVIEWER_NAV while hydrating
-
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
-  const navItems = user.role === 'admin' ? ADMIN_NAV : REVIEWER_NAV
+  const navItems = NAV_ITEMS.filter(
+    item => !item.allowedRoles || item.allowedRoles.includes(user.role)
+  )
 
   return (
     <>

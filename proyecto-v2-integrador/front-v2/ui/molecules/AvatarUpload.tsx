@@ -82,6 +82,18 @@ export interface AvatarUploadProps {
    * Texto de soporte al lado del avatar
    */
   helperText?: string
+
+  /**
+   * Mostrar texto de soporte
+   * @default true
+   */
+  supportText?: boolean
+
+  /**
+   * Deshabilita la interacción con el selector de archivos
+   * @default false
+   */
+  disabled?: boolean
 }
 
 const messageColorClasses: Record<AvatarUploadState, string> = {
@@ -104,7 +116,9 @@ export function AvatarUpload({
   initialPreviewUrl,
   accept = 'image/*',
   className = '',
-  helperText = 'Subí una foto de perfil para personalizar tu cuenta'
+  supportText = true,
+  helperText = 'Subí una foto de perfil para personalizar tu cuenta',
+  disabled = false
 }: AvatarUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
@@ -122,6 +136,8 @@ export function AvatarUpload({
   const previewUrl = localPreviewUrl || initialPreviewUrl || null
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return
+
     const file = event.target.files?.[0] || null
 
     setSelectedFile(file)
@@ -129,9 +145,12 @@ export function AvatarUpload({
   }
 
   return (
-    <div className={['w-full', className].filter(Boolean).join(' ')}>
+    <div className={[className].filter(Boolean).join(' ')}>
       <div className="mb-2 flex items-center gap-3">
-        <label className="relative h-fit cursor-pointer" htmlFor={id}>
+        <label
+          className={`relative h-fit ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
+          htmlFor={id}
+        >
           <Avatar
             alt="Avatar de perfil"
             className=""
@@ -149,19 +168,27 @@ export function AvatarUpload({
             <PlusIcon className="h-3 w-3" weight="bold" />
           </span>
         </label>
+        {supportText && (
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <label className="text-foreground text-sm font-medium" htmlFor={id}>
+              {label}
+            </label>
 
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <label className="text-foreground text-sm font-medium" htmlFor={id}>
-            {label}
-          </label>
+            <p className="text-foreground/70 text-xs">{helperText}</p>
+            <span className="text-foreground/70 truncate text-xs">
+              {selectedFile?.name || 'Sin archivo seleccionado'}
+            </span>
+          </div>
+        )}
 
-          <p className="text-foreground/70 text-xs">{helperText}</p>
-          <span className="text-foreground/70 truncate text-xs">
-            {selectedFile?.name || 'Sin archivo seleccionado'}
-          </span>
-
-          <input accept={accept} className="hidden" id={id} onChange={handleChange} type="file" />
-        </div>
+        <input
+          accept={accept}
+          className="hidden"
+          disabled={disabled}
+          id={id}
+          onChange={handleChange}
+          type="file"
+        />
       </div>
 
       {errorMessage && state === 'error' && (

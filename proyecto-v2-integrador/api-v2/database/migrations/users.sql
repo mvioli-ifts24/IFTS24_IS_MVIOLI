@@ -9,11 +9,13 @@ CREATE TABLE `users` (
   `role` varchar(20) NOT NULL DEFAULT 'user',
   `email_verified` tinyint NOT NULL DEFAULT '0',
   `accept_newsletter` tinyint NOT NULL DEFAULT '0',
+  `favorite_game_id` bigint unsigned DEFAULT NULL,
   `profile_picture_filename` varchar(255) NOT NULL,
-  `about` varchar(145) DEFAULT NULL,
+  `about` varchar(150) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_unique` (`email`),
   KEY `users_user_genders_FK` (`gender_id`),
+  KEY `users_favorite_game_id_idx` (`favorite_game_id`),
   CONSTRAINT `users_user_genders_FK` FOREIGN KEY (`gender_id`) REFERENCES `users_genders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

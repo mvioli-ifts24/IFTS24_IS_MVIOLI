@@ -31,10 +31,6 @@ export interface UseAuthRouteGuardOptions {
   redirectAuthenticatedToDashboard?: boolean
 }
 
-export function getDashboardPath(role: UserRole) {
-  return role === 'admin' ? '/admin/dashboard' : '/dashboard'
-}
-
 export function useAuthRouteGuard({
   allowedRoles,
   redirectUnauthenticatedTo,
@@ -59,13 +55,11 @@ export function useAuthRouteGuard({
     if (!user) return
 
     if (redirectAuthenticatedToDashboard) {
-      router.push(getDashboardPath(user.role))
-
-      return
+      router.push('/dashboard')
     }
 
-    if (allowedRoles && !allowedRoles.includes(user.role)) {
-      router.push(getDashboardPath(user.role))
+    if (allowedRoles && !allowedRoles.includes(userRole!)) {
+      router.push('/dashboard')
     }
   }, [
     allowedRoles,

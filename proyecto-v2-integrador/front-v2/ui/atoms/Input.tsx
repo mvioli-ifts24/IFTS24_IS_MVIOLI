@@ -61,6 +61,17 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   errorMessage?: string
 
   /**
+   * Mostrar contador de caracteres (requiere maxLength)
+   * @default false
+   */
+  showCounter?: boolean
+
+  /**
+   * Largo actual del valor cuando se usa input no controlado
+   */
+  currentLength?: number
+
+  /**
    * Clases CSS adicionales
    */
   className?: string
@@ -69,6 +80,12 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
    * ID del input para asociar con la etiqueta
    */
   id: string
+
+  /**
+   * Mantiene la etiqueta siempre en posición superior (sin comportamiento flotante)
+   * @default false
+   */
+  labelAlwaysTop?: boolean
 }
 
 /**
@@ -123,9 +140,12 @@ export function Input({
   iconLeft,
   iconRight,
   errorMessage,
+  showCounter = false,
+  currentLength,
   className = '',
   id,
   placeholder = ' ',
+  labelAlwaysTop = false,
   ...props
 }: InputProps) {
   const inputClasses = [
@@ -144,6 +164,14 @@ export function Input({
   const iconContainerClasses =
     'absolute top-1/2 -translate-y-1/2 flex items-center justify-center text-foreground'
 
+  const maxLength = typeof props.maxLength === 'number' ? props.maxLength : undefined
+  const valueLength =
+    typeof currentLength === 'number'
+      ? currentLength
+      : typeof props.value === 'string'
+        ? props.value.length
+        : 0
+
   return (
     <div className="w-full">
       <div className="relative mb-2">
@@ -156,8 +184,10 @@ export function Input({
               'inline-flex origin-left -translate-y-4 scale-75 transform items-center',
               'px-2 text-sm duration-300',
               'text-foreground peer-focus:text-primary-400',
-              'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100',
-              'peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2',
+              !labelAlwaysTop &&
+                'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100',
+              !labelAlwaysTop &&
+                'peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2',
               'rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4',
               // Fondo que coincide con el contenedor, separado del bg-background hardcodeado
               'bg-background'
@@ -174,9 +204,18 @@ export function Input({
         {iconRight && <div className={`${iconContainerClasses} inset-e-2.5`}>{iconRight}</div>}
       </div>
 
-      {errorMessage && state === 'error' && (
-        <p className={`mt-1 text-xs ${messageColorClasses[state]}`}>{errorMessage}</p>
-      )}
+      {(errorMessage && state === 'error') || (showCounter && maxLength !== undefined) ? (
+        <div className="mt-1 flex items-center justify-between gap-2">
+          <p className={`text-xs ${messageColorClasses[state]}`}>
+            {errorMessage && state === 'error' ? errorMessage : ''}
+          </p>
+          {showCounter && maxLength !== undefined && (
+            <p className="text-foreground/70 text-xs">
+              {valueLength}/{maxLength}
+            </p>
+          )}
+        </div>
+      ) : null}
     </div>
   )
 }

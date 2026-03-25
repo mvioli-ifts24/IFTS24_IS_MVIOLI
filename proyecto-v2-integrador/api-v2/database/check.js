@@ -50,6 +50,8 @@ async function checkDatabase() {
       "birth_date",
       "gender_id",
       "role",
+      "email_verified",
+      "favorite_game_id",
       "profile_picture_filename",
     ];
     const existingColumns = columns.map((col) => col.Field);
