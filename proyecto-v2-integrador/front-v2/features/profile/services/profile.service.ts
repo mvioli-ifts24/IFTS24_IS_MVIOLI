@@ -1,5 +1,5 @@
-import { ApiResponse } from '@/shared/types/api.types'
-import { User } from '@/shared/types/user.types'
+import { ApiResponse } from '@/features/shared/types/api.types'
+import { User } from '@/features/shared/types/user.types'
 
 export type GameSearchItem = {
   id: number

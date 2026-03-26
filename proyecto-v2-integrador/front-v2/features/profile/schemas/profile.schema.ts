@@ -15,7 +15,9 @@ const profilePictureSchema = z
 export const profileSchema = z.object({
   about: z.string().max(150, 'La descripción no puede superar 150 caracteres').optional(),
   favorite_game_id: z.number().nullable().optional(),
-  profile_picture: profilePictureSchema
+  profile_picture: profilePictureSchema,
+  birth_date: z.string().optional().nullable(),
+  gender_id: z.string().optional()
 })
 
 export type ProfileFormData = z.output<typeof profileSchema>

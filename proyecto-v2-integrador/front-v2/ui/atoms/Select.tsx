@@ -2,13 +2,14 @@ import { type ReactNode, type SelectHTMLAttributes } from 'react'
 
 export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   /**
+   * ID único del select para asociar con la etiqueta
+   */
+  id: string
+
+  /**
    * Etiqueta del select
    */
   label?: string
-
-  /**
-   * Mensaje de error a mostrar
-   */
   errorMessage?: string
 
   /**
@@ -40,7 +41,7 @@ export function Select({
   id,
   ...props
 }: SelectProps) {
-  const selectId = id || 'select'
+  const selectId = id
 
   const stateClasses = {
     default: 'border-neutral-300 focus:border-primary-400',

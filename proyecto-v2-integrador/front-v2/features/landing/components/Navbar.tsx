@@ -3,8 +3,7 @@
 import { ListIcon, UserIcon, UserPlusIcon, XIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 
-import { Button, type ButtonColor, type ButtonVariant, Logo, Separator } from '@/ui'
-import { ThemeToggle } from '@/ui/molecules/ThemeToggle'
+import { Button, type ButtonColor, type ButtonVariant, Logo, Separator, ThemeToggle } from '@/ui'
 
 import { MenuLinks } from './MenuLinks'
 

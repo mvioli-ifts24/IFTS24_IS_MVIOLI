@@ -2,6 +2,11 @@ import { type InputHTMLAttributes, type ReactNode } from 'react'
 
 export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /**
+   * ID único del checkbox para asociar con la etiqueta
+   */
+  id: string
+
+  /**
    * Etiqueta del checkbox
    */
   label?: ReactNode
@@ -34,7 +39,7 @@ export function Checkbox({
   id,
   ...props
 }: CheckboxProps) {
-  const checkboxId = id || 'checkbox'
+  const checkboxId = id
 
   const stateClasses = {
     default: 'border-neutral-300 checked:border-primary-400',

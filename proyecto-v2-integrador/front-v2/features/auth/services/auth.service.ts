@@ -1,8 +1,8 @@
 import type { LoginFormData } from '../schemas/login'
 import type { RegisterFormData } from '../schemas/register'
 
-import { ApiResponse } from '@/shared/types/api.types'
-import { User } from '@/shared/types/user.types'
+import { ApiResponse } from '@/features/shared/types/api.types'
+import { User } from '@/features/shared/types/user.types'
 
 export type AuthResponse = {
   token: string

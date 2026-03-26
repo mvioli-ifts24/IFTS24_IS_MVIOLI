@@ -3,7 +3,7 @@
 import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr'
 import { type ReactNode } from 'react'
 
-import { useAuthRouteGuard } from '@/shared/hooks/useAuthRouteGuard'
+import { useAuthRouteGuard } from '@/features/shared/hooks/useAuthRouteGuard'
 import { Button, Logo, SpinLoader, Text, ThemeToggle } from '@/ui'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {

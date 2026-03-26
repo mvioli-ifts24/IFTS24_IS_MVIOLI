@@ -64,6 +64,10 @@ export { AnimatedCounter } from './atoms/AnimatedCounter'
 
 export { CardWrapper, type CardWrapperProps } from './atoms/CardWrapper'
 
+export { Skeleton, type SkeletonProps } from './atoms/Skeleton'
+
+export { PageSkeleton } from './atoms/PageSkeleton'
+
 export { Logo, type LogoProps } from './atoms/Logo'
 
 export { Separator, type SeparatorProps } from './atoms/Separator'

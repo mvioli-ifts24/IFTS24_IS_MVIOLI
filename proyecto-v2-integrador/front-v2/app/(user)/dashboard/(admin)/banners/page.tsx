@@ -1,8 +1,14 @@
+import { CardWrapper, Heading, Text } from '@/ui'
+
 export default function AdminBannersPage() {
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="mb-6 text-4xl font-bold">Gestión de Banners</h1>
-      <p className="text-neutral-600">Administra los banners de la plataforma</p>
-    </div>
+    <section className="mx-auto w-full max-w-5xl">
+      <CardWrapper className="flex flex-col gap-3" elevation="0">
+        <Heading level="h1" size="m" variant="primary">
+          Gestión de Banners
+        </Heading>
+        <Text variant="muted">Administrá los banners del sitio</Text>
+      </CardWrapper>
+    </section>
   )
 }

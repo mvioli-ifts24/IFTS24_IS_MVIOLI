@@ -2,8 +2,8 @@ import { CardWrapper, Heading, Text } from '@/ui'
 
 export default function DashboardHelpPage() {
   return (
-    <div className="mx-auto w-full max-w-4xl">
-      <CardWrapper className="flex flex-col gap-3" elevation="1">
+    <section className="mx-auto w-full max-w-4xl">
+      <CardWrapper className="flex flex-col gap-3" elevation="0">
         <Heading level="h1" size="m" variant="primary">
           Centro de Ayuda
         </Heading>
@@ -16,6 +16,6 @@ export default function DashboardHelpPage() {
           reseñas y evitá contenido ofensivo para cumplir las normas de la comunidad.
         </Text>
       </CardWrapper>
-    </div>
+    </section>
   )
 }

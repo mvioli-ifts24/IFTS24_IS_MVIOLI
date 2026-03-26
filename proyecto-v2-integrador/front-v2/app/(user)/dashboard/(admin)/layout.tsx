@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuthRouteGuard } from '@/shared/hooks/useAuthRouteGuard'
+import { useAuthRouteGuard } from '@/features/shared/hooks/useAuthRouteGuard'
 import { SpinLoader } from '@/ui'
 
 /**

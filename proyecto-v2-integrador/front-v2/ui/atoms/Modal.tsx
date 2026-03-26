@@ -66,7 +66,7 @@ export function Modal({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             aria-modal="true"
-            className="relative w-full max-w-md rounded-xl border border-neutral-200 bg-neutral-50 shadow-lg"
+            className="bg-surface relative w-full max-w-md rounded-xl border border-neutral-200 shadow-lg"
             id="modal-content"
             role="dialog"
           >

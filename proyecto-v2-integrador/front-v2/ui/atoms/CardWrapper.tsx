@@ -72,16 +72,26 @@ export interface CardWrapperProps {
 }
 
 const elevationClasses: Record<CardWrapperElevation, string> = {
-  0: 'bg-neutral-50 dark:bg-neutral-50 border border-transparent',
-  1: 'bg-background dark:bg-neutral-50 border border-neutral-100 dark:border-neutral-100',
-  2: 'bg-background dark:bg-neutral-50  border border-neutral-100 dark:border-neutral-100 shadow-md shadow-foreground/10 ',
-  3: 'bg-white/8 backdrop-blur-lg dark:bg-white/4 border border-white/12 dark:border-white/8 '
+  // 0: card "plana" — sin sombra, borde muy sutil
+  //    light: bg-surface (blanco) sobre lavanda (#f4f2fb) → contraste limpio, igual al efecto dark
+  //    dark:  neutral-50 (#1e1d26) sobre background (#15141b) → escalón tonal
+  0: 'bg-surface dark:bg-neutral-50 border border-neutral-100 dark:border-transparent',
+  // 1: card estándar — surface sobre background (MD3: elevation level 1)
+  //    light: blanco sobre lavanda + sombra xs para depth
+  //    dark:  neutral-100 (#2a2937) → un escalón más claro
+  1: 'bg-surface dark:bg-neutral-100 border border-neutral-200 dark:border-neutral-200 shadow-xs shadow-foreground/6 dark:shadow-none',
+  // 2: panel flotante — sobre cards, menús (MD3: elevation level 2+)
+  //    light: surface + sombra md para indicar que flota
+  //    dark:  neutral-200 (#3e3d4a) → otro escalón + tonal visible
+  2: 'bg-surface dark:bg-neutral-200 border border-neutral-200 dark:border-neutral-200 shadow-md shadow-foreground/10 dark:shadow-foreground/20',
+  // 3: glassmorphism — overlays sobre fondos ricos o imágenes
+  3: 'bg-white/8 backdrop-blur-lg dark:bg-white/4 border border-white/12 dark:border-white/8'
 }
 
 const interactiveClasses: Record<CardWrapperElevation, string> = {
-  0: 'hover:bg-neutral-100 dark:hover:bg-neutral-100 transition-colors duration-200',
-  1: 'hover:border-neutral-300 dark:hover:border-neutral-300 hover:shadow-sm hover:shadow-black/5 dark:hover:shadow-black/20 transition-all duration-200',
-  2: 'hover:shadow-lg hover:shadow-black/8 dark:hover:shadow-black/40 hover:-translate-y-0.5 transition-all duration-200',
+  0: 'hover:border-neutral-200 dark:hover:bg-neutral-100 transition-colors duration-200',
+  1: 'hover:shadow-sm hover:shadow-foreground/10 hover:border-neutral-300 dark:hover:border-neutral-300 transition-all duration-200',
+  2: 'hover:shadow-lg hover:shadow-foreground/12 dark:hover:shadow-black/40 hover:-translate-y-0.5 transition-all duration-200',
   3: 'hover:bg-white/12 dark:hover:bg-white/8 hover:border-white/20 dark:hover:border-white/12 transition-all duration-200'
 }
 

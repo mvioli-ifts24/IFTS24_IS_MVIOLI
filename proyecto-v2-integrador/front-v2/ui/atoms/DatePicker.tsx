@@ -2,6 +2,11 @@ import { type InputHTMLAttributes } from 'react'
 
 export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /**
+   * ID único del datepicker para asociar con la etiqueta
+   */
+  id: string
+
+  /**
    * Etiqueta del datepicker
    */
   label?: string
@@ -34,7 +39,7 @@ export function DatePicker({
   id,
   ...props
 }: DatePickerProps) {
-  const inputId = id || 'datepicker'
+  const inputId = id
 
   const stateClasses = {
     default: 'border-neutral-300 focus:border-primary-400',

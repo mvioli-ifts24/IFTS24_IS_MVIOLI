@@ -44,7 +44,7 @@ export function LoginPage() {
       // Redirigir según rol
 
       router.push('/dashboard')
-    } catch (error) {
+    } catch {
       toast.error('Error de conexión, intentá de nuevo')
     }
   }
@@ -77,8 +77,8 @@ export function LoginPage() {
             type="password"
             {...form.register('password')}
           />
-          <Button disabled={isLoading} type="submit">
-            {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+          <Button fullWidth loading={isLoading} type="submit">
+            Iniciar Sesión
           </Button>
         </form>
         <Separator className="h-1 w-full" />

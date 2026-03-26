@@ -33,6 +33,7 @@ export function RegisterForm() {
   })
 
   const errors = form.formState.errors
+  const isLoading = form.formState.isSubmitting
 
   const setAuth = useAuthStore(state => state.setAuth)
   const router = useRouter()
@@ -55,8 +56,8 @@ export function RegisterForm() {
 
       // Redirigir según rol
 
-      router.push('dashboard')
-    } catch (error) {
+      router.push('/dashboard')
+    } catch {
       toast.error('Error de conexión, intentá de nuevo')
     }
   }
@@ -154,7 +155,9 @@ export function RegisterForm() {
         {...form.register('accept_newsletter')}
       />
 
-      <Button type="submit">Registrarse</Button>
+      <Button fullWidth loading={isLoading} type="submit">
+        Registrarse
+      </Button>
     </form>
   )
 }

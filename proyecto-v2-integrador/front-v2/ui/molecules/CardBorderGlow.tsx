@@ -381,7 +381,7 @@ export function CardBorderGlow({
   return (
     <div
       ref={rootRef}
-      className={`relative isolate grid max-w-full overflow-x-clip border ${className}`.trim()}
+      className={`relative isolate grid max-w-full border ${className}`.trim()}
       onPointerEnter={() => setIsHovered(true)}
       onPointerLeave={() => setIsHovered(false)}
       onPointerMove={handlePointerMove}

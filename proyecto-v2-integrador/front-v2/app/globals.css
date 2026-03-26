@@ -1,8 +1,11 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
+  --background: #f4f2fb;
+  --surface: #ffffff;
+  --foreground: #1a1826;
+
+  --navbar-height: 57px;
 
   --primary-50: #f5f3ff;
   --primary-100: #ede9fe;
@@ -43,6 +46,7 @@
 
 .dark {
   --background: #15141b;
+  --surface: #1e1d26;
   --foreground: #fafafa;
 
   --primary-50: #2d2b40;
@@ -84,6 +88,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
 
   --color-primary-50: var(--primary-50);

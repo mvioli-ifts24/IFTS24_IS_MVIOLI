@@ -1,9 +1,12 @@
 'use client'
-import type { User } from '@/shared/types/user.types'
+import type { User } from '@/features/shared/types/user.types'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-import { useAuthRouteGuard } from '@/shared/hooks/useAuthRouteGuard'
+import { useAuthStore } from '@/features/auth/store/auth.store'
+import { useProfileStore } from '@/features/profile/store/profile.store'
+import { useAuthRouteGuard } from '@/features/shared/hooks/useAuthRouteGuard'
 
 import { SpinLoader } from '../atoms/SpinLoader'
 import { Navbar } from '../organisms/Navbar'
@@ -20,6 +23,15 @@ export function UserDashboard({ children, role }: UserDashboardProps) {
     allowedRoles: role,
     redirectUnauthenticatedTo: '/login'
   })
+  const logout = useAuthStore(state => state.logout)
+  const resetProfile = useProfileStore(state => state.reset)
+  const router = useRouter()
+
+  const handleLogout = () => {
+    logout()
+    resetProfile()
+    router.push('/login')
+  }
 
   if (!canRender || !user) {
     return <SpinLoader />
@@ -28,6 +40,7 @@ export function UserDashboard({ children, role }: UserDashboardProps) {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <Navbar
+        onLogout={handleLogout}
         onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         sidebarOpen={sidebarOpen}
         user={user}

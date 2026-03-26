@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { Montserrat, Roboto } from 'next/font/google'
 
-import { ThemeProvider } from '@/shared/providers/ThemeProvider'
+import { ThemeProvider } from '@/features/shared/providers/ThemeProvider'
 
 import './globals.css'
 

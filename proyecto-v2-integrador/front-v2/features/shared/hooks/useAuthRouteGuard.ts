@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
-import { type UserRole } from '@/shared/types/user.types'
+import { type UserRole } from '@/features/shared/types/user.types'
 
 import { useAuthHydration } from './useAuthHydration'
 
@@ -56,6 +56,8 @@ export function useAuthRouteGuard({
 
     if (redirectAuthenticatedToDashboard) {
       router.push('/dashboard')
+
+      return
     }
 
     if (allowedRoles && !allowedRoles.includes(userRole!)) {
@@ -68,7 +70,8 @@ export function useAuthRouteGuard({
     redirectAuthenticatedToDashboard,
     redirectUnauthenticatedTo,
     router,
-    user
+    user,
+    userRole
   ])
 
   const canRender = hydrated && computeCanRender()

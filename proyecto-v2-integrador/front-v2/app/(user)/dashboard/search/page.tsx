@@ -1,8 +1,14 @@
+import { CardWrapper, Heading, Text } from '@/ui'
+
 export default function SearchPage() {
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="mb-6 text-4xl font-bold">Búsqueda</h1>
-      <p className="text-neutral-600">Busca usuarios y juegos en la plataforma</p>
-    </div>
+    <section className="mx-auto w-full max-w-5xl">
+      <CardWrapper className="flex flex-col gap-3" elevation="0">
+        <Heading level="h1" size="m" variant="primary">
+          Búsqueda
+        </Heading>
+        <Text variant="muted">Buscá usuarios y juegos en la plataforma</Text>
+      </CardWrapper>
+    </section>
   )
 }
