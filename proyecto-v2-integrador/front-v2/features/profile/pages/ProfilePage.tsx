@@ -30,8 +30,9 @@ export function ProfilePage() {
     setReviews,
     setLoadingReviews
   } = useProfileStore()
-  const { open: openPassword } = useModal(MODAL_IDS.CHANGE_PASSWORD)
-  const { open: openPreferences } = useModal(MODAL_IDS.EDIT_PREFERENCES)
+  const { open: openPassword, isOpen: isPasswordOpen } = useModal(MODAL_IDS.CHANGE_PASSWORD)
+  const { open: openPreferences, isOpen: isPreferencesOpen } = useModal(MODAL_IDS.EDIT_PREFERENCES)
+  const { isOpen: isProfileOpen } = useModal(MODAL_IDS.EDIT_PROFILE)
 
   const isReviewer = profile?.role === 'user' || profile?.role === 'moderator'
 
@@ -167,9 +168,9 @@ export function ProfilePage() {
         </div>
       </CardWrapper>
 
-      <ProfileModal />
-      <PasswordModal />
-      <PreferencesModal />
+      {isProfileOpen && <ProfileModal />}
+      {isPasswordOpen && <PasswordModal />}
+      {isPreferencesOpen && <PreferencesModal />}
     </>
   )
 }

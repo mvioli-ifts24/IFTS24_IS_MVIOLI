@@ -1,22 +1,19 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { AvatarUpload, Button, Checkbox, DatePicker, Input, Select } from '@/ui'
 
-import {
-  GENDERS,
-  GENDER_LABELS,
-  registerSchema,
-  type RegisterFormData,
-  type RegisterFormInput
-} from '../schemas/register'
-import { AuthService } from '../services/auth.service'
+import { registerSchema, type RegisterFormData, type RegisterFormInput } from '../schemas/register'
+import { AuthService, type GenderItem } from '../services/auth.service'
 import { useAuthStore } from '../store/auth.store'
 
 export function RegisterForm() {
+  const [genders, setGenders] = useState<GenderItem[]>([])
+
   const form = useForm<RegisterFormInput, unknown, RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -37,6 +34,14 @@ export function RegisterForm() {
 
   const setAuth = useAuthStore(state => state.setAuth)
   const router = useRouter()
+
+  useEffect(() => {
+    AuthService.getGenders().then(response => {
+      if (!response.error && response.data) {
+        setGenders(response.data)
+      }
+    })
+  }, [])
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
@@ -140,9 +145,9 @@ export function RegisterForm() {
         {...form.register('gender_id')}
       >
         <option value="">Seleccionar género</option>
-        {GENDERS.map(genderId => (
-          <option key={genderId} value={genderId}>
-            {GENDER_LABELS[genderId]}
+        {genders.map(gender => (
+          <option key={gender.id} value={String(gender.id)}>
+            {gender.label}
           </option>
         ))}
       </Select>

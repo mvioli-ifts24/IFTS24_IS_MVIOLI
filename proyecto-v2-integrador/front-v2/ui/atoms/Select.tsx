@@ -61,15 +61,7 @@ export function Select({
     <div className="w-full">
       <div className="relative mb-2">
         <select
-          className={[
-            'text-foreground rounded border transition-colors duration-200 focus:ring-0 focus:outline-none',
-            'peer block w-full appearance-none bg-transparent',
-            'px-2.5 py-2.5 pe-10 text-base',
-            stateClasses[state],
-            className
-          ]
-            .filter(Boolean)
-            .join(' ')}
+          className={`text-foreground peer block w-full appearance-none rounded border bg-transparent px-2.5 py-2.5 pe-10 text-base transition-colors duration-200 focus:ring-0 focus:outline-none ${stateClasses[state]} ${className}`.trim()}
           id={selectId}
           {...props}
         >
@@ -77,22 +69,14 @@ export function Select({
         </select>
         {label && (
           <label
-            className={[
-              'absolute inset-s-2.5 top-2 z-10',
-              'inline-flex origin-left -translate-y-4 scale-75 transform items-center',
-              'px-2 text-sm',
-              'text-foreground peer-focus:text-primary-400',
-              'bg-background'
-            ]
-              .filter(Boolean)
-              .join(' ')}
+            className="text-foreground peer-focus:text-primary-400 bg-background absolute inset-s-2.5 top-2 z-10 inline-flex origin-left -translate-y-4 scale-75 transform items-center px-2 text-sm"
             htmlFor={selectId}
           >
             {label}
           </label>
         )}
 
-        <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5">
+        <div className="pointer-events-none absolute inset-y-0 inset-e-0 flex items-center pe-2.5">
           <svg
             aria-hidden="true"
             className="text-foreground h-4 w-4"

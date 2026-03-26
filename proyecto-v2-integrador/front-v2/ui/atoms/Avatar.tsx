@@ -79,13 +79,7 @@ export function Avatar({
   return (
     <div
       aria-label={alt}
-      className={[
-        'bg-background relative flex aspect-square items-center justify-center overflow-hidden rounded-full border border-neutral-100 text-neutral-500',
-        sizeClasses[size],
-        className
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      className={`bg-background relative flex aspect-square items-center justify-center overflow-hidden rounded-full border border-neutral-100 text-neutral-500 ${sizeClasses[size]} ${className}`.trim()}
       role="img"
     >
       {src ? (

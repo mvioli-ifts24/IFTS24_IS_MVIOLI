@@ -77,7 +77,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`bg-surface shadow-foreground/4 fixed top-[var(--navbar-height)] left-0 z-40 h-[calc(100vh-var(--navbar-height))] w-fit transform border-r border-neutral-200 shadow-sm transition-transform duration-300 lg:relative lg:top-0 lg:h-auto lg:transform-none lg:border-t-0 lg:shadow-none ${
+        className={`bg-surface shadow-foreground/4 fixed top-(--navbar-height) left-0 z-40 h-[calc(100vh-var(--navbar-height))] w-fit transform border-r border-neutral-200 shadow-sm transition-transform duration-300 lg:relative lg:top-0 lg:h-auto lg:transform-none lg:border-t-0 lg:shadow-none ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >

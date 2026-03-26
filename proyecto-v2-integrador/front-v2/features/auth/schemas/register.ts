@@ -1,21 +1,9 @@
-import { z } from 'zod' // ← cambio clave
-
-export const GENDERS = ['1', '2', '3'] as const
-export type GenderId = (typeof GENDERS)[number]
-export const GENDER_LABELS: Record<GenderId, string> = {
-  '1': 'Masculino',
-  '2': 'Femenino',
-  '3': 'Otro'
-}
+import { z } from 'zod'
 
 const MAX_PROFILE_PICTURE_SIZE = 5 * 1024 * 1024
 const ACCEPTED_PROFILE_PICTURE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
-const genderSchema = z
-  .union([z.enum(GENDERS), z.literal('')])
-  .refine((value): value is GenderId => value !== '', {
-    message: 'Debes seleccionar un género válido'
-  })
+const genderSchema = z.string().min(1, 'Debes seleccionar un género válido')
 
 const profilePictureSchema = z
   .instanceof(File)

@@ -41,8 +41,6 @@ export function LoginPage() {
 
       toast.success('Sesión iniciada exitosamente')
 
-      // Redirigir según rol
-
       router.push('/dashboard')
     } catch {
       toast.error('Error de conexión, intentá de nuevo')

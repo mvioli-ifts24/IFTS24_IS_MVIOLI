@@ -84,6 +84,8 @@ export { CardBorderGlow, type CardBorderGlowProps } from './molecules/CardBorder
 
 export { AvatarUpload, type AvatarUploadProps } from './molecules/AvatarUpload'
 
+export { ReviewCard, type ReviewCardProps } from './molecules/ReviewCard'
+
 export { ThemeToggle, type ThemeToggleProps } from './molecules/ThemeToggle'
 
 // ================================

@@ -75,18 +75,7 @@ export function DatePicker({
         />
         {label && (
           <label
-            className={[
-              'absolute inset-s-2.5 top-2 z-10',
-              'inline-flex origin-left -translate-y-4 scale-75 transform items-center',
-              'px-2 text-sm duration-300',
-              'text-foreground peer-focus:text-primary-400',
-              'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100',
-              'peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2',
-              'rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4',
-              'bg-background'
-            ]
-              .filter(Boolean)
-              .join(' ')}
+            className="text-foreground peer-focus:text-primary-400 bg-background absolute inset-s-2.5 top-2 z-10 inline-flex origin-left -translate-y-4 scale-75 transform items-center px-2 text-sm duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
             htmlFor={inputId}
           >
             {label}

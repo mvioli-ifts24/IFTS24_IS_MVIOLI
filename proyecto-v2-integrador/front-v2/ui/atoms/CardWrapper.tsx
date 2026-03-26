@@ -60,10 +60,6 @@ export interface CardWrapperProps {
    */
   padding?: CardWrapperPadding
   /**
-   * Si es true, aplica un cursor pointer y un efecto hover interactivo.
-   */
-  interactive?: boolean
-  /**
    * Elemento HTML que se renderiza. Por defecto div, pero puede ser article, section, li, etc.
    */
   as?: ElementType
@@ -88,13 +84,6 @@ const elevationClasses: Record<CardWrapperElevation, string> = {
   3: 'bg-white/8 backdrop-blur-lg dark:bg-white/4 border border-white/12 dark:border-white/8'
 }
 
-const interactiveClasses: Record<CardWrapperElevation, string> = {
-  0: 'hover:border-neutral-200 dark:hover:bg-neutral-100 transition-colors duration-200',
-  1: 'hover:shadow-sm hover:shadow-foreground/10 hover:border-neutral-300 dark:hover:border-neutral-300 transition-all duration-200',
-  2: 'hover:shadow-lg hover:shadow-foreground/12 dark:hover:shadow-black/40 hover:-translate-y-0.5 transition-all duration-200',
-  3: 'hover:bg-white/12 dark:hover:bg-white/8 hover:border-white/20 dark:hover:border-white/12 transition-all duration-200'
-}
-
 const radiusClasses: Record<CardWrapperRadius, string> = {
   none: 'rounded-none',
   sm: 'rounded-lg',
@@ -116,7 +105,6 @@ export function CardWrapper({
   elevation = '1',
   radius = 'lg',
   padding = 'md',
-  interactive = false,
   as: Component = 'div',
   className = '',
   onClick
@@ -126,10 +114,7 @@ export function CardWrapper({
     elevationClasses[elevation],
     radiusClasses[radius],
     paddingClasses[padding],
-    interactive && interactiveClasses[elevation],
-    interactive && 'cursor-pointer',
-    // Si se pasa onClick pero no interactive, igual hacemos clickable
-    !interactive && onClick && 'cursor-pointer',
+    onClick && 'cursor-pointer',
     className
   ]
     .filter(Boolean)

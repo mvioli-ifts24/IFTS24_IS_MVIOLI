@@ -4,6 +4,11 @@ import type { RegisterFormData } from '../schemas/register'
 import { ApiResponse } from '@/features/shared/types/api.types'
 import { User } from '@/features/shared/types/user.types'
 
+export type GenderItem = {
+  id: number
+  label: string
+}
+
 export type AuthResponse = {
   token: string
   user: User
@@ -41,6 +46,12 @@ export const AuthService = {
       method: 'POST',
       body: formData
     })
+
+    return await response.json()
+  },
+
+  async getGenders(): Promise<ApiResponse<GenderItem[]>> {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users_genders`)
 
     return await response.json()
   }

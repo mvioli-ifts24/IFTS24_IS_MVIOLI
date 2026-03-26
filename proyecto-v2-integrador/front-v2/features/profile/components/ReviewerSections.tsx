@@ -1,4 +1,4 @@
-import { Button, CardWrapper, Heading, Text } from '@/ui'
+import { Button, CardWrapper, Heading, ReviewCard, Text } from '@/ui'
 
 import { OwnReview } from '../services/profile.service'
 
@@ -20,15 +20,12 @@ export function ReviewerSections({ reviews, loadingReviews }: ReviewerSectionsPr
         ) : reviews.length ? (
           <div className="flex max-h-80 flex-col gap-3 overflow-auto pr-1">
             {reviews.map(review => (
-              <article key={review.id} className="rounded-lg border border-neutral-200 p-3">
-                <Text weight="medium">{review.game_title}</Text>
-                <Text className="line-clamp-2" size="sm" variant="muted">
-                  {review.description}
-                </Text>
-                <Text className="mt-1" size="xs" variant="muted">
-                  Valoración: {review.rating}
-                </Text>
-              </article>
+              <ReviewCard
+                key={review.id}
+                description={review.description}
+                gameTitle={review.game_title}
+                rating={review.rating}
+              />
             ))}
           </div>
         ) : (
