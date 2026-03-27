@@ -76,7 +76,7 @@ export function Modal({
               </Heading>
               <Button
                 disabled={closeDisabled}
-                iconLeft={<XIcon />}
+                iconLeft={XIcon}
                 onClick={handleClose}
                 size="sm"
                 variant="text"

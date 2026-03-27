@@ -54,7 +54,7 @@ export function LoginPage() {
           <Heading className="text-center" level="h2" size="xs" variant="default" weight="medium">
             ¡Hola de nuevo!
           </Heading>
-          <Text className="text-center" size="sm" variant="muted" weight="light">
+          <Text className="text-center" color="muted" size="sm" weight="light">
             Ingresa a tu cuenta para continuar
           </Text>
         </div>

@@ -102,7 +102,7 @@ const register = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -174,7 +174,7 @@ const login = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -200,7 +200,7 @@ const verifyAccount = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 

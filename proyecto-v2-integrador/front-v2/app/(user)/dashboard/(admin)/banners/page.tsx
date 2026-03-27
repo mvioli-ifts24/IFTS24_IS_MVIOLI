@@ -7,7 +7,7 @@ export default function AdminBannersPage() {
         <Heading level="h1" size="m" variant="primary">
           Gestión de Banners
         </Heading>
-        <Text variant="muted">Administrá los banners del sitio</Text>
+        <Text color="muted">Administrá los banners del sitio</Text>
       </CardWrapper>
     </section>
   )

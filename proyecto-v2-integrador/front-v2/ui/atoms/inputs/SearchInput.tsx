@@ -84,7 +84,7 @@ export function SearchInput({
       <Input
         labelAlwaysTop
         disabled={disabled}
-        iconLeft={<MagnifyingGlassIcon size={18} />}
+        iconLeft={MagnifyingGlassIcon}
         id={id}
         label={label}
         onBlur={onBlur}

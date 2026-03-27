@@ -20,9 +20,7 @@ export function Navbar({ onMenuToggle, sidebarOpen, user, onLogout }: NavbarProp
       <div className="flex items-center gap-4">
         <Button
           className="lg:hidden"
-          iconLeft={
-            sidebarOpen ? <XIcon size={20} weight="bold" /> : <ListIcon size={20} weight="bold" />
-          }
+          iconLeft={sidebarOpen ? XIcon : ListIcon}
           onClick={onMenuToggle}
           variant="text"
         />

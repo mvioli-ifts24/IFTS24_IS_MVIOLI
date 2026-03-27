@@ -7,7 +7,7 @@ export default function AboutPage() {
         <Heading level="h1" size="m" variant="primary">
           Sobre Nosotros
         </Heading>
-        <Text variant="muted">Conocé al equipo de desarrolladores y nuestro instituto</Text>
+        <Text color="muted">Conocé al equipo de desarrolladores y nuestro instituto</Text>
       </CardWrapper>
     </section>
   )

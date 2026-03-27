@@ -1,6 +1,6 @@
 'use client'
 
-import { ListIcon, UserIcon, UserPlusIcon, XIcon } from '@phosphor-icons/react'
+import { type Icon, ListIcon, UserIcon, UserPlusIcon, XIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button, type ButtonColor, type ButtonVariant, Logo, Separator, ThemeToggle } from '@/ui'
@@ -10,7 +10,7 @@ import { MenuLinks } from './MenuLinks'
 export interface NavLink {
   label: string
   href: string
-  icons?: React.ReactNode
+  icon?: Icon
   variant: ButtonVariant
   color?: ButtonColor
 }
@@ -24,13 +24,13 @@ const authLinks: NavLink[] = [
   {
     label: 'Iniciar Sesión',
     href: '/login',
-    icons: <UserIcon className="mr-2" size={16} />,
+    icon: UserIcon,
     variant: 'text'
   },
   {
     label: 'Registrarse',
     href: '/register',
-    icons: <UserPlusIcon className="mr-2" size={16} />,
+    icon: UserPlusIcon,
     variant: 'filled'
   }
 ]
@@ -87,7 +87,7 @@ export function Navbar() {
               {/* Botón hamburguesa — solo visible en móvil */}
               <Button
                 className="lg:hidden"
-                iconLeft={isOpen ? <XIcon size={20} /> : <ListIcon size={20} />}
+                iconLeft={isOpen ? XIcon : ListIcon}
                 onClick={() => setIsOpen(prev => !prev)}
                 variant="text"
               />

@@ -50,11 +50,14 @@ export {
 
 export {
   Text,
+  type TextColor,
   type TextProps,
   type TextSize,
   type TextVariant,
   type TextWeight
 } from './atoms/Text'
+
+export { Breadcrumbs, type BreadcrumbsProps } from './organisms/Breadcrumbs'
 
 export { SpinLoader, type SpinLoaderProps, type SpinLoaderSize } from './atoms/SpinLoader'
 

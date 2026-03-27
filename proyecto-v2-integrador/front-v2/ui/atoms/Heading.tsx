@@ -71,6 +71,7 @@ export interface HeadingProps {
  * Mapeo de tamaños a clases de Tailwind
  */
 const sizeClasses: Record<HeadingSize, string> = {
+  '2xs': 'text-lg md:text-xl',
   xs: 'text-xl md:text-2xl',
   sm: 'text-2xl md:text-3xl',
   m: 'text-3xl md:text-4xl',

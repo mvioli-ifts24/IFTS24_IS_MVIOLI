@@ -33,14 +33,14 @@ export function ReviewCard({
       <div className="flex min-w-0 flex-col gap-0.5">
         <Text weight="medium">{gameTitle}</Text>
         {authorName && (
-          <Text size="xs" variant="muted">
+          <Text color="muted" size="xs">
             {authorName}
           </Text>
         )}
-        <Text className="line-clamp-2" size="sm" variant="muted">
+        <Text className="line-clamp-2" color="muted" size="sm">
           {description}
         </Text>
-        <Text className="mt-1" size="xs" variant="muted">
+        <Text className="mt-1" color="muted" size="xs">
           Valoración: {rating}
         </Text>
       </div>

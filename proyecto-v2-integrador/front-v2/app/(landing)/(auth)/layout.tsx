@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <main className="flex min-h-screen flex-col justify-between gap-8">
       <div className="flex justify-between p-2">
-        <Button href="/" iconLeft={<CaretLeftIcon />} size="m" variant="action" weight="normal">
+        <Button href="/" iconLeft={CaretLeftIcon} size="m" variant="action" weight="normal">
           Volver
         </Button>
         <ThemeToggle size="m" />
@@ -27,7 +27,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <Logo size="m" />
         {children}
       </div>
-      <Text className="px-8 pb-8 text-center" size="sm" variant="muted" weight="light">
+      <Text className="px-8 pb-8 text-center" color="muted" size="sm" weight="light">
         Al continuar, aceptás nuestros Términos de Servicio y Política de Privacidad.
       </Text>
     </main>

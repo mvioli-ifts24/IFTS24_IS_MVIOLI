@@ -8,37 +8,62 @@ import { type ColorVariant, type Size, type Weight } from '../types'
 export type TextSize = Size
 
 /**
- * Variantes de color para el componente Text
+ * Variante de color para el componente Text (renombrada desde TextVariant).
  */
-export type TextVariant = ColorVariant
+export type TextColor = ColorVariant
 
 /**
  * Peso de fuente para el componente Text
  */
 export type TextWeight = Weight
 
+export type TextVariant = 'default' | 'label'
+
+type PresetConfig = {
+  sizeClass: string
+  colorClass: string
+  weightClass: string
+  extraClass: string
+}
+
+const PRESETS: Record<TextVariant, PresetConfig | null> = {
+  default: null,
+  label: {
+    sizeClass: 'text-xs',
+    colorClass: 'text-neutral-500 dark:text-neutral-400',
+    weightClass: 'font-semibold',
+    extraClass: 'uppercase tracking-widest'
+  }
+}
+
 /**
  * Props para el componente Text
  */
 export interface TextProps {
   /**
-   * Tamaño del texto
-   * @default 'm'
+   * Tamaño del texto. Sobreescribe el tamaño del preset si se especifica.
+   * @default 'sm' (o el default del preset)
    *  xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
    */
   size?: TextSize
 
   /**
-   * Variante de color del texto
+   * Color del texto
    * @default 'default'
    */
-  variant?: TextVariant
+  color?: TextColor
 
   /**
    * Peso de la fuente
    * @default 'normal'
    */
   weight?: TextWeight
+
+  /**
+   * Variante de estilo (preset). Aplica defaults visuales combinables con
+   * las props `size`, `color` y `weight`.
+   */
+  variant?: TextVariant
 
   /**
    * Contenido del texto
@@ -58,18 +83,19 @@ export interface TextProps {
 }
 
 const sizeClasses: Record<TextSize, string> = {
-  xs: 'text-xs md:text-sm',
+  '2xs': 'text-[10px]',
+  xs: 'text-xs',
   sm: 'text-sm md:text-base',
   m: 'text-base md:text-lg',
   lg: 'text-lg md:text-xl',
   xl: 'text-xl md:text-2xl'
 }
 
-const variantClasses: Record<TextVariant, string> = {
+const colorClasses: Record<TextColor, string> = {
   default: 'text-foreground',
   primary: 'text-primary-400',
   secondary: 'text-secondary-400',
-  muted: 'text-neutral-600 ',
+  muted: 'text-neutral-600',
   gradient: 'bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent'
 }
 
@@ -82,20 +108,34 @@ const weightClasses: Record<TextWeight, string> = {
 }
 
 export function Text({
-  size = 'sm',
-  variant = 'default',
-  weight = 'normal',
+  size,
+  color,
+  weight,
+  variant,
   children,
   className = '',
   as: Component = 'p'
 }: TextProps) {
+  const preset = variant && variant !== 'default' ? PRESETS[variant] : null
+
+  // Las props explícitas tienen prioridad; si no se pasan, el preset define el default;
+  // si tampoco hay preset, se usa el default genérico del componente.
+  const resolvedSizeClass = size ? sizeClasses[size] : (preset?.sizeClass ?? sizeClasses['sm'])
+
+  const resolvedColorClass = color
+    ? colorClasses[color]
+    : (preset?.colorClass ?? colorClasses['default'])
+
+  const resolvedWeightClass = weight
+    ? weightClasses[weight]
+    : (preset?.weightClass ?? weightClasses['normal'])
+
   const classes = [
-    'transition-colors',
-    'duration-200',
-    'cursor-default',
-    sizeClasses[size],
-    variantClasses[variant],
-    weightClasses[weight],
+    'transition-colors duration-200 cursor-default',
+    resolvedSizeClass,
+    resolvedColorClass,
+    resolvedWeightClass,
+    preset?.extraClass,
     className
   ]
     .filter(Boolean)

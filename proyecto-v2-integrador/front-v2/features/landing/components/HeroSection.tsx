@@ -68,7 +68,7 @@ function ReviewCard({ review }: ReviewCardProps) {
           <Text size="sm" weight="medium">
             {review.user}
           </Text>
-          <Text size="xs" variant="muted">
+          <Text color="muted" size="xs">
             {review.game}
           </Text>
         </div>
@@ -89,7 +89,7 @@ function ReviewCard({ review }: ReviewCardProps) {
       </div>
 
       {/* Comment */}
-      <Text className="leading-relaxed" size="sm" variant="muted">
+      <Text className="leading-relaxed" color="muted" size="sm">
         &ldquo;{review.comment}&rdquo;
       </Text>
     </div>
@@ -114,7 +114,7 @@ function StatItem({ stat }: StatItemProps) {
       <Heading level="h3" size="lg" variant="primary">
         <AnimatedCounter duration={2000} suffix={stat.suffix} targetNumber={stat.value} />
       </Heading>
-      <Text size="sm" variant="muted">
+      <Text color="muted" size="sm">
         {stat.label}
       </Text>
     </div>
@@ -178,7 +178,7 @@ export function HeroSection() {
             <Heading className="mb-4" level="h2" size="lg" variant="primary">
               LO QUE DICEN NUESTROS GAMERS
             </Heading>
-            <Text size="m" variant="muted">
+            <Text color="muted" size="m">
               Reviews reales de nuestra comunidad
             </Text>
           </div>

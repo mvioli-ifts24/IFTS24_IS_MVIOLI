@@ -9,6 +9,7 @@ import { useProfileStore } from '@/features/profile/store/profile.store'
 import { useAuthRouteGuard } from '@/features/shared/hooks/useAuthRouteGuard'
 
 import { SpinLoader } from '../atoms/SpinLoader'
+import { Breadcrumbs } from '../organisms/Breadcrumbs'
 import { Navbar } from '../organisms/Navbar'
 import { Sidebar } from '../organisms/Sidebar'
 
@@ -47,8 +48,9 @@ export function UserDashboard({ children, role }: UserDashboardProps) {
       />
       <div className="relative flex max-h-full flex-1 overflow-auto">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} />
-        <main className="bg-background flex flex-1 flex-col gap-6 overflow-auto p-4 sm:p-6 lg:p-8">
-          {children}
+        <main className="bg-background flex flex-1 flex-col overflow-auto p-4 sm:p-6 lg:p-8">
+          <Breadcrumbs className="mb-6" />
+          <div className="flex flex-col gap-6">{children}</div>
         </main>
       </div>
     </div>

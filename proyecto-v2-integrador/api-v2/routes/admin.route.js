@@ -46,7 +46,13 @@ adminRoutesGroup.patch("/users/:id/moderator", assignModerator);
 adminRoutesGroup.get("/stats", async (req, res) => {
   try {
     const [usersCount] = await Database.execute(
-      "SELECT COUNT(*) as count FROM users WHERE deleted_at IS NULL",
+      "SELECT COUNT(*) as count FROM users WHERE deleted_at IS NULL AND role = 'user'",
+    );
+    const [adminsCount] = await Database.execute(
+      "SELECT COUNT(*) as count FROM users WHERE deleted_at IS NULL AND role = 'admin'",
+    );
+    const [moderatorsCount] = await Database.execute(
+      "SELECT COUNT(*) as count FROM users WHERE deleted_at IS NULL AND role = 'moderator'",
     );
     const [reviewsCount] = await Database.execute(
       "SELECT COUNT(*) as count FROM games_reviews",
@@ -57,20 +63,72 @@ adminRoutesGroup.get("/stats", async (req, res) => {
     const [sponsorsCount] = await Database.execute(
       "SELECT COUNT(*) as count FROM sponsors",
     );
+    const [pendingMessagesCount] = await Database.execute(
+      "SELECT COUNT(*) as count FROM contact_messages WHERE response IS NULL",
+    );
 
     return res.send({
       data: {
         users: usersCount[0].count,
+        admins: adminsCount[0].count,
+        moderators: moderatorsCount[0].count,
         reviews: reviewsCount[0].count,
         banners: bannersCount[0].count,
         sponsors: sponsorsCount[0].count,
+        pending_messages: pendingMessagesCount[0].count,
       },
       error: null,
     });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+    return res.status(500).send({
+      data: null,
+      error:
+        "No se pudieron cargar las estadísticas. Intenta de nuevo más tarde.",
+    });
+  }
+});
+
+adminRoutesGroup.get("/top-games", async (req, res) => {
+  try {
+    const [topByReviews] = await Database.execute(`
+      SELECT
+        cached_games.api_id,
+        cached_games.title,
+        cached_games.thumbnail,
+        COUNT(games_reviews.id) AS review_count,
+        ROUND(AVG(games_reviews.rating_id), 1) AS avg_rating
+      FROM cached_games
+      JOIN games_reviews ON games_reviews.api_game_id = cached_games.api_id
+      GROUP BY cached_games.api_id, cached_games.title, cached_games.thumbnail
+      ORDER BY review_count DESC
+      LIMIT 5
+    `);
+
+    const [topByRating] = await Database.execute(`
+      SELECT
+        cached_games.api_id,
+        cached_games.title,
+        cached_games.thumbnail,
+        COUNT(games_reviews.id) AS review_count,
+        ROUND(AVG(games_reviews.rating_id), 1) AS avg_rating
+      FROM cached_games
+      JOIN games_reviews ON games_reviews.api_game_id = cached_games.api_id
+      GROUP BY cached_games.api_id, cached_games.title, cached_games.thumbnail
+      HAVING review_count >= 1
+      ORDER BY avg_rating DESC, review_count DESC
+      LIMIT 5
+    `);
+
+    return res.send({
+      data: { top_by_reviews: topByReviews, top_by_rating: topByRating },
+      error: null,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      data: null,
+      error:
+        "No se pudo cargar el ranking de juegos. Intenta de nuevo más tarde.",
+    });
   }
 });
 

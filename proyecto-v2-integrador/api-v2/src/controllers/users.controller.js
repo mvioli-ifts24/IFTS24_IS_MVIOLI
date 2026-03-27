@@ -82,7 +82,7 @@ const index = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -102,7 +102,7 @@ const show = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -189,7 +189,7 @@ const update = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -236,7 +236,7 @@ const changePassword = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -264,7 +264,7 @@ const disable = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -299,7 +299,7 @@ const createAdmin = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -322,7 +322,7 @@ const assignModerator = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -336,7 +336,7 @@ const deleteUser = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 

@@ -30,7 +30,7 @@ export function AccountSettings() {
           <Button
             className="w-fit"
             color="muted"
-            iconLeft={<KeyIcon />}
+            iconLeft={KeyIcon}
             onClick={openPassword}
             size="sm"
             type="button"
@@ -41,7 +41,7 @@ export function AccountSettings() {
           <Button
             className="w-fit"
             color="muted"
-            iconLeft={<GearIcon />}
+            iconLeft={GearIcon}
             onClick={openPreferences}
             size="sm"
             type="button"

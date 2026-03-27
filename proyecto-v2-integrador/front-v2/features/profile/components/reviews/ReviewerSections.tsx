@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
+import { ROUTES } from '@/features/shared/constants/nav.constants'
 import { Button, CardWrapper, Heading, ReviewCard, Text } from '@/ui'
 
 import { ProfileService } from '../../services/profile.service'
@@ -56,15 +57,10 @@ export function ReviewerSections() {
         <Heading level="h2" size="sm" variant="primary">
           Ayuda
         </Heading>
-        <Text variant="muted">
+        <Text color="muted">
           Si necesitás asistencia con tu cuenta o moderación, podés consultar el centro de ayuda.
         </Text>
-        <Button
-          className="justify-start"
-          color="secondary"
-          href="/dashboard/help"
-          variant="outlined"
-        >
+        <Button className="justify-start" color="secondary" href={ROUTES.ayuda} variant="outlined">
           Ir a ayuda
         </Button>
       </CardWrapper>

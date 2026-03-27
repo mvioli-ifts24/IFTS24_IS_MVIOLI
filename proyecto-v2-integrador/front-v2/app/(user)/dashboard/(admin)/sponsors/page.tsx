@@ -7,7 +7,7 @@ export default function AdminSponsorsPage() {
         <Heading level="h1" size="m" variant="primary">
           Gestión de Sponsors
         </Heading>
-        <Text variant="muted">Administrá los sponsors de la plataforma</Text>
+        <Text color="muted">Administrá los sponsors de la plataforma</Text>
       </CardWrapper>
     </section>
   )

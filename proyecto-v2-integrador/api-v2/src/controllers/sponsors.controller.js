@@ -10,7 +10,7 @@ const index = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -40,7 +40,7 @@ const store = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -75,7 +75,7 @@ const update = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 
@@ -89,7 +89,7 @@ const destroy = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: "Error al consultar la DB: " + err });
+      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
   }
 };
 

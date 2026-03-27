@@ -7,11 +7,11 @@ export default function DashboardHelpPage() {
         <Heading level="h1" size="m" variant="primary">
           Centro de Ayuda
         </Heading>
-        <Text variant="muted">
+        <Text color="muted">
           Si tenés problemas con tu cuenta, reseñas o moderación, escribinos desde la sección de
           contacto y un administrador te responderá.
         </Text>
-        <Text size="sm" variant="muted">
+        <Text color="muted" size="sm">
           Tips rápidos: revisá que tu perfil esté completo, mantené una descripción clara en tus
           reseñas y evitá contenido ofensivo para cumplir las normas de la comunidad.
         </Text>

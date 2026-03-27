@@ -64,7 +64,7 @@ export function ProfileCard() {
         loading={loading || !profile}
       >
         <ProfileHeader onVerifyAccount={handleVerifyAccount} user={profile!} />
-        <Text className="italic" variant="muted">
+        <Text className="italic" color="muted">
           &quot;{profile?.about || 'Sin descripción'}&quot;
         </Text>
         {profile?.favorite_game_id &&
@@ -79,14 +79,14 @@ export function ProfileCard() {
               width={45}
             />
             <div className="flex flex-col">
-              <Text size="xs" variant="muted" weight="medium">
+              <Text color="muted" size="xs" weight="medium">
                 Mi juego favorito
               </Text>
               <Text weight="medium">{profile?.favorite_game_title}</Text>
             </div>
           </div>
         ) : (
-          <Text size="sm" variant="muted">
+          <Text color="muted" size="sm">
             Sin juego favorito seleccionado
           </Text>
         )}

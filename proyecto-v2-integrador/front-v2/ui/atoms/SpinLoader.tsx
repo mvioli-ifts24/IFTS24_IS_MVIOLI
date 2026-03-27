@@ -34,6 +34,7 @@ export interface SpinLoaderProps {
 }
 
 const sizeClasses: Record<SpinLoaderSize, string> = {
+  '2xs': 'h-3 w-3',
   xs: 'h-4 w-4',
   sm: 'h-6 w-6',
   m: 'h-8 w-8',

@@ -1,3 +1,4 @@
+import { type Icon } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ReactNode } from 'react'
 
@@ -56,12 +57,22 @@ interface BaseButtonProps {
   /**
    * Icono a la izquierda del texto
    */
-  iconLeft?: ReactNode
+  iconLeft?: Icon
+
+  /**
+   * Clase CSS adicional para el contenedor del icono izquierdo (ej: color)
+   */
+  iconLeftClassName?: string
 
   /**
    * Icono a la derecha del texto
    */
-  iconRight?: ReactNode
+  iconRight?: Icon
+
+  /**
+   * Clase CSS adicional para el contenedor del icono derecho
+   */
+  iconRightClassName?: string
 
   /**
    * Clases CSS adicionales
@@ -146,9 +157,22 @@ function getVariantClasses(variant: ButtonVariant, color: ButtonColor): string {
 }
 
 /**
+ * Mapeo de tamaños del botón al tamaño en px del ícono
+ */
+const iconSizeMap: Record<ButtonSize, number> = {
+  '2xs': 10,
+  xs: 12,
+  sm: 14,
+  m: 16,
+  lg: 18,
+  xl: 20
+}
+
+/**
  * Mapeo de tamaños a clases de Tailwind
  */
 const sizeClasses: Record<ButtonSize, string> = {
+  '2xs': 'px-2 py-1 text-[10px] rounded-md',
   xs: 'px-3 py-2 text-xs rounded-lg',
   sm: 'px-4 py-2 text-sm rounded-lg',
   m: 'px-6 py-3 text-base rounded-xl',
@@ -174,8 +198,10 @@ export function Button({
   disabled = false,
   loading = false,
   fullWidth = false,
-  iconLeft,
-  iconRight,
+  iconLeft: IconLeft,
+  iconLeftClassName = '',
+  iconRight: IconRight,
+  iconRightClassName = '',
   size = 'sm',
   weight = 'medium',
   variant = 'filled',
@@ -192,6 +218,7 @@ export function Button({
   const isDisabled = disabled || loading
 
   const loaderSize: Record<ButtonSize, 'xs' | 'sm' | 'm'> = {
+    '2xs': 'xs',
     xs: 'xs',
     sm: 'xs',
     m: 'sm',
@@ -223,10 +250,26 @@ export function Button({
       {loading ? (
         <SpinLoader fullScreen={false} size={loaderSize[size]} />
       ) : (
-        iconLeft && <span className="flex items-center justify-center">{iconLeft}</span>
+        IconLeft && (
+          <span
+            className={['flex items-center justify-center', iconLeftClassName]
+              .filter(Boolean)
+              .join(' ')}
+          >
+            <IconLeft size={iconSizeMap[size]} weight="regular" />
+          </span>
+        )
       )}
       {children}
-      {iconRight && <span className="flex items-center justify-center">{iconRight}</span>}
+      {IconRight && (
+        <span
+          className={['flex items-center justify-center', iconRightClassName]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          <IconRight size={iconSizeMap[size]} weight="regular" />
+        </span>
+      )}
     </>
   )
 

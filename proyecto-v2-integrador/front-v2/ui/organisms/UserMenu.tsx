@@ -6,6 +6,7 @@ import { SignOutIcon } from '@phosphor-icons/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { ROUTES } from '@/features/shared/constants/nav.constants'
 import { Avatar, Button, CardWrapper, Separator, Tag, Text } from '@/ui'
 
 type UserMenuProps = {
@@ -47,7 +48,7 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
               <Text size="m">
                 {user.name} {user.surname}
               </Text>
-              <Text className="mb-2 truncate text-ellipsis" variant="muted">
+              <Text className="mb-2 truncate text-ellipsis" color="muted">
                 {user.email}
               </Text>
               {user.role && user.role !== 'user' && (
@@ -69,7 +70,7 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
                 className="justify-start"
                 color="muted"
                 onClick={() => {
-                  router.push('/dashboard/profile')
+                  router.push(ROUTES.perfil)
                   setIsOpen(false)
                 }}
                 variant="text"
@@ -80,7 +81,7 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
                 fullWidth
                 className="justify-start"
                 color="danger"
-                iconLeft={<SignOutIcon size={18} />}
+                iconLeft={SignOutIcon}
                 onClick={handleLogout}
                 variant="text"
               >

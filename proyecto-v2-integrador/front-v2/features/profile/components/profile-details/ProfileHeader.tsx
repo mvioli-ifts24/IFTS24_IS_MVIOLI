@@ -35,12 +35,12 @@ export function ProfileHeader({ user, onVerifyAccount }: ProfileHeaderProps) {
                 Verificar mi cuenta
               </Button>
             )}
-            <Button iconLeft={<PencilSimpleIcon />} onClick={open} size="xs" variant="outlined">
+            <Button iconLeft={PencilSimpleIcon} onClick={open} size="xs" variant="outlined">
               Editar
             </Button>
           </div>
         </div>
-        <Text className="truncate" variant="muted">
+        <Text className="truncate" color="muted">
           {user.email}
         </Text>
         <div className="flex flex-wrap items-center gap-2 pt-2">

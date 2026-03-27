@@ -17,7 +17,7 @@ export function MenuLinks({ links, onClose }: MenuLinksProps) {
           key={link.href}
           color={link.color}
           href={link.href}
-          iconLeft={link.icons}
+          iconLeft={link.icon}
           onClick={onClose}
           variant={link.variant}
         >

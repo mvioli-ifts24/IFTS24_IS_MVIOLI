@@ -1,4 +1,5 @@
-import { type InputHTMLAttributes, type ReactNode } from 'react'
+import { type Icon } from '@phosphor-icons/react'
+import { type InputHTMLAttributes } from 'react'
 
 import { type Size } from '../../types'
 
@@ -48,12 +49,12 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   /**
    * Icono a la izquierda del input
    */
-  iconLeft?: ReactNode
+  iconLeft?: Icon
 
   /**
    * Icono a la derecha del input
    */
-  iconRight?: ReactNode
+  iconRight?: Icon
 
   /**
    * Mensaje de error a mostrar debajo del input
@@ -89,9 +90,22 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 }
 
 /**
+ * Mapeo de tamaños del input al tamaño en px del ícono
+ */
+const iconSizeMap: Record<InputSize, number> = {
+  '2xs': 10,
+  xs: 12,
+  sm: 14,
+  m: 16,
+  lg: 18,
+  xl: 20
+}
+
+/**
  * Mapeo de tamaños a clases de Tailwind
  */
 const sizeClasses: Record<InputSize, string> = {
+  '2xs': 'px-1.5 py-0.5 text-[10px]',
   xs: 'px-2 py-1 text-xs',
   sm: 'px-2.5 py-1.5 text-sm',
   m: 'px-2.5 py-2.5 text-base',
@@ -137,8 +151,8 @@ export function Input({
   variant = 'outlined',
   state = 'default',
   label,
-  iconLeft,
-  iconRight,
+  iconLeft: IconLeft,
+  iconRight: IconRight,
   errorMessage,
   showCounter = false,
   currentLength,
@@ -154,8 +168,8 @@ export function Input({
     sizeClasses[size],
     stateClasses[state],
     variant === 'outlined' ? 'border' : 'border-b-2',
-    iconLeft && 'ps-10',
-    iconRight && 'pe-10',
+    IconLeft && 'ps-10',
+    IconRight && 'pe-10',
     className
   ]
     .filter(Boolean)
@@ -206,8 +220,16 @@ export function Input({
           </label>
         )}
 
-        {iconLeft && <div className={`${iconContainerClasses} inset-s-2.5`}>{iconLeft}</div>}
-        {iconRight && <div className={`${iconContainerClasses} inset-e-2.5`}>{iconRight}</div>}
+        {IconLeft && (
+          <div className={`${iconContainerClasses} inset-s-2.5`}>
+            <IconLeft size={iconSizeMap[size]} />
+          </div>
+        )}
+        {IconRight && (
+          <div className={`${iconContainerClasses} inset-e-2.5`}>
+            <IconRight size={iconSizeMap[size]} />
+          </div>
+        )}
       </div>
 
       {(errorMessage && state === 'error') || (showCounter && maxLength !== undefined) ? (

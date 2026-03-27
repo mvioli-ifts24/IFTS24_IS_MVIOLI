@@ -1,8 +1,8 @@
 'use client'
 
-import { MoonIcon, SunIcon } from '@phosphor-icons/react'
+import { type Icon, MoonIcon, SunIcon } from '@phosphor-icons/react'
 import { useTheme } from 'next-themes'
-import { useSyncExternalStore, type ReactNode } from 'react'
+import { useSyncExternalStore } from 'react'
 
 import { Button, type ButtonSize } from '../atoms/Button'
 
@@ -13,19 +13,18 @@ export interface ThemeToggleProps {
   /**
    * Tamaño del toggle
    * @default 'sm'
-   * Equivalencias de texto: xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
    */
   size?: ButtonSize
 
   /**
-   * Icono personalizado para el modo light
+   * Icono personalizado para el modo light (cuando el tema es dark, se muestra este para cambiar a light)
    */
-  iconLight?: ReactNode
+  iconLight?: Icon
 
   /**
-   * Icono personalizado para el modo dark
+   * Icono personalizado para el modo dark (cuando el tema es light, se muestra este para cambiar a dark)
    */
-  iconDark?: ReactNode
+  iconDark?: Icon
 
   /**
    * Callback cuando el tema cambia
@@ -80,8 +79,8 @@ export function ThemeToggle({
 
   if (!mounted) return <div aria-hidden="true" className="h-9 w-9" role="presentation" />
 
-  const lightIcon = iconLight || <SunIcon className="text-amber-200" />
-  const darkIcon = iconDark || <MoonIcon className="text-blue-400" />
+  const currentIcon = theme === 'dark' ? (iconLight ?? SunIcon) : (iconDark ?? MoonIcon)
+  const currentIconClassName = theme === 'dark' ? 'text-amber-200' : 'text-blue-400'
 
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
@@ -94,7 +93,8 @@ export function ThemeToggle({
     <Button
       aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
       className={className}
-      iconLeft={theme === 'dark' ? lightIcon : darkIcon}
+      iconLeft={currentIcon}
+      iconLeftClassName={currentIconClassName}
       onClick={handleThemeToggle}
       size={size}
       variant="text"

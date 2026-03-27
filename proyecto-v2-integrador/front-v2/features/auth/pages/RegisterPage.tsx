@@ -11,7 +11,7 @@ export function RegisterPage() {
           <Heading className="text-center" level="h2" size="xs" variant="default" weight="medium">
             ¡Te damos la bienvenida!
           </Heading>
-          <Text className="text-center" size="sm" variant="muted" weight="light">
+          <Text className="text-center" color="muted" size="sm" weight="light">
             Crea tu cuenta para comenzar
           </Text>
         </div>

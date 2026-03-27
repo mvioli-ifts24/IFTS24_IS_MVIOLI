@@ -6,9 +6,11 @@
 /**
  * Tamaños estándar para componentes
  *
- * xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
+ * 2xs = 10px, xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
  */
 export type Size =
+  /** 10px */
+  | '2xs'
   /** 12px */
   | 'xs'
   /** 14px */
