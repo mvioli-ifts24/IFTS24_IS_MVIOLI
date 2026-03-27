@@ -30,13 +30,13 @@ export {
   type InputSize,
   type InputState,
   type InputVariant
-} from './atoms/Input'
+} from './atoms/inputs/Input'
 
-export { DatePicker, type DatePickerProps } from './atoms/DatePicker'
+export { DatePicker, type DatePickerProps } from './atoms/inputs/DatePicker'
 
-export { Select, type SelectProps } from './atoms/Select'
+export { Select, type SelectProps } from './atoms/inputs/Select'
 
-export { Checkbox, type CheckboxProps } from './atoms/Checkbox'
+export { Checkbox, type CheckboxProps } from './atoms/inputs/Checkbox'
 
 export { Avatar, type AvatarFallback, type AvatarProps, type AvatarSize } from './atoms/Avatar'
 
@@ -64,9 +64,9 @@ export { AnimatedCounter } from './atoms/AnimatedCounter'
 
 export { CardWrapper, type CardWrapperProps } from './atoms/CardWrapper'
 
-export { Skeleton, type SkeletonProps } from './atoms/Skeleton'
+export { Skeleton, type SkeletonProps } from './atoms/skeleton/Skeleton'
 
-export { PageSkeleton } from './atoms/PageSkeleton'
+export { PageSkeleton } from './atoms/skeleton/PageSkeleton'
 
 export { Logo, type LogoProps } from './atoms/Logo'
 
@@ -74,7 +74,7 @@ export { Separator, type SeparatorProps } from './atoms/Separator'
 
 export { Modal, type ModalProps } from './atoms/Modal'
 
-export { SearchInput, type SearchInputProps } from './atoms/SearchInput'
+export { SearchInput, type SearchInputProps } from './atoms/inputs/SearchInput'
 
 // ================================
 // MOLECULES - Componentes compuestos

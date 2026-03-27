@@ -14,9 +14,9 @@ import {
   profileSchema,
   type ProfileFormData,
   type ProfileFormInput
-} from '../schemas/profile.schema'
-import { GameSearchItem, ProfileService, UserGenderItem } from '../services/profile.service'
-import { useProfileStore } from '../store/profile.store'
+} from '../../../schemas/profile.schema'
+import { GameSearchItem, ProfileService } from '../../../services/profile.service'
+import { useProfileStore } from '../../../store/profile.store'
 
 import { GameSearchField } from './GameSearchField'
 
@@ -29,24 +29,23 @@ function gameFromProfile(
 ): GameSearchItem | null {
   if (
     !profile?.favorite_game_id ||
-    !profile.favorite_game_title ||
-    !profile.favorite_game_thumbnail
+    !profile?.favorite_game_title ||
+    !profile?.favorite_game_thumbnail
   )
     return null
 
   return {
-    id: profile.favorite_game_id,
-    title: profile.favorite_game_title,
-    thumbnail: profile.favorite_game_thumbnail
+    id: profile?.favorite_game_id,
+    title: profile?.favorite_game_title,
+    thumbnail: profile?.favorite_game_thumbnail
   }
 }
 
 export function ProfileModal() {
   const { token } = useAuthStore()
   const { isOpen, close } = useModal(MODAL_IDS.EDIT_PROFILE)
-  const { profile, setProfile } = useProfileStore()
+  const { profile, setProfile, genders } = useProfileStore()
 
-  const [genders, setGenders] = useState<UserGenderItem[]>([])
   const [selectedGame, setSelectedGame] = useState<GameSearchItem | null>(() =>
     gameFromProfile(profile)
   )
@@ -64,28 +63,38 @@ export function ProfileModal() {
     if (!isOpen || !profile) return
 
     form.reset({
-      about: profile.about || '',
-      favorite_game_id: profile.favorite_game_id ?? undefined,
-      birth_date: profile.birth_date?.slice(0, 10) || '',
-      gender_id: profile.gender_id ? String(profile.gender_id) : '',
+      about: profile?.about || '',
+      favorite_game_id: profile?.favorite_game_id ?? undefined,
+      birth_date: profile?.birth_date?.slice(0, 10) || '',
+      gender_id: profile?.gender_id ? String(profile?.gender_id) : '',
       profile_picture: undefined
     })
   }, [isOpen, profile, form])
 
-  // Cargar géneros al abrir
+  // Cargar géneros al abrir (sólo si no están ya en el store).
+  // Se guarda en el store para no repetir la llamada cada vez que se abre el modal.
+  // genders.length y gendersLoading se leen como guards en runtime, NO son deps del efecto.
   useEffect(() => {
-    const loadGenders = async () => {
-      if (!isOpen || !token || genders.length) return
+    if (!isOpen || !token) return
 
-      const response = await ProfileService.getUserGenders(token)
+    const {
+      genders: currentGenders,
+      gendersLoading: loading,
+      setGendersLoading
+    } = useProfileStore.getState()
 
+    if (currentGenders.length > 0 || loading) return
+
+    setGendersLoading(true)
+
+    ProfileService.getUserGenders(token).then(response => {
       if (!response.error && response.data) {
-        setGenders(response.data)
+        useProfileStore.getState().setGenders(response.data)
+      } else {
+        useProfileStore.getState().setGendersLoading(false)
       }
-    }
-
-    loadGenders()
-  }, [isOpen, token, genders.length])
+    })
+  }, [isOpen, token])
 
   const onSubmit = async (data: ProfileFormData) => {
     if (!token || !profile) return
@@ -139,7 +148,7 @@ export function ProfileModal() {
           }
           fallback="icon"
           id="avatar_modal"
-          initialPreviewUrl={profile.profile_picture_url || undefined}
+          initialPreviewUrl={profile?.profile_picture_url || undefined}
           onFileChange={handleFileChange}
           state={errors.profile_picture ? 'error' : 'default'}
         />
@@ -170,6 +179,17 @@ export function ProfileModal() {
             ))}
           </Select>
 
+          <Input
+            showCounter
+            currentLength={aboutValue?.length ?? 0}
+            disabled={isSubmitting}
+            errorMessage={errors.about?.message}
+            id="about_modal"
+            label="Descripción breve"
+            maxLength={150}
+            state={errors.about ? 'error' : 'default'}
+            {...form.register('about')}
+          />
           {token && (
             <GameSearchField
               disabled={isSubmitting}
@@ -183,18 +203,6 @@ export function ProfileModal() {
               token={token}
             />
           )}
-
-          <Input
-            showCounter
-            currentLength={aboutValue?.length ?? 0}
-            disabled={isSubmitting}
-            errorMessage={errors.about?.message}
-            id="about_modal"
-            label="Descripción breve"
-            maxLength={150}
-            state={errors.about ? 'error' : 'default'}
-            {...form.register('about')}
-          />
         </div>
 
         <div className="flex justify-end gap-3">

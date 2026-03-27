@@ -13,8 +13,8 @@ import {
   passwordSchema,
   type PasswordFormData,
   type PasswordFormInput
-} from '../schemas/password.schema'
-import { ProfileService } from '../services/profile.service'
+} from '../../schemas/password.schema'
+import { ProfileService } from '../../services/profile.service'
 
 export function PasswordModal() {
   const { token } = useAuthStore()

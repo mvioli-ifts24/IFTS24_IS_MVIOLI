@@ -1,6 +1,6 @@
 import { type InputHTMLAttributes, type ReactNode } from 'react'
 
-import { type Size } from '../types'
+import { type Size } from '../../types'
 
 /**
  * Estados disponibles para el componente Input
@@ -175,7 +175,13 @@ export function Input({
   return (
     <div className="w-full">
       <div className="relative mb-2">
-        <input className={inputClasses} id={id} placeholder={placeholder} {...props} />
+        <input
+          autoComplete="off"
+          className={inputClasses}
+          id={id}
+          placeholder={placeholder}
+          {...props}
+        />
 
         {label && (
           <label

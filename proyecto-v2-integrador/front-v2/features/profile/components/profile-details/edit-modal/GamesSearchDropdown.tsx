@@ -1,11 +1,12 @@
 'use client'
 
+import type { GameSearchItem } from '@/features/profile/services/profile.service'
+
 import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 
+import { ProfileService } from '@/features/profile/services/profile.service'
 import { SpinLoader } from '@/ui'
-
-import { GameSearchItem, ProfileService } from '../services/profile.service'
 
 type GamesSearchDropdownProps = {
   token: string

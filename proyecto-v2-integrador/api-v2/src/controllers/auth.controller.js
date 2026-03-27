@@ -72,9 +72,6 @@ const register = async (req, res) => {
         email_verified: 0,
       },
       process.env.SECRET_KEY,
-      {
-        expiresIn: "24h",
-      },
     );
 
     return res.send({
@@ -147,9 +144,6 @@ const login = async (req, res) => {
         email_verified: user.email_verified,
       },
       process.env.SECRET_KEY,
-      {
-        expiresIn: "24h",
-      },
     );
 
     return res.send({

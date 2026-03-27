@@ -10,9 +10,9 @@ import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
 import { useModal } from '@/features/shared/store/modals.store'
 import { Button, Checkbox, Modal } from '@/ui'
 
-import { preferencesSchema, type PreferencesFormData } from '../schemas/preferences.schema'
-import { ProfileService } from '../services/profile.service'
-import { useProfileStore } from '../store/profile.store'
+import { preferencesSchema, type PreferencesFormData } from '../../schemas/preferences.schema'
+import { ProfileService } from '../../services/profile.service'
+import { useProfileStore } from '../../store/profile.store'
 
 export function PreferencesModal() {
   const { token } = useAuthStore()

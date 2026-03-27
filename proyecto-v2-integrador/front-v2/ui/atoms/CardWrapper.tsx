@@ -43,7 +43,8 @@ export type CardWrapperPadding =
   | 'xl'
 
 export interface CardWrapperProps {
-  children: ReactNode
+  children?: ReactNode
+  loading?: boolean
   elevation?: CardWrapperElevation
 
   /**
@@ -102,6 +103,7 @@ const paddingClasses: Record<CardWrapperPadding, string> = {
 
 export function CardWrapper({
   children,
+  loading = false,
   elevation = '1',
   radius = 'lg',
   padding = 'md',
@@ -115,14 +117,15 @@ export function CardWrapper({
     radiusClasses[radius],
     paddingClasses[padding],
     onClick && 'cursor-pointer',
-    className
+    className,
+    loading && 'h-24 w-full animate-pulse'
   ]
     .filter(Boolean)
     .join(' ')
 
   return (
     <Component className={classes} onClick={onClick}>
-      {children}
+      {loading ? <div /> : children}
     </Component>
   )
 }
