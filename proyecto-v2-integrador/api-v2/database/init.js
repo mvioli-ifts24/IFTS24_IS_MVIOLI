@@ -61,6 +61,21 @@ async function initializeDatabase() {
       } else {
         console.log(chalk.green("✅ Tabla users ya está actualizada"));
       }
+
+      // Limpiar columnas legacy is_admin / is_moderator si sobrevivieron
+      for (const legacyCol of ["is_admin", "is_moderator"]) {
+        const [legacyCols] = await connection.execute(
+          `SHOW COLUMNS FROM users LIKE '${legacyCol}'`,
+        );
+        if (legacyCols.length > 0) {
+          await connection.execute(
+            `ALTER TABLE users DROP COLUMN ${legacyCol}`,
+          );
+          console.log(
+            chalk.green(`✅ Columna legacy '${legacyCol}' eliminada`),
+          );
+        }
+      }
     } catch (e) {
       // La tabla users no existe, continuar con la creación normal
       console.log(
@@ -69,6 +84,7 @@ async function initializeDatabase() {
     }
     const migrations = [
       "users_genders.sql",
+      "user_roles.sql",
       "cached_games.sql",
       "users.sql",
       "games_reviews_ratings.sql",
@@ -141,8 +157,96 @@ async function initializeDatabase() {
       // Ignorar si no existe
     }
 
+    // Migrar banners de columna única a dos columnas (horizontal + vertical).
+    try {
+      const [hCol] = await connection.execute(
+        "SHOW COLUMNS FROM banners LIKE 'image_filename_horizontal'",
+      );
+
+      if (hCol.length === 0) {
+        await connection.execute(
+          "ALTER TABLE banners ADD COLUMN image_filename_horizontal VARCHAR(255) NULL AFTER name",
+        );
+        await connection.execute(
+          "ALTER TABLE banners ADD COLUMN image_filename_vertical VARCHAR(255) NULL AFTER image_filename_horizontal",
+        );
+
+        const [oldFilenameCol] = await connection.execute(
+          "SHOW COLUMNS FROM banners LIKE 'image_filename'",
+        );
+
+        if (oldFilenameCol.length > 0) {
+          const [oldOrientationCol] = await connection.execute(
+            "SHOW COLUMNS FROM banners LIKE 'orientation'",
+          );
+
+          if (oldOrientationCol.length > 0) {
+            await connection.execute(
+              "UPDATE banners SET image_filename_horizontal = image_filename WHERE orientation = 'horizontal' OR orientation IS NULL",
+            );
+            await connection.execute(
+              "UPDATE banners SET image_filename_vertical = image_filename WHERE orientation = 'vertical'",
+            );
+            await connection.execute(
+              "ALTER TABLE banners DROP COLUMN orientation",
+            );
+          } else {
+            // Sin columna orientation: se asume que eran horizontales
+            await connection.execute(
+              "UPDATE banners SET image_filename_horizontal = image_filename",
+            );
+          }
+
+          await connection.execute(
+            "ALTER TABLE banners DROP COLUMN image_filename",
+          );
+        }
+
+        console.log(
+          chalk.green(
+            "✅ banners: migrado a image_filename_horizontal / image_filename_vertical",
+          ),
+        );
+      }
+    } catch (_) {
+      // La tabla banners puede no existir aún; se creará con la migración
+    }
+
+    // Asegurar columnas de timestamps en games_reviews para instalaciones existentes.
+    try {
+      const [grCreatedAt] = await connection.execute(
+        "SHOW COLUMNS FROM games_reviews LIKE 'created_at'",
+      );
+      if (grCreatedAt.length === 0) {
+        await connection.execute(
+          "ALTER TABLE games_reviews ADD COLUMN created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP",
+        );
+        console.log(
+          chalk.green("✅ games_reviews: columna created_at agregada"),
+        );
+      }
+
+      const [grUpdatedAt] = await connection.execute(
+        "SHOW COLUMNS FROM games_reviews LIKE 'updated_at'",
+      );
+      if (grUpdatedAt.length === 0) {
+        await connection.execute(
+          "ALTER TABLE games_reviews ADD COLUMN updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        );
+        console.log(
+          chalk.green("✅ games_reviews: columna updated_at agregada"),
+        );
+      }
+    } catch (_) {
+      // La tabla games_reviews puede no existir aún; se creará con las columnas en la migración
+    }
+
     // Ejecutar seeders
-    const seeders = ["users_genders.sql", "games_reviews_ratings.sql"];
+    const seeders = [
+      "users_genders.sql",
+      "user_roles.sql",
+      "games_reviews_ratings.sql",
+    ];
 
     console.log(chalk.yellow("🌱 Ejecutando seeders..."));
 

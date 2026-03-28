@@ -8,6 +8,7 @@ import {
   admin_index,
   admin_response,
 } from "#controllers/contact_messages.controller.js";
+import { index as rolesIndex } from "#controllers/roles.controller.js";
 import {
   destroy as sponsorsDestroy,
   index as sponsorsIndex,
@@ -17,11 +18,13 @@ import {
 import {
   assignModerator,
   createAdmin,
+  updateUserRole,
+  deleteUser as usersDestroy,
   index as usersIndex,
   show as usersShow,
 } from "#controllers/users.controller.js";
 import { connection as Database } from "#database";
-import { upload } from "#middlewares/profile.multer.middleware.js";
+import { imagesUpload } from "#middlewares/images.multer.middleware.js";
 import express from "express";
 
 const adminRoutesGroup = express.Router();
@@ -29,20 +32,42 @@ const adminRoutesGroup = express.Router();
 adminRoutesGroup.get("/contact_messages", admin_index);
 adminRoutesGroup.patch("/contact_messages/:id", admin_response);
 
+adminRoutesGroup.get("/roles", rolesIndex);
+
 adminRoutesGroup.get("/banners", bannersIndex);
-adminRoutesGroup.post("/banners", upload.single("image"), bannersStore);
-adminRoutesGroup.put("/banners/:id", upload.single("image"), bannersUpdate);
+adminRoutesGroup.post(
+  "/banners",
+  imagesUpload.fields([
+    { name: "image_horizontal", maxCount: 1 },
+    { name: "image_vertical", maxCount: 1 },
+  ]),
+  bannersStore,
+);
+adminRoutesGroup.put(
+  "/banners/:id",
+  imagesUpload.fields([
+    { name: "image_horizontal", maxCount: 1 },
+    { name: "image_vertical", maxCount: 1 },
+  ]),
+  bannersUpdate,
+);
 adminRoutesGroup.delete("/banners/:id", bannersDestroy);
 
 adminRoutesGroup.get("/sponsors", sponsorsIndex);
-adminRoutesGroup.post("/sponsors", upload.single("image"), sponsorsStore);
-adminRoutesGroup.put("/sponsors/:id", upload.single("image"), sponsorsUpdate);
+adminRoutesGroup.post("/sponsors", imagesUpload.single("image"), sponsorsStore);
+adminRoutesGroup.put(
+  "/sponsors/:id",
+  imagesUpload.single("image"),
+  sponsorsUpdate,
+);
 adminRoutesGroup.delete("/sponsors/:id", sponsorsDestroy);
 
 adminRoutesGroup.get("/users", usersIndex);
 adminRoutesGroup.get("/users/:id", usersShow);
 adminRoutesGroup.post("/users", createAdmin);
 adminRoutesGroup.patch("/users/:id/moderator", assignModerator);
+adminRoutesGroup.patch("/users/:id/role", updateUserRole);
+adminRoutesGroup.delete("/users/:id", usersDestroy);
 adminRoutesGroup.get("/stats", async (req, res) => {
   try {
     const [usersCount] = await Database.execute(

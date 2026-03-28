@@ -3,27 +3,28 @@ import jwt from "jsonwebtoken";
 export const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
+
     if (!authHeader) {
-      throw "No se proveyó autenticacion.";
+      throw "No se proveyó autenticación.";
     }
 
     const token = authHeader.split(" ")[1];
 
     if (!token) {
-      throw "El token provisto tiene un formato incorrecto. Debe ser de tipo <Bearer>.";
+      throw "El token provisto tiene un formato incorrecto. Debe ser de tipo Bearer.";
     }
 
-    jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
-      if (error) {
-        throw "Autenticación de token invalida o token expirado.";
-      }
-      req.user_id = decoded.id;
-    });
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+    req.user_id = decoded.id;
 
     next();
   } catch (err) {
     return res
       .status(401)
-      .send({ data: null, error: "Error durante la autenticación: " + err });
+      .send({
+        data: null,
+        error: "Error durante la autenticación: " + (err?.message ?? err),
+      });
   }
 };

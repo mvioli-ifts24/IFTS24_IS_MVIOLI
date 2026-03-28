@@ -1,7 +1,8 @@
 CREATE TABLE `banners` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `image_filename` varchar(255) NOT NULL,
+  `image_filename_horizontal` varchar(255) NULL,
+  `image_filename_vertical` varchar(255) NULL,
   `link` varchar(500) DEFAULT NULL,
   `contact` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,

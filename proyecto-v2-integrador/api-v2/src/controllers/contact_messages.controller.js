@@ -13,7 +13,13 @@ const index = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
@@ -27,7 +33,13 @@ const admin_index = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
@@ -49,7 +61,13 @@ const store = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
@@ -77,24 +95,46 @@ const admin_response = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
 const destroy = async (req, res) => {
   try {
     const { id } = req.params;
+    const user_id = req.user_id;
 
-    const [results] = await Database.execute(
-      "DELETE FROM `contact_messages` WHERE id = ?",
-      [id],
+    const [owned] = await Database.execute(
+      "SELECT id FROM `contact_messages` WHERE id = ? AND user_id = ?",
+      [id, user_id],
     );
+
+    if (!owned.length) {
+      return res.status(403).send({
+        data: null,
+        error: "No tenés permiso para eliminar este mensaje.",
+      });
+    }
+
+    await Database.execute("DELETE FROM `contact_messages` WHERE id = ?", [id]);
 
     return res.send({ data: null, error: null });
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 

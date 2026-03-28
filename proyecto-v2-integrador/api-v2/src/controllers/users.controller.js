@@ -24,7 +24,7 @@ const USER_SELECT = `
     users.about,
     users.deleted_at,
     users_genders.label as gender_label,
-    CONCAT(?, users.profile_picture_filename) as profile_picture_url
+    IF(users.profile_picture_filename IS NULL OR users.profile_picture_filename = '', NULL, CONCAT(?, users.profile_picture_filename)) as profile_picture_url
   FROM users
   JOIN users_genders ON users_genders.id = users.gender_id
 `;
@@ -69,20 +69,86 @@ const enrichFavoriteGame = async (user) => {
 
 const index = async (req, res) => {
   try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const pageSize = Math.min(
+      20,
+      Math.max(1, parseInt(req.query.pageSize) || 5),
+    );
+    const search = req.query.search?.trim() || null;
+    const offset = (page - 1) * pageSize;
+
+    const role_id = req.query.role_id ? parseInt(req.query.role_id) : null;
+
+    const conditions = [];
+    const conditionParams = [];
+
+    if (search) {
+      conditions.push(
+        "(users.name LIKE ? OR users.surname LIKE ? OR users.email LIKE ?)",
+      );
+      const pat = `%${search}%`;
+      conditionParams.push(pat, pat, pat);
+    }
+
+    if (role_id) {
+      const [roleRows] = await Database.execute(
+        "SELECT name FROM user_roles WHERE id = ?",
+        [role_id],
+      );
+      if (roleRows.length) {
+        conditions.push("users.role = ?");
+        conditionParams.push(roleRows[0].name);
+      }
+    }
+
+    const whereClause = conditions.length
+      ? `WHERE ${conditions.join(" AND ")}`
+      : "";
+
+    const [countRows] = await Database.execute(
+      `SELECT COUNT(*) as total FROM users ${whereClause}`,
+      conditionParams,
+    );
+    const total = countRows[0].total;
+
     const [results] = await Database.execute(
-      `${USER_SELECT} ORDER BY users.id`,
-      [PROFILE_PICTURES_PATH],
+      `${USER_SELECT} ${whereClause} ORDER BY users.id LIMIT ${pageSize} OFFSET ${offset}`,
+      [PROFILE_PICTURES_PATH, ...conditionParams],
     );
 
     const enrichedUsers = await Promise.all(
       results.map((user) => enrichFavoriteGame(user)),
     );
 
-    return res.send({ data: enrichedUsers, error: null });
+    const baseUrl = `${req.protocol}://${req.get("host")}${req.path}`;
+    const buildUrl = (p) => {
+      const qs = new URLSearchParams({
+        page: String(p),
+        pageSize: String(pageSize),
+      });
+      if (search) qs.set("search", search);
+      if (role_id) qs.set("role_id", String(role_id));
+      return `${baseUrl}?${qs.toString()}`;
+    };
+
+    return res.send({
+      data: enrichedUsers,
+      error: null,
+      total,
+      page,
+      pageSize,
+      prevUrl: page > 1 ? buildUrl(page - 1) : null,
+      nextUrl: page * pageSize < total ? buildUrl(page + 1) : null,
+    });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+    console.error("[users.index]", err);
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -100,9 +166,13 @@ const show = async (req, res) => {
 
     return res.send({ data: user, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -187,9 +257,13 @@ const update = async (req, res) => {
 
     return res.send({ data: user, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -234,9 +308,13 @@ const changePassword = async (req, res) => {
 
     return res.send({ data: { updated: true }, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -244,7 +322,6 @@ const disable = async (req, res) => {
   try {
     const user_id = req.user_id;
     const { disable } = req.body;
-    console.log(disable);
 
     if (disable !== 0 && disable !== 1) {
       throw "Para deshabilitar un registro es obligatorio el campo disable con un valor de 0 o 1.";
@@ -262,9 +339,13 @@ const disable = async (req, res) => {
 
     return res.send({ data: results.length ? results[0] : null, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -297,9 +378,13 @@ const createAdmin = async (req, res) => {
       error: null,
     });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -320,9 +405,13 @@ const assignModerator = async (req, res) => {
 
     return res.send({ data: results[0], error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -334,9 +423,57 @@ const deleteUser = async (req, res) => {
 
     return res.send({ data: null, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
+  }
+};
+
+const updateUserRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role_id } = req.body;
+
+    if (!role_id) {
+      throw "El ID del rol es obligatorio.";
+    }
+
+    const [roleRows] = await Database.execute(
+      "SELECT id, name FROM user_roles WHERE id = ?",
+      [role_id],
+    );
+
+    if (!roleRows.length) {
+      throw "El rol provisto no existe.";
+    }
+
+    await Database.execute("UPDATE users SET role = ? WHERE id = ?", [
+      roleRows[0].name,
+      id,
+    ]);
+
+    const [results] = await Database.execute(
+      `${USER_SELECT} WHERE users.id = ?`,
+      [PROFILE_PICTURES_PATH, id],
+    );
+
+    if (!results.length) {
+      throw "No se encontró el usuario.";
+    }
+
+    return res.send({ data: results[0], error: null });
+  } catch (err) {
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -349,4 +486,5 @@ export {
   index,
   show,
   update,
+  updateUserRole,
 };

@@ -5,6 +5,9 @@
 CREATE DATABASE IF NOT EXISTS rank;
 USE rank;
 
+-- Tabla de roles de usuario
+SOURCE database/migrations/user_roles.sql;
+
 -- Tabla de géneros de usuario
 SOURCE database/migrations/users_genders.sql;
 
@@ -30,6 +33,7 @@ SOURCE database/migrations/banners.sql;
 SOURCE database/migrations/sponsors.sql;
 
 -- Insertar datos iniciales
+SOURCE database/seeders/user_roles.sql;
 SOURCE database/seeders/users_genders.sql;
 SOURCE database/seeders/games_reviews_ratings.sql;
 

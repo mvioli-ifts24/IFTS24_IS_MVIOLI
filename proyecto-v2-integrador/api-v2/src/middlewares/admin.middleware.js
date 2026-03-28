@@ -12,13 +12,21 @@ export const adminMiddleware = async (req, res, next) => {
     const user = results[0];
 
     if (user.role !== "admin") {
-      throw "El usuario logueado no es administrador.";
+      return res
+        .status(403)
+        .send({
+          data: null,
+          error: "Acceso denegado: se requieren permisos de administrador.",
+        });
     }
 
     next();
   } catch (err) {
     return res
-      .status(401)
-      .send({ data: null, error: "Error durante la autorización: " + err });
+      .status(403)
+      .send({
+        data: null,
+        error: "Error durante la autorización: " + (err?.message ?? err),
+      });
   }
 };

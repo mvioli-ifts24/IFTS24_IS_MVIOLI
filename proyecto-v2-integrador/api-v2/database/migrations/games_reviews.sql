@@ -5,6 +5,8 @@ CREATE TABLE `games_reviews` (
   `rating_id` bigint unsigned NOT NULL,
   `api_game_id` bigint unsigned NOT NULL,
   `user_id` bigint unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `games_reviews_unique` (`api_game_id`,`user_id`),
   KEY `games_reviews_games_reviews_ratings_FK` (`rating_id`),

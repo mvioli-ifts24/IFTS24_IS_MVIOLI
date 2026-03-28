@@ -23,10 +23,9 @@ logs
 .tmp/
 temp/
 
-# Archivos subidos (en desarrollo local)
-public/uploads/profile_pictures/
-public/uploads/banners/
-public/uploads/sponsors/
+# Archivos subidos — ignorar contenido pero mantener estructura de carpetas
+public/uploads/**
+!public/uploads/**/.gitkeep
 
 # Coverage directory used by tools like istanbul
 coverage/

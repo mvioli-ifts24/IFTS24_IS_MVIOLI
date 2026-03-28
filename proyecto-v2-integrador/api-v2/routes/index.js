@@ -1,7 +1,6 @@
 import { adminMiddleware } from "#middlewares/admin.middleware.js";
 import { authMiddleware } from "#middlewares/auth.middleware.js";
 import express from "express";
-import path from "path";
 import adminRoutesGroup from "./admin.route.js";
 import authRoutesGroup from "./auth.route.js";
 import contactMessagesRoutesGroup from "./contact_messages.route.js";
@@ -17,7 +16,6 @@ const rootRouter = router
   .use("/auth", authRoutesGroup)
   .use("", authMiddleware)
   .use("/users_genders", usersGendersRouteGroup)
-  .use("/storage", express.static(path.resolve(process.cwd(), "./public")))
   .use("/games_reviews", gamesReviewsRoutesGroup)
   .use("/games_reviews_ratings", gamesReviewsRatingsRoutesGroup)
   .use("/contact_messages", contactMessagesRoutesGroup)

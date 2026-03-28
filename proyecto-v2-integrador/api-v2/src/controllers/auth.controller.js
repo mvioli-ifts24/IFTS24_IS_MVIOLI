@@ -21,7 +21,7 @@ const register = async (req, res) => {
       gender_id,
       accept_newsletter,
     } = req.body;
-    console.log("req.body", req.body);
+
     if (
       !email ||
       !password ||
@@ -58,7 +58,7 @@ const register = async (req, res) => {
         gender_id,
         "user",
         accept_newsletter ? 1 : 0,
-        req.file.filename,
+        req.file?.filename ?? null,
       ],
     );
 
@@ -89,8 +89,11 @@ const register = async (req, res) => {
           favorite_game_thumbnail: null,
           email_verified: 0,
           about: null,
-          profile_picture_url:
-            API_HOST + "/storage/uploads/profile_pictures/" + req.file.filename,
+          profile_picture_url: req.file
+            ? API_HOST +
+              "/storage/uploads/profile_pictures/" +
+              req.file.filename
+            : null,
           accept_newsletter: accept_newsletter ? 1 : 0,
           birth_date: birthDate
             ? new Date(birthDate).toISOString().split("T")[0]
@@ -102,7 +105,13 @@ const register = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
@@ -174,7 +183,13 @@ const login = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
@@ -200,7 +215,13 @@ const verifyAccount = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 

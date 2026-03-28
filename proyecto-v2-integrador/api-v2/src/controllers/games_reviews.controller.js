@@ -28,7 +28,13 @@ const indexGameReviews = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
@@ -48,7 +54,13 @@ const indexOwnReviews = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
@@ -67,7 +79,13 @@ const indexUserReviews = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
@@ -78,6 +96,16 @@ const store = async (req, res) => {
 
     if (!title || !description || !rating_id || !api_game_id) {
       throw "Para crear un registro son obligatorios tres campos: titulo, reseña, id de juego api y puntuación.";
+    }
+
+    // Verificar si el usuario ya tiene una reseña para este juego
+    const [existing] = await Database.execute(
+      "SELECT id FROM `games_reviews` WHERE api_game_id = ? AND user_id = ?",
+      [api_game_id, user_id],
+    );
+
+    if (existing.length) {
+      throw "Ya tenés una reseña publicada para este juego. Podés editarla desde tu perfil.";
     }
 
     const [resultsCachedGames] = await Database.execute(
@@ -118,18 +146,38 @@ const store = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
 const update = async (req, res) => {
   try {
     const { id } = req.params;
+    const user_id = req.user_id;
 
     const { title, description, rating_id, api_game_id } = req.body;
 
     if (!title || !description || !rating_id || !api_game_id) {
       throw "Para actualizar un registro son obligatorios tres campos: titulo, reseña, id de juego api y puntuación.";
+    }
+
+    // Verificar que la reseña pertenece al usuario
+    const [owned] = await Database.execute(
+      "SELECT id FROM `games_reviews` WHERE id = ? AND user_id = ?",
+      [id, user_id],
+    );
+
+    if (!owned.length) {
+      return res.status(403).send({
+        data: null,
+        error: "No tenés permiso para editar esta reseña.",
+      });
     }
 
     await Database.execute(
@@ -146,24 +194,47 @@ const update = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
 const destroy = async (req, res) => {
   try {
     const { id } = req.params;
+    const user_id = req.user_id;
 
-    const [results] = await Database.execute(
-      "DELETE FROM `games_reviews` WHERE id = ?",
-      [id],
+    // Verificar que la reseña pertenece al usuario
+    const [owned] = await Database.execute(
+      "SELECT id FROM `games_reviews` WHERE id = ? AND user_id = ?",
+      [id, user_id],
     );
+
+    if (!owned.length) {
+      return res.status(403).send({
+        data: null,
+        error: "No tenés permiso para eliminar esta reseña.",
+      });
+    }
+
+    await Database.execute("DELETE FROM `games_reviews` WHERE id = ?", [id]);
 
     return res.send({ data: null, error: null });
   } catch (err) {
     return res
       .status(400)
-      .send({ data: null, error: typeof err === 'string' ? err : 'Ocurrió un error inesperado. Intenta de nuevo más tarde.' });
+      .send({
+        data: null,
+        error:
+          typeof err === "string"
+            ? err
+            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+      });
   }
 };
 
