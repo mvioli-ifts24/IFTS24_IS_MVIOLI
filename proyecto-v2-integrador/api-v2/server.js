@@ -27,6 +27,17 @@ app.use("/storage", express.static(path.join(__dirname, "public")));
 
 app.use("/api", rootRouter);
 
+// Manejador de errores global — siempre responde JSON
+app.use((err, req, res, _next) => {
+  const status = err.status || err.statusCode || 500;
+  const message =
+    typeof err === "string"
+      ? err
+      : err.message ||
+        "Ocurrió un error inesperado. Intenta de nuevo más tarde.";
+  return res.status(status).json({ data: null, error: message });
+});
+
 app.listen(port, () => {
   console.log(
     chalk.green.inverse.bold(

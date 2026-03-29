@@ -44,8 +44,8 @@ interface BaseButtonProps {
 
   /**
    * Tamaño del botón
-   * @default 'm'
-   *  xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
+   * @default 'sm'
+   *  2xs≈18px · xs≈24px · sm≈32px · m≈36px · lg≈44px · xl≈48px
    */
   size?: ButtonSize
 
@@ -163,21 +163,27 @@ const iconSizeMap: Record<ButtonSize, number> = {
   '2xs': 10,
   xs: 12,
   sm: 14,
-  m: 16,
-  lg: 18,
-  xl: 20
+  m: 14,
+  lg: 16,
+  xl: 18
 }
 
 /**
- * Mapeo de tamaños a clases de Tailwind
+ * Mapeo de tamaños a clases de Tailwind (solo spacing y tipografía).
+ *
+ * Alturas aproximadas: 2xs≈18px · xs≈24px · sm≈32px · m≈36px · lg≈44px · xl≈48px
+ * Mismo size en Button/Input/Select produce la misma altura, facilitando alignment en filas.
+ *
+ * El border-radius (rounded-lg) se aplica en las clases base del componente,
+ * independiente del size, para alinear visualmente con Input/Select/DatePicker.
  */
 const sizeClasses: Record<ButtonSize, string> = {
-  '2xs': 'px-2 py-1 text-[10px] rounded-md',
-  xs: 'px-3 py-2 text-xs rounded-lg',
-  sm: 'px-4 py-2 text-sm rounded-lg',
-  m: 'px-6 py-3 text-base rounded-xl',
-  lg: 'px-8 py-4 text-lg rounded-xl',
-  xl: 'px-10 py-5 text-xl rounded-2xl'
+  '2xs': 'px-2 py-0.5 text-[10px]',
+  xs: 'px-2.5 py-1 text-xs',
+  sm: 'px-3 py-1.5 text-sm',
+  m: 'px-4 py-2 text-sm',
+  lg: 'px-5 py-2.5 text-base',
+  xl: 'px-6 py-3 text-base'
 }
 
 /**
@@ -202,7 +208,7 @@ export function Button({
   iconLeftClassName = '',
   iconRight: IconRight,
   iconRightClassName = '',
-  size = 'sm',
+  size = 'm',
   weight = 'medium',
   variant = 'filled',
   ...props
@@ -231,6 +237,7 @@ export function Button({
     'items-center',
     'justify-center',
     'gap-2',
+    'rounded-lg',
     'transition-all',
     'duration-300',
     'ease-out',

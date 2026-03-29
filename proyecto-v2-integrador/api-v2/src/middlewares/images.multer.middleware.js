@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 const imagesUpload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    const fileTypes = /jpg|jpeg|png|gif|webp/;
+    const fileTypes = /jpg|jpeg|png|gif|webp|svg/;
     const mimetype = fileTypes.test(file.mimetype);
     const extname = fileTypes.test(
       path.extname(file.originalname).toLowerCase(),
@@ -32,7 +32,9 @@ const imagesUpload = multer({
       return cb(null, true);
     }
     cb(
-      "Tipo de archivo no soportado. Solo se permiten imágenes (jpg, jpeg, png, gif, webp).",
+      new Error(
+        "Tipo de archivo no soportado. Solo se permiten imágenes (jpg, jpeg, png, gif, webp).",
+      ),
     );
   },
   limits: { fileSize: 1024 * 1024 * 2 }, // 2MB

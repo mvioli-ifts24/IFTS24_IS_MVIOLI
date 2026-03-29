@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect x="8"  y="14" width="36" height="36" rx="4" fill="currentColor"/>
+  <rect x="8"  y="54" width="36" height="14" rx="4" fill="currentColor" opacity="0.4"/>
+  <rect x="50" y="14" width="20" height="54" rx="4" fill="currentColor" opacity="0.6"/>
+  <text x="82" y="54" font-family="sans-serif" font-weight="700" font-size="30" letter-spacing="0" fill="currentColor">PRAXIS</text>
+</svg>

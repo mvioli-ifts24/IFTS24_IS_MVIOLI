@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <polygon points="10,70 40,10 70,70" fill="currentColor"/>
+  <polygon points="40,70 70,10 100,70" fill="currentColor" opacity="0.4"/>
+  <text x="112" y="54" font-family="sans-serif" font-weight="700" font-size="30" letter-spacing="2" fill="currentColor">ZELTRO</text>
+</svg>

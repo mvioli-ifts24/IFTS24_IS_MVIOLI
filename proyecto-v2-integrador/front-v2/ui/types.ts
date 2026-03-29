@@ -6,7 +6,11 @@
 /**
  * Tamaños estándar para componentes
  *
- * 2xs = 10px, xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
+ * La escala está calibrada para que el mismo `size` en Button, Input, Select y DatePicker
+ * produzca la misma altura, facilitando el alineamiento cuando se combinan en una fila.
+ *
+ * Alturas aproximadas:
+ *   2xs ≈ 18px · xs ≈ 24px · sm ≈ 32px · m ≈ 36px · lg ≈ 44px · xl ≈ 48px
  */
 export type Size =
   /** 10px */

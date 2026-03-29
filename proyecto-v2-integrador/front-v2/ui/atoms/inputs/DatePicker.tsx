@@ -60,9 +60,9 @@ export function DatePicker({
       <div className="relative mb-2">
         <input
           className={[
-            'text-foreground rounded border transition-colors duration-200 focus:ring-0 focus:outline-none',
+            'text-foreground rounded-lg border transition-colors duration-200 focus:ring-0 focus:outline-none',
             'peer block w-full appearance-none bg-transparent',
-            'px-2.5 py-2.5 text-base',
+            'px-3 py-2 text-sm',
             stateClasses[state],
             className
           ]

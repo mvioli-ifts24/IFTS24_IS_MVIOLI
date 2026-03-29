@@ -26,7 +26,7 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
   return (
     <div className="relative">
       {/* Avatar Button */}
-      <button onClick={() => setIsOpen(!isOpen)}>
+      <button className="flex h-full items-center" onClick={() => setIsOpen(!isOpen)}>
         <Avatar
           className="cursor-pointer hover:border-neutral-200"
           name={user.email}

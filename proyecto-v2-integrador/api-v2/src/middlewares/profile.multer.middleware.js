@@ -33,7 +33,9 @@ const upload = multer({
       return cb(null, true);
     }
     cb(
-      "Tipo de archivo no soportado. Solo se permiten imágenes (jpg, jpeg, png).",
+      new Error(
+        "Tipo de archivo no soportado. Solo se permiten imágenes (jpg, jpeg, png).",
+      ),
     );
   },
   limits: { fileSize: 1024 * 1024 * 1 },

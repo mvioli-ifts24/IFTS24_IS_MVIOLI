@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect x="8"  y="14" width="12" height="52" rx="3" fill="currentColor"/>
+  <rect x="26" y="24" width="12" height="42" rx="3" fill="currentColor"/>
+  <rect x="44" y="10" width="12" height="56" rx="3" fill="currentColor"/>
+  <rect x="62" y="30" width="12" height="36" rx="3" fill="currentColor"/>
+  <text x="86" y="54" font-family="sans-serif" font-weight="700" font-size="28" letter-spacing="1" fill="currentColor">FLUXEN</text>
+</svg>

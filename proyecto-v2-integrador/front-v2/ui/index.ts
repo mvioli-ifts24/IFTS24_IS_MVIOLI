@@ -79,6 +79,12 @@ export { Modal, type ModalProps } from './atoms/Modal'
 
 export { SearchInput, type SearchInputProps } from './atoms/inputs/SearchInput'
 
+export { Toggle, type ToggleColor, type ToggleProps } from './atoms/inputs/Toggle'
+
+export { ConfirmActionModal, type ConfirmActionModalProps } from './molecules/ConfirmActionModal'
+
+export { Paginator, type PaginatorProps } from './molecules/table/Paginator'
+
 // ================================
 // MOLECULES - Componentes compuestos
 // ================================
@@ -91,9 +97,29 @@ export { ReviewCard, type ReviewCardProps } from './molecules/ReviewCard'
 
 export { ThemeToggle, type ThemeToggleProps } from './molecules/ThemeToggle'
 
+export { ImageUpload, type ImageUploadProps, type ImageUploadState } from './molecules/ImageUpload'
+
+export {
+  TableFilters,
+  type FilterGroup,
+  type FilterOption,
+  type TableFiltersProps
+} from './molecules/table/TableFilters'
+
+export {
+  Table,
+  type ColumnDef,
+  type TableActionDef,
+  type TableProps
+} from './molecules/table/Table'
+
+export { SearchFilterBar, type SearchFilterBarProps } from './molecules/table/SearchFilterBar'
+
 // ================================
 // ORGANISMS - Componentes complejos
 // ================================
+
+export { SearchFiltersTable, type SearchFiltersTableProps } from './organisms/SearchFiltersTable'
 
 export { Navbar } from './organisms/Navbar'
 

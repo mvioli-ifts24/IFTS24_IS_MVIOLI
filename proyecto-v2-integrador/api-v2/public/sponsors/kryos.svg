@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <line x1="40" y1="8"  x2="40" y2="72" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+  <line x1="8"  y1="24" x2="72" y2="56" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+  <line x1="72" y1="24" x2="8"  y2="56" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="40" cy="8"  r="4" fill="currentColor"/>
+  <circle cx="40" cy="72" r="4" fill="currentColor"/>
+  <circle cx="8"  cy="24" r="4" fill="currentColor"/>
+  <circle cx="72" cy="24" r="4" fill="currentColor"/>
+  <circle cx="8"  cy="56" r="4" fill="currentColor"/>
+  <circle cx="72" cy="56" r="4" fill="currentColor"/>
+  <text x="86" y="54" font-family="sans-serif" font-weight="800" font-size="34" letter-spacing="-1" fill="currentColor">KRYOS</text>
+</svg>

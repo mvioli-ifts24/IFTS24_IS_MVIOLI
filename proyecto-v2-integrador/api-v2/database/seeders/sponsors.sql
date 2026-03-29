@@ -1,0 +1,10 @@
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Drakko', 'drakko.svg', 'https://www.drakko.gg-no-existe', 'contacto@drakko.gg-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Fluxen', 'fluxen.svg', 'https://www.fluxen.io-no-existe', 'contacto@fluxen.io-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Kryos', 'kryos.svg', 'https://www.kryos.tech-no-existe', 'contacto@kryos.tech-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Lumex', 'lumex.svg', 'https://www.lumex.net-no-existe', 'contacto@lumex.net-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Nuvix', 'nuvix.svg', 'https://www.nuvix.gg-no-existe', 'contacto@nuvix.gg-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Orka', 'orka.svg', 'https://www.orka-gaming.com-no-existe', 'contacto@orka-gaming.com-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Praxis', 'praxis.svg', 'https://www.praxis.io-no-existe', 'contacto@praxis.io-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Syntherr', 'syntherr.svg', 'https://www.syntherr.gg-no-existe', 'contacto@syntherr.gg-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Veloq', 'veloq.svg', 'https://www.veloq.tech-no-existe', 'contacto@veloq.tech-no-existe');
+INSERT IGNORE INTO `sponsors` (name, image_filename, link, contact) VALUES ('Zeltro', 'zeltro.svg', 'https://www.zeltro.gaming-no-existe', 'contacto@zeltro.gaming-no-existe');

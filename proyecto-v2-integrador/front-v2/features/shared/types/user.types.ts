@@ -17,3 +17,9 @@ export type User = {
 }
 
 export type UserRole = 'admin' | 'moderator' | 'user'
+
+export type UserRoleOption = {
+  id: number
+  name: UserRole
+  label: string
+}

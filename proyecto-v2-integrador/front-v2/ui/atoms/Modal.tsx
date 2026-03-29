@@ -14,6 +14,21 @@ export interface ModalProps {
   children: ReactNode
   closeDisabled?: boolean
   closeOnEscape?: boolean
+  /**
+   * Tamaño máximo del modal.
+   * @default 'md'
+   */
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  /**
+   * Eleva los z-indices del modal para superponerse a otro modal abierto.
+   * @default false
+   */
+  elevated?: boolean
+  /**
+   * Selector CSS del primer elemento a enfocar al abrir el modal.
+   * Si no se especifica, FocusTrap enfoca el primer elemento focusable.
+   */
+  initialFocus?: string
 }
 
 export function Modal({
@@ -22,8 +37,17 @@ export function Modal({
   title,
   children,
   closeDisabled = false,
-  closeOnEscape = true
+  closeOnEscape = true,
+  size = 'md',
+  elevated = false,
+  initialFocus
 }: ModalProps) {
+  const sizeClass = {
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl'
+  }[size]
   const handleClose = () => {
     if (closeDisabled) return
     onClose()
@@ -58,15 +82,21 @@ export function Modal({
         clickOutsideDeactivates: false,
         escapeDeactivates: false,
         fallbackFocus: '#modal-content',
-        preventScroll: true
+        preventScroll: true,
+        ...(initialFocus ? { initialFocus } : {})
       }}
     >
       <div className="absolute">
-        <div aria-hidden="true" className="fixed inset-0 z-40 bg-black/50 transition-opacity" />
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div
+          aria-hidden="true"
+          className={`fixed inset-0 ${elevated ? 'z-60' : 'z-40'} bg-black/50 transition-opacity`}
+        />
+        <div
+          className={`fixed inset-0 ${elevated ? 'z-70' : 'z-50'} flex items-center justify-center p-4`}
+        >
           <div
             aria-modal="true"
-            className="bg-surface relative w-full max-w-md rounded-xl border border-neutral-200 shadow-lg"
+            className={`bg-surface relative w-full ${sizeClass} rounded-xl border border-neutral-200 shadow-lg`}
             id="modal-content"
             role="dialog"
           >

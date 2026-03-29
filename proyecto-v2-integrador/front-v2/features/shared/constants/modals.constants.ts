@@ -17,7 +17,19 @@ export const MODAL_IDS = {
   // Profile modals
   EDIT_PROFILE: 'modal/profile/edit',
   CHANGE_PASSWORD: 'modal/profile/change-password',
-  EDIT_PREFERENCES: 'modal/profile/edit-preferences'
+  EDIT_PREFERENCES: 'modal/profile/edit-preferences',
+
+  // Admin — Users
+  ADMIN_EDIT_USER_ROLE: 'modal/admin/edit-user-role',
+  ADMIN_DELETE_USER: 'modal/admin/delete-user',
+
+  // Admin — Banners
+  ADMIN_BANNER_FORM: 'modal/admin/banner-form',
+  ADMIN_BANNER_DELETE: 'modal/admin/banner-delete',
+
+  // Admin — Sponsors
+  ADMIN_SPONSOR_FORM: 'modal/admin/sponsor-form',
+  ADMIN_SPONSOR_DELETE: 'modal/admin/sponsor-delete'
 } as const
 
 /**

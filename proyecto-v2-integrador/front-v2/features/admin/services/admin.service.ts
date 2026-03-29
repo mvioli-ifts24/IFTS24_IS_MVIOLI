@@ -1,4 +1,5 @@
 import { ApiResponse } from '@/features/shared/types/api.types'
+import { type UserRoleOption } from '@/features/shared/types/user.types'
 
 export type AdminStats = {
   users: number
@@ -40,6 +41,14 @@ export const AdminService = {
 
   async getTopGames(token: string): Promise<ApiResponse<TopGames>> {
     const response = await fetch(`${API_URL}/admin/top-games`, {
+      headers: authHeaders(token)
+    })
+
+    return await response.json()
+  },
+
+  async getRoles(token: string): Promise<ApiResponse<UserRoleOption[]>> {
+    const response = await fetch(`${API_URL}/admin/roles`, {
       headers: authHeaders(token)
     })
 

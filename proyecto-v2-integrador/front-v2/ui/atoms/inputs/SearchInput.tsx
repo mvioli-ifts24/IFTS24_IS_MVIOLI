@@ -62,7 +62,6 @@ export interface SearchInputProps {
  *
  * <SearchInput
  *   id="game-search"
- *   label="Buscar juego"
  *   value={searchQuery}
  *   onChange={setSearchQuery}
  *   onFocus={() => setShowDropdown(true)}
@@ -80,19 +79,15 @@ export function SearchInput({
   disabled = false
 }: SearchInputProps) {
   return (
-    <div className="w-full">
-      <Input
-        labelAlwaysTop
-        disabled={disabled}
-        iconLeft={MagnifyingGlassIcon}
-        id={id}
-        label={label}
-        onBlur={onBlur}
-        onChange={event => onChange(event.target.value)}
-        onFocus={onFocus}
-        placeholder="Buscar"
-        value={value}
-      />
-    </div>
+    <Input
+      disabled={disabled}
+      iconLeft={MagnifyingGlassIcon}
+      id={id}
+      label={label}
+      onBlur={onBlur}
+      onChange={event => onChange(event.target.value)}
+      onFocus={onFocus}
+      value={value}
+    />
   )
 }

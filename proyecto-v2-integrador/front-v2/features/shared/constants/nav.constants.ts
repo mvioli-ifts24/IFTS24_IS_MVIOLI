@@ -58,12 +58,6 @@ export const NAV_ITEMS: NavItem[] = [
   },
   { label: 'Usuarios', href: ROUTES.usuarios, icon: UsersIcon, allowedRoles: ['admin'] },
   {
-    label: 'Administradores',
-    href: ROUTES.administradores,
-    icon: UserCircleGearIcon,
-    allowedRoles: ['admin']
-  },
-  {
     label: 'Banners',
     href: ROUTES.banners,
     icon: FolderOpenIcon,

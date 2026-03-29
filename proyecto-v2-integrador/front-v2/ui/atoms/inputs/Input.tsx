@@ -25,7 +25,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   /**
    * Tamaño del input
    * @default 'm'
-   *  xs = 12px, sm = 14px, m = 16px, lg = 18px, xl = 20px
+   *  2xs≈18px · xs≈24px · sm≈32px · m≈36px · lg≈44px · xl≈48px
    */
   size?: InputSize
 
@@ -96,21 +96,24 @@ const iconSizeMap: Record<InputSize, number> = {
   '2xs': 10,
   xs: 12,
   sm: 14,
-  m: 16,
-  lg: 18,
-  xl: 20
+  m: 14,
+  lg: 16,
+  xl: 16
 }
 
 /**
  * Mapeo de tamaños a clases de Tailwind
+ *
+ * Alturas aproximadas: 2xs≈18px · xs≈24px · sm≈32px · m≈36px · lg≈44px · xl≈48px
+ * Mismo size produce la misma altura que Button/Select, facilitando alignment en filas.
  */
 const sizeClasses: Record<InputSize, string> = {
   '2xs': 'px-1.5 py-0.5 text-[10px]',
   xs: 'px-2 py-1 text-xs',
   sm: 'px-2.5 py-1.5 text-sm',
-  m: 'px-2.5 py-2.5 text-base',
-  lg: 'px-3 py-3 text-lg',
-  xl: 'px-3.5 py-3.5 text-xl'
+  m: 'px-3 py-2 text-sm',
+  lg: 'px-3.5 py-2.5 text-base',
+  xl: 'px-4 py-3 text-base'
 }
 
 const stateClasses: Record<InputState, string> = {
@@ -163,7 +166,7 @@ export function Input({
   ...props
 }: InputProps) {
   const inputClasses = [
-    'text-foreground border focus:ring-0 focus:outline-none rounded transition-colors duration-200',
+    'text-foreground border focus:ring-0 focus:outline-none rounded-lg transition-colors duration-200',
     'peer block w-full appearance-none bg-transparent',
     sizeClasses[size],
     stateClasses[state],
@@ -188,7 +191,7 @@ export function Input({
 
   return (
     <div className="w-full">
-      <div className="relative mb-2">
+      <div className="relative">
         <input
           autoComplete="off"
           className={inputClasses}
@@ -210,7 +213,8 @@ export function Input({
                 'peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2',
               'rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4',
               // Fondo que coincide con el contenedor, separado del bg-background hardcodeado
-              'bg-background'
+              'bg-background',
+              IconLeft && 'ms-4'
             ]
               .filter(Boolean)
               .join(' ')}

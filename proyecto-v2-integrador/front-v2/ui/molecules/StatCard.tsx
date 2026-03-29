@@ -95,8 +95,8 @@ export function StatCard({ icon: Icon, label, value, href, accent = 1 }: StatCar
         >
           <Icon size={24} weight="regular" />
         </span>
-        <div className="flex flex-col gap-2">
-          <Text size="2xs" variant="label">
+        <div className="flex min-w-0 flex-1 flex-col gap-2" title={label}>
+          <Text className="line-clamp-2 w-full truncate" size="2xs" variant="label">
             {label}
           </Text>
           <span className="text-foreground text-2xl leading-none font-bold">{value}</span>

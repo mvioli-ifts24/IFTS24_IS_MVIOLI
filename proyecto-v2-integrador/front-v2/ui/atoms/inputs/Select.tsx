@@ -1,4 +1,10 @@
+import { CaretDownIcon } from '@phosphor-icons/react/dist/ssr'
 import { type ReactNode, type SelectHTMLAttributes } from 'react'
+
+export interface SelectOption {
+  label: string
+  value: string | number
+}
 
 export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   /**
@@ -24,9 +30,20 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
   className?: string
 
   /**
-   * Opciones del select
+   * Tamaño del select
+   * @default 'default'
    */
-  children: ReactNode
+  size?: 'default' | 'xs'
+
+  /**
+   * Opciones del select. Alternativa conveniente a usar children con <option>.
+   */
+  options?: SelectOption[]
+
+  /**
+   * Contenido personalizado. Se ignora si se pasa `options`.
+   */
+  children?: ReactNode
 }
 
 /**
@@ -35,13 +52,21 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
 export function Select({
   label,
   errorMessage,
+  size = 'default',
   state = 'default',
   className = '',
   children,
+  options,
   id,
   ...props
 }: SelectProps) {
   const selectId = id
+
+  // Alturas: default ≈ 36px (alinea con Input m / Button m) · xs ≈ 24px (compact)
+  const sizeClasses = {
+    default: { wrapper: 'mb-2', select: 'px-3 py-2 pe-10 text-sm', icon: 'pe-2.5 h-3.5 w-3.5' },
+    xs: { wrapper: '', select: 'ps-2 py-1 pe-7 text-xs', icon: 'pe-2 h-3 w-3' }
+  }
 
   const stateClasses = {
     default: 'border-neutral-300 focus:border-primary-400',
@@ -59,13 +84,19 @@ export function Select({
 
   return (
     <div className="w-full">
-      <div className="relative mb-2">
+      <div className={`relative ${sizeClasses[size].wrapper}`}>
         <select
-          className={`text-foreground peer block w-full appearance-none rounded border bg-transparent px-2.5 py-2.5 pe-10 text-base transition-colors duration-200 focus:ring-0 focus:outline-none ${stateClasses[state]} ${className}`.trim()}
+          className={`text-foreground peer block w-full cursor-pointer appearance-none rounded-lg border bg-transparent transition-colors duration-200 focus:ring-0 focus:outline-none ${sizeClasses[size].select} ${stateClasses[state]} ${className}`.trim()}
           id={selectId}
           {...props}
         >
-          {children}
+          {options
+            ? options.map(opt => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))
+            : children}
         </select>
         {label && (
           <label
@@ -75,24 +106,10 @@ export function Select({
             {label}
           </label>
         )}
-
-        <div className="pointer-events-none absolute inset-y-0 inset-e-0 flex items-center pe-2.5">
-          <svg
-            aria-hidden="true"
-            className="text-foreground h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="m19 9-7 7-7-7"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-            />
-          </svg>
-        </div>
+        <CaretDownIcon
+          className="pointer-events-none absolute inset-e-2 top-1/2 -translate-y-1/2 text-neutral-500"
+          size={16}
+        />
       </div>
       {errorMessage && state === 'error' && (
         <p className={`mt-1 text-xs ${messageColorClasses[state]}`}>{errorMessage}</p>

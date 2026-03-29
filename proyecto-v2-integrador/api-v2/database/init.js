@@ -7,7 +7,35 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+function syncSeedImages() {
+  const UPLOADS_DIR = path.join(__dirname, "../public/uploads/images");
+  const SOURCE_DIRS = [
+    path.join(__dirname, "../public/sponsors"),
+    path.join(__dirname, "../public/banners"),
+  ];
+
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  }
+
+  for (const srcDir of SOURCE_DIRS) {
+    if (!fs.existsSync(srcDir)) continue;
+    const files = fs.readdirSync(srcDir).filter((f) => f !== "README.md");
+    for (const file of files) {
+      const dest = path.join(UPLOADS_DIR, file);
+      if (!fs.existsSync(dest)) {
+        fs.copyFileSync(path.join(srcDir, file), dest);
+      }
+    }
+  }
+
+  console.log(
+    chalk.green("✅ Imágenes de seed sincronizadas en uploads/images"),
+  );
+}
+
 async function initializeDatabase() {
+  syncSeedImages();
   console.log(chalk.blue("🚀 Inicializando base de datos..."));
 
   try {
@@ -212,6 +240,27 @@ async function initializeDatabase() {
       // La tabla banners puede no existir aún; se creará con la migración
     }
 
+    // Asegurar UNIQUE KEY en name para sponsors y banners (para instalaciones existentes).
+    for (const { table, key } of [
+      { table: "sponsors", key: "uq_sponsors_name" },
+      { table: "banners", key: "uq_banners_name" },
+    ]) {
+      try {
+        const [indexes] = await connection.execute(
+          `SHOW INDEX FROM \`${table}\` WHERE Key_name = ?`,
+          [key],
+        );
+        if (indexes.length === 0) {
+          await connection.execute(
+            `ALTER TABLE \`${table}\` ADD UNIQUE KEY \`${key}\` (name)`,
+          );
+          console.log(chalk.green(`✅ ${table}: UNIQUE KEY en name agregado`));
+        }
+      } catch (_) {
+        // La tabla puede no existir aún
+      }
+    }
+
     // Asegurar columnas de timestamps en games_reviews para instalaciones existentes.
     try {
       const [grCreatedAt] = await connection.execute(
@@ -246,6 +295,8 @@ async function initializeDatabase() {
       "users_genders.sql",
       "user_roles.sql",
       "games_reviews_ratings.sql",
+      "sponsors.sql",
+      "banners.sql",
     ];
 
     console.log(chalk.yellow("🌱 Ejecutando seeders..."));

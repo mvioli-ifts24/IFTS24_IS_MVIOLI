@@ -68,7 +68,7 @@ export function Avatar({
   src,
   alt = 'Avatar de usuario',
   size = 'm',
-  fallback = 'icon',
+  fallback = 'initials',
   name,
   surname,
   className = ''
