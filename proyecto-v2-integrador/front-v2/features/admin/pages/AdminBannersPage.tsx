@@ -75,11 +75,11 @@ export function AdminBannersPage() {
     openDeleteModal()
   }
 
-  const handleSaved = (saved: Banner) => {
+  const handleSaved = () => {
     fetchBanners()
   }
 
-  const handleDeleted = (bannerId: number) => {
+  const handleDeleted = () => {
     const remainingOnPage = banners.length - 1
 
     if (remainingOnPage === 0 && page > 1) {

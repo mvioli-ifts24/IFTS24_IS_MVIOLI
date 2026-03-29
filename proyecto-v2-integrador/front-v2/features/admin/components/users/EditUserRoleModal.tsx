@@ -118,7 +118,7 @@ export function EditUserRoleModal({ user, roles, onSuccess }: EditUserRoleModalP
       <ConfirmActionModal
         confirmColor="primary"
         confirmWord="editar"
-        description="Estás por realizar cambios permanentes en el sistema. Esta acción modificará los permisos del usuario."
+        description={`Estás por realizar cambios permanentes en el sistema. Esta acción modificará los permisos de ${displayName}.`}
         isOpen={isConfirmOpen}
         loading={isLoading}
         onClose={() => {

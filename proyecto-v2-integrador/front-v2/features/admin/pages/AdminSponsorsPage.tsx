@@ -75,11 +75,11 @@ export function AdminSponsorsPage() {
     openDeleteModal()
   }
 
-  const handleSaved = (saved: Sponsor) => {
+  const handleSaved = () => {
     fetchSponsors()
   }
 
-  const handleDeleted = (sponsorId: number) => {
+  const handleDeleted = () => {
     const remainingOnPage = sponsors.length - 1
 
     if (remainingOnPage === 0 && page > 1) {

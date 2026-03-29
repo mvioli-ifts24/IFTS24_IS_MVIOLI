@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 
 import { Button, type ButtonColor } from '../atoms/Button'
 import { Modal } from '../atoms/Modal'
@@ -46,9 +46,9 @@ export function ConfirmActionModal({
   confirmWord,
   children
 }: ConfirmActionModalProps) {
-  const { control, handleSubmit, reset, watch } = useForm({ defaultValues: { word: '' } })
+  const { control, handleSubmit, reset } = useForm({ defaultValues: { word: '' } })
 
-  const word = watch('word')
+  const word = useWatch({ control, name: 'word', defaultValue: '' })
   const wordMatches = !confirmWord || word.trim().toLowerCase() === confirmWord.toLowerCase()
   const isConfirmable = !disabled && !loading && wordMatches
 
