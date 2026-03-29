@@ -4,7 +4,8 @@ import { type Icon } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { type MouseEvent, type ReactNode, useRef, useState } from 'react'
 
-import { CardWrapper, Text } from '@/ui'
+import { CardWrapper } from '../atoms/CardWrapper'
+import { Text } from '../atoms/Text'
 
 export type StatCardAccent = 1 | 2 | 3 | 4 | 5
 
@@ -19,7 +20,7 @@ export type StatCardProps = {
 
 const accentClasses: Record<StatCardAccent, string> = {
   1: 'text-primary-300',
-  2: 'text-primary',
+  2: 'text-primary-400',
   3: 'text-secondary-300',
   4: 'text-secondary-400',
   5: 'text-primary-400'

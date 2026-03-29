@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type HTMLAttributes, type ReactNode } from 'react'
 
 import { type ColorVariant, type Size, type Weight } from '../types'
 
@@ -39,7 +39,7 @@ const PRESETS: Record<TextVariant, PresetConfig | null> = {
 /**
  * Props para el componente Text
  */
-export interface TextProps {
+export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'color' | 'children'> {
   /**
    * Tamaño del texto. Sobreescribe el tamaño del preset si se especifica.
    * @default 'sm' (o el default del preset)
@@ -114,7 +114,8 @@ export function Text({
   variant,
   children,
   className = '',
-  as: Component = 'p'
+  as: Component = 'p',
+  ...rest
 }: TextProps) {
   const preset = variant && variant !== 'default' ? PRESETS[variant] : null
 
@@ -141,5 +142,9 @@ export function Text({
     .filter(Boolean)
     .join(' ')
 
-  return <Component className={classes}>{children}</Component>
+  return (
+    <Component className={classes} {...rest}>
+      {children}
+    </Component>
+  )
 }

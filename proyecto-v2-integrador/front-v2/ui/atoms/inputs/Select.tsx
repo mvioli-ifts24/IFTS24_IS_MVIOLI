@@ -6,6 +6,14 @@ export interface SelectOption {
   value: string | number
 }
 
+/**
+ * Tamaños del Select, alineados con el sistema de Size del UI kit.
+ * La misma opción produce la misma altura que Button e Input.
+ *
+ * m  ≈ 36px (default) · xs ≈ 24px (compact)
+ */
+export type SelectSize = 'm' | 'xs'
+
 export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   /**
    * ID único del select para asociar con la etiqueta
@@ -30,10 +38,10 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
   className?: string
 
   /**
-   * Tamaño del select
-   * @default 'default'
+   * Tamaño del select. Produce la misma altura que Button e Input con el mismo valor.
+   * @default 'm'
    */
-  size?: 'default' | 'xs'
+  size?: SelectSize
 
   /**
    * Opciones del select. Alternativa conveniente a usar children con <option>.
@@ -52,7 +60,7 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
 export function Select({
   label,
   errorMessage,
-  size = 'default',
+  size = 'm',
   state = 'default',
   className = '',
   children,
@@ -62,9 +70,9 @@ export function Select({
 }: SelectProps) {
   const selectId = id
 
-  // Alturas: default ≈ 36px (alinea con Input m / Button m) · xs ≈ 24px (compact)
-  const sizeClasses = {
-    default: { wrapper: 'mb-2', select: 'px-3 py-2 pe-10 text-sm', icon: 'pe-2.5 h-3.5 w-3.5' },
+  // m ≈ 36px (alinea con Input m / Button m) · xs ≈ 24px (compact)
+  const sizeClasses: Record<SelectSize, { wrapper: string; select: string; icon: string }> = {
+    m: { wrapper: 'mb-2', select: 'px-3 py-2 pe-10 text-sm', icon: 'pe-2.5 h-3.5 w-3.5' },
     xs: { wrapper: '', select: 'ps-2 py-1 pe-7 text-xs', icon: 'pe-2 h-3 w-3' }
   }
 

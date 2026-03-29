@@ -1,7 +1,7 @@
 'use client'
 import { XIcon } from '@phosphor-icons/react'
 import { FocusTrap } from 'focus-trap-react'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useId } from 'react'
 
 import { Button } from './Button'
 import { Heading } from './Heading'
@@ -42,6 +42,7 @@ export function Modal({
   elevated = false,
   initialFocus
 }: ModalProps) {
+  const modalId = useId()
   const sizeClass = {
     sm: 'max-w-sm',
     md: 'max-w-md',
@@ -81,7 +82,7 @@ export function Modal({
       focusTrapOptions={{
         clickOutsideDeactivates: false,
         escapeDeactivates: false,
-        fallbackFocus: '#modal-content',
+        fallbackFocus: `#${modalId}`,
         preventScroll: true,
         ...(initialFocus ? { initialFocus } : {})
       }}
@@ -97,7 +98,7 @@ export function Modal({
           <div
             aria-modal="true"
             className={`bg-surface relative w-full ${sizeClass} rounded-xl border border-neutral-200 shadow-lg`}
-            id="modal-content"
+            id={modalId}
             role="dialog"
           >
             <div className="flex items-center justify-between p-4">

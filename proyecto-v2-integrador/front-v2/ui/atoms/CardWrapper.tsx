@@ -82,7 +82,9 @@ const elevationClasses: Record<CardWrapperElevation, string> = {
   //    dark:  neutral-200 (#3e3d4a) → otro escalón + tonal visible
   2: 'bg-surface dark:bg-neutral-200 border border-neutral-200 dark:border-neutral-200 shadow-md shadow-foreground/10 dark:shadow-foreground/20',
   // 3: glassmorphism — overlays sobre fondos ricos o imágenes
-  3: 'bg-white/8 backdrop-blur-lg dark:bg-white/4 border border-white/12 dark:border-white/8'
+  //    Usa las CSS vars --glass-bg y --glass-border definidas en globals.css.
+  //    El dark mode es automático: las vars cambian en .dark sin necesidad de dark: prefixes.
+  3: 'bg-[var(--glass-bg)] backdrop-blur-lg border border-[var(--glass-border)]'
 }
 
 const radiusClasses: Record<CardWrapperRadius, string> = {

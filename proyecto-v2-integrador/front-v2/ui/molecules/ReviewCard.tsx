@@ -6,6 +6,11 @@ export interface ReviewCardProps {
   gameTitle: string
   description: string
   rating: string | number
+  /**
+   * Etiqueta previa al valor de la valoración.
+   * @default 'Valoración'
+   */
+  ratingLabel?: string
   gameThumbnail?: string
   authorName?: string
   className?: string
@@ -15,6 +20,7 @@ export function ReviewCard({
   gameTitle,
   description,
   rating,
+  ratingLabel = 'Valoración',
   gameThumbnail,
   authorName,
   className = ''
@@ -41,7 +47,7 @@ export function ReviewCard({
           {description}
         </Text>
         <Text className="mt-1" color="muted" size="xs">
-          Valoración: {rating}
+          {ratingLabel}: {rating}
         </Text>
       </div>
     </article>

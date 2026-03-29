@@ -15,9 +15,9 @@ import {
 } from '@/ui'
 
 const ROLE_TAG_VARIANT: Record<string, TagVariant> = {
-  admin: 0,
-  moderator: 4,
-  user: 3
+  admin: 'primary',
+  moderator: 'secondary',
+  user: 'neutral'
 }
 
 export interface UsersTableProps {
@@ -87,7 +87,7 @@ export function UsersTable({
       id: 'role',
       header: 'Rol',
       cell: user => (
-        <Tag variant={ROLE_TAG_VARIANT[user.role] ?? 3}>
+        <Tag variant={ROLE_TAG_VARIANT[user.role] ?? 'neutral'}>
           {roles.find(r => r.name === user.role)?.label ?? user.role}
         </Tag>
       )

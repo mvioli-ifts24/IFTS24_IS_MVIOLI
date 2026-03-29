@@ -7,7 +7,7 @@ import { Button, Logo, ThemeToggle } from '@/ui'
 
 import { UserMenu } from './UserMenu'
 
-type NavbarProps = {
+export type NavbarProps = {
   onMenuToggle?: () => void
   sidebarOpen?: boolean
   user: User

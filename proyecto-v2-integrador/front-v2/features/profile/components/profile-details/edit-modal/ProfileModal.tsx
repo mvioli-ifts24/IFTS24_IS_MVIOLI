@@ -113,13 +113,8 @@ export function ProfileModal() {
       return
     }
 
-    // Refrescar perfil completo para obtener URLs actualizadas
-    const refreshResponse = await ProfileService.getOwnProfile(token)
-
-    const refreshedProfile = refreshResponse.data ?? response.data
-
-    setProfile(refreshedProfile)
-    setSelectedGame(gameFromProfile(refreshedProfile))
+    setProfile(response.data)
+    setSelectedGame(gameFromProfile(response.data))
     toast.success('Perfil actualizado')
     close()
   }

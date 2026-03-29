@@ -8,8 +8,8 @@ export interface SeparatorProps {
   orientation?: 'horizontal' | 'vertical'
 
   /**
-   * Color del separador
-   * @default 'neutral-200'
+   * Color del borde como valor CSS válido (e.g. `'var(--primary-400)'`, `'#e5e7eb'`).
+   * Si se omite, se aplica `border-neutral-200` (clase Tailwind segura).
    */
   color?: string
 
@@ -34,31 +34,37 @@ export interface SeparatorProps {
  * Componente Separator reutilizable
  * Divide contenido visualmente con una línea
  *
+ * El color acepta cualquier valor CSS válido: `'#e5e7eb'`, `'rgb(0,0,0)'`, `'var(--primary-400)'`.
+ * El valor por defecto (`undefined`) aplica la clase Tailwind `border-neutral-200`.
+ *
  * @example
  * ```tsx
  * <Separator />
  * <Separator orientation="vertical" />
- * <Separator color="primary-400" />
+ * <Separator color="var(--primary-400)" />
  * ```
  */
 export function Separator({
   orientation = 'horizontal',
-  color = 'neutral-200',
+  color,
   size = '1px',
   className = '',
   style
 }: SeparatorProps) {
-  const baseClasses = `border-${orientation === 'horizontal' ? 't' : 'l'} border-${color} `
+  // Clase fija para el caso default (Tailwind la puede scanear).
+  // Si se pasa un color personalizado se aplica vía inline style, evitando clases dinámicas.
+  const directionClass = orientation === 'horizontal' ? 'border-t' : 'border-l'
+  const defaultColorClass = color ? '' : 'border-neutral-200'
 
   const orientationStyles: CSSProperties =
     orientation === 'horizontal'
-      ? { borderTopWidth: size }
-      : { borderLeftWidth: size, height: '100%' }
+      ? { borderTopWidth: size, ...(color ? { borderColor: color } : {}) }
+      : { borderLeftWidth: size, height: '100%', ...(color ? { borderColor: color } : {}) }
 
   return (
     <div
       aria-orientation={orientation}
-      className={`${baseClasses} ${className}`}
+      className={[directionClass, defaultColorClass, className].filter(Boolean).join(' ')}
       role="separator"
       style={{ ...orientationStyles, ...style }}
     />

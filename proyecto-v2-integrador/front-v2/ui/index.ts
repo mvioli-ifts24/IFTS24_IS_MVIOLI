@@ -32,9 +32,9 @@ export {
   type InputVariant
 } from './atoms/inputs/Input'
 
-export { DatePicker, type DatePickerProps } from './atoms/inputs/DatePicker'
+export { DatePicker, type DatePickerProps, type DatePickerSize } from './atoms/inputs/DatePicker'
 
-export { Select, type SelectProps } from './atoms/inputs/Select'
+export { Select, type SelectOption, type SelectProps, type SelectSize } from './atoms/inputs/Select'
 
 export { Checkbox, type CheckboxProps } from './atoms/inputs/Checkbox'
 
@@ -63,13 +63,13 @@ export { SpinLoader, type SpinLoaderProps, type SpinLoaderSize } from './atoms/S
 
 export { Tag, type TagProps, type TagVariant } from './atoms/Tag'
 
-export { AnimatedCounter } from './atoms/AnimatedCounter'
+export { AnimatedCounter, type AnimatedCounterProps } from './atoms/AnimatedCounter'
 
 export { CardWrapper, type CardWrapperProps } from './atoms/CardWrapper'
 
 export { Skeleton, type SkeletonProps } from './atoms/skeleton/Skeleton'
 
-export { PageSkeleton } from './atoms/skeleton/PageSkeleton'
+export { PageSkeleton, type PageSkeletonProps } from './atoms/skeleton/PageSkeleton'
 
 export { Logo, type LogoProps } from './atoms/Logo'
 
@@ -115,17 +115,26 @@ export {
 
 export { SearchFilterBar, type SearchFilterBarProps } from './molecules/table/SearchFilterBar'
 
+export {
+  LogoLoop,
+  type LogoImageItem,
+  type LogoItem,
+  type LogoLoopDirection,
+  type LogoLoopProps,
+  type LogoNodeItem
+} from './molecules/LogoLoop'
+
 // ================================
 // ORGANISMS - Componentes complejos
 // ================================
 
 export { SearchFiltersTable, type SearchFiltersTableProps } from './organisms/SearchFiltersTable'
 
-export { Navbar } from './organisms/Navbar'
+export { Navbar, type NavbarProps } from './organisms/Navbar'
 
-export { UserMenu } from './organisms/UserMenu'
+export { UserMenu, type UserMenuProps } from './organisms/UserMenu'
 
-export { Sidebar } from './organisms/Sidebar'
+export { Sidebar, type SidebarProps } from './organisms/Sidebar'
 
 // ================================
 // LAYOUTS - Estructuras de página

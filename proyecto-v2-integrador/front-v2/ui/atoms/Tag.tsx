@@ -1,17 +1,23 @@
 import { type ReactNode } from 'react'
 
 /**
- * Variantes de tag disponibles
+ * Variantes semánticas del tag.
+ *
+ * primary   → acción / rol admin
+ * danger    → error / sin verificar
+ * warning   → advertencia
+ * neutral   → rol estándar / inactivo
+ * secondary → éxito / verificado / moderador
  */
-export type TagVariant = 0 | 1 | 2 | 3 | 4
+export type TagVariant = 'primary' | 'danger' | 'warning' | 'neutral' | 'secondary'
 
 /**
  * Props para el componente Tag
  */
 export interface TagProps {
   /**
-   * Variante del tag
-   * @default 'default'
+   * Variante semántica del tag
+   * @default 'primary'
    */
   variant?: TagVariant
 
@@ -27,14 +33,17 @@ export interface TagProps {
 }
 
 const variantClasses: Record<TagVariant, string> = {
-  0: 'bg-primary-400/10 text-primary-400 border border-primary-400/20',
-  1: 'bg-red-400/10 text-red-400 border border-red-400/20',
-  2: 'bg-orange-400/10 text-orange-400 border border-orange-400/20',
-  3: 'bg-neutral-400/10 text-neutral-400 border border-neutral-400/20',
-  4: 'bg-secondary-400/10 text-secondary-400 border border-secondary-400/20'
+  // primary / secondary / neutral usan los tokens del sistema de color
+  primary: 'bg-primary-400/10 text-primary-400 border border-primary-400/20',
+  secondary: 'bg-secondary-400/10 text-secondary-400 border border-secondary-400/20',
+  neutral: 'bg-neutral-400/10 text-neutral-400 border border-neutral-400/20',
+  // danger usa --danger-400 (escala semántica de globals.css, no red-* de Tailwind)
+  danger: 'bg-danger-400/10 text-danger-400 border border-danger-400/20',
+  // warning usa --warning (token semántico de globals.css, no orange-* de Tailwind)
+  warning: 'bg-warning/10 text-warning border border-warning/20'
 }
 
-export function Tag({ variant = 0, children, className = '' }: TagProps) {
+export function Tag({ variant = 'primary', children, className = '' }: TagProps) {
   const classes = [
     'rounded-full',
     'px-3',

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 /**
  * Props para el contador animado
  */
-interface AnimatedCounterProps {
+export interface AnimatedCounterProps {
   /**
    * Número final al que contar
    */

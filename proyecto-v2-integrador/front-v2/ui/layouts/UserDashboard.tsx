@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { useProfileStore } from '@/features/profile/store/profile.store'
+import { SponsorsBanner } from '@/features/shared/components/SponsorsBanner'
 import { useAuthRouteGuard } from '@/features/shared/hooks/useAuthRouteGuard'
 import { useViewModeStore } from '@/features/shared/store/view-mode.store'
 
@@ -59,7 +60,8 @@ export function UserDashboard({ children, role }: UserDashboardProps) {
         />
         <main className="bg-background flex flex-1 flex-col overflow-auto p-4 sm:p-6 lg:p-8">
           <Breadcrumbs className="mb-6" />
-          <div className="flex flex-col gap-6">{children}</div>
+          <div className="flex flex-1 flex-col gap-6">{children}</div>
+          <SponsorsBanner />
         </main>
       </div>
     </div>

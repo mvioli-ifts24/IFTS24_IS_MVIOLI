@@ -1,5 +1,9 @@
 import { type InputHTMLAttributes } from 'react'
 
+import { type Size } from '../../types'
+
+export type DatePickerSize = Size
+
 export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /**
    * ID único del datepicker para asociar con la etiqueta
@@ -23,6 +27,13 @@ export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputEleme
   state?: 'default' | 'error' | 'success' | 'warning'
 
   /**
+   * Tamaño del datepicker. Produce la misma altura que Button e Input con el mismo valor.
+   * @default 'm'
+   *  2xs≈18px · xs≈24px · sm≈32px · m≈36px · lg≈44px · xl≈48px
+   */
+  size?: DatePickerSize
+
+  /**
    * Clases CSS adicionales
    */
   className?: string
@@ -31,10 +42,20 @@ export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputEleme
 /**
  * Componente DatePicker para selección de fechas
  */
+const sizeClasses: Record<DatePickerSize, string> = {
+  '2xs': 'px-1.5 py-0.5 text-[10px]',
+  xs: 'px-2 py-1 text-xs',
+  sm: 'px-2.5 py-1.5 text-sm',
+  m: 'px-3 py-2 text-sm',
+  lg: 'px-3.5 py-2.5 text-base',
+  xl: 'px-4 py-3 text-base'
+}
+
 export function DatePicker({
   label,
   errorMessage,
   state = 'default',
+  size = 'm',
   className = '',
   id,
   ...props
@@ -62,7 +83,7 @@ export function DatePicker({
           className={[
             'text-foreground rounded-lg border transition-colors duration-200 focus:ring-0 focus:outline-none',
             'peer block w-full appearance-none bg-transparent',
-            'px-3 py-2 text-sm',
+            sizeClasses[size],
             stateClasses[state],
             className
           ]

@@ -135,7 +135,7 @@ export function SponsorFormModal({ sponsor, onSuccess }: SponsorFormModalProps) 
             accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
             disabled={isLoading}
             errorMessage={errors.image?.message}
-            helperText="Mínimo 200×80 px · Máx. 2 MB · Debe ser apaisado (más ancho que alto) · JPG, PNG, GIF o WebP"
+            helperText="Mínimo 200×80 px · Máx. 2 MB · Debe ser apaisado (más ancho que alto) · JPG, PNG, GIF, WebP o SVG · Usá el logo en negro sobre fondo transparente para que el modo oscuro lo invierta correctamente"
             id="sponsor-image"
             initialPreviewUrl={sponsor?.image_url ?? undefined}
             label="Imagen"

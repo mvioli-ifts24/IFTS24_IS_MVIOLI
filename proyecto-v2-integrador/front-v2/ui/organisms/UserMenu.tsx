@@ -9,12 +9,17 @@ import { useState } from 'react'
 import { ROUTES } from '@/features/shared/constants/nav.constants'
 import { Avatar, Button, CardWrapper, Separator, Tag, Text } from '@/ui'
 
-type UserMenuProps = {
+export type UserMenuProps = {
   user: User
   onLogout: () => void
+  /**
+   * Callback al hacer clic en "Ver perfil".
+   * Si no se provee, navega internamente a la ruta de perfil.
+   */
+  onProfileClick?: () => void
 }
 
-export function UserMenu({ user, onLogout }: UserMenuProps) {
+export function UserMenu({ user, onLogout, onProfileClick }: UserMenuProps) {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -52,7 +57,7 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
                 {user.email}
               </Text>
               {user.role && user.role !== 'user' && (
-                <Tag variant={user.role === 'admin' ? 0 : 3}>
+                <Tag variant={user.role === 'admin' ? 'primary' : 'neutral'}>
                   {user.role === 'admin'
                     ? 'Administrador'
                     : user.role === 'moderator'
@@ -70,7 +75,7 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
                 className="justify-start"
                 color="muted"
                 onClick={() => {
-                  router.push(ROUTES.perfil)
+                  onProfileClick ? onProfileClick() : router.push(ROUTES.perfil)
                   setIsOpen(false)
                 }}
                 variant="text"

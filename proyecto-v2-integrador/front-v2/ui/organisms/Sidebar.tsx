@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { NAV_ITEMS, ROUTES } from '@/features/shared/constants/nav.constants'
@@ -8,7 +7,7 @@ import { type ViewMode } from '@/features/shared/store/view-mode.store'
 import { User } from '@/features/shared/types/user.types'
 import { Button, Text, Toggle } from '@/ui'
 
-type SidebarProps = {
+export type SidebarProps = {
   isOpen: boolean
   onClose?: () => void
   user: User
@@ -53,18 +52,19 @@ export function Sidebar({ user, isOpen, onClose, viewMode, onToggleViewMode }: S
               const active = isActive(item.href)
 
               return (
-                <Link key={item.href} href={item.href} onClick={onClose}>
-                  <Button
-                    fullWidth
-                    className="justify-start"
-                    color={active ? 'primary' : 'muted'}
-                    iconLeft={Icon}
-                    variant="text"
-                    weight="medium"
-                  >
-                    {item.label}
-                  </Button>
-                </Link>
+                <Button
+                  key={item.href}
+                  fullWidth
+                  className="justify-start"
+                  color={active ? 'primary' : 'muted'}
+                  href={item.href}
+                  iconLeft={Icon}
+                  onClick={onClose}
+                  variant="text"
+                  weight="medium"
+                >
+                  {item.label}
+                </Button>
               )
             })}
           </div>

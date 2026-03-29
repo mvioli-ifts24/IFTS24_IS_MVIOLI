@@ -7,6 +7,7 @@ import contactMessagesRoutesGroup from "./contact_messages.route.js";
 import gamesRouteGroup from "./games.route.js";
 import gamesReviewsRoutesGroup from "./games_reviews.route.js";
 import gamesReviewsRatingsRoutesGroup from "./games_reviews_ratings.route.js";
+import sponsorsRoutesGroup from "./sponsors.route.js";
 import usersRouteGroup from "./users.route.js";
 import usersGendersRouteGroup from "./users_genders.route.js";
 
@@ -21,6 +22,7 @@ const rootRouter = router
   .use("/contact_messages", contactMessagesRoutesGroup)
   .use("/users", usersRouteGroup)
   .use("/games", gamesRouteGroup)
+  .use("/sponsors", sponsorsRoutesGroup)
   .use("/admin", adminMiddleware, adminRoutesGroup);
 
 export default rootRouter;

@@ -23,9 +23,13 @@ export interface FilterGroup {
 
 export interface TableFiltersProps {
   groups: FilterGroup[]
+  /** Etiqueta del botón de filtros.
+   * @default 'Filtros'
+   */
+  label?: string
 }
 
-export function TableFilters({ groups }: TableFiltersProps) {
+export function TableFilters({ groups, label = 'Filtros' }: TableFiltersProps) {
   const [open, setOpen] = useState(false)
 
   const hasActiveFilter = groups.some(g => g.value !== (g.defaultValue ?? g.options[0]?.value))
@@ -39,7 +43,7 @@ export function TableFilters({ groups }: TableFiltersProps) {
         onClick={() => setOpen(o => !o)}
         variant="outlined"
       >
-        Filtros
+        {label}
       </Button>
       {hasActiveFilter && (
         <div className="bg-danger-400 absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full" />
@@ -48,7 +52,7 @@ export function TableFilters({ groups }: TableFiltersProps) {
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-20 mt-1 min-w-48 rounded-lg border border-neutral-200 bg-white py-2 shadow-md dark:border-neutral-200 dark:bg-neutral-50">
+          <div className="bg-surface absolute right-0 z-20 mt-1 min-w-48 rounded-lg border border-neutral-200 py-2 shadow-md">
             {groups.map((group, i) => (
               <div key={group.id}>
                 {i > 0 && <div className="my-1 border-t border-neutral-100" />}

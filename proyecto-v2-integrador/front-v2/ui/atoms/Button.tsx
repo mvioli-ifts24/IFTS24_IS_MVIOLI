@@ -26,6 +26,14 @@ export type ButtonSize = Size
  */
 export type ButtonWeight = Weight
 
+const weightClasses: Record<ButtonWeight, string> = {
+  light: 'font-light',
+  normal: 'font-normal',
+  medium: 'font-medium',
+  semibold: 'font-semibold',
+  bold: 'font-bold'
+}
+
 /**
  * Props base compartidas entre botón y link
  */
@@ -213,14 +221,6 @@ export function Button({
   variant = 'filled',
   ...props
 }: ButtonProps) {
-  const weightClasses: Record<ButtonWeight, string> = {
-    light: 'font-light',
-    normal: 'font-normal',
-    medium: 'font-medium',
-    semibold: 'font-semibold',
-    bold: 'font-bold'
-  }
-
   const isDisabled = disabled || loading
 
   const loaderSize: Record<ButtonSize, 'xs' | 'sm' | 'm'> = {

@@ -1,10 +1,12 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
+import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
+import { useModal } from '@/features/shared/store/modals.store'
 import { CardWrapper, Text } from '@/ui'
 
 import { ProfileService } from '../../services/profile.service'
@@ -16,6 +18,13 @@ import { ProfileModal } from './edit-modal/ProfileModal'
 export function ProfileCard() {
   const { token, updateUser } = useAuthStore()
   const { profile, loading, setProfile, setLoading } = useProfileStore()
+  const { open } = useModal(MODAL_IDS.EDIT_PROFILE)
+  const [formKey, setFormKey] = useState(0)
+
+  const handleEdit = () => {
+    setFormKey(k => k + 1)
+    open()
+  }
 
   useEffect(() => {
     if (!token || profile) return
@@ -63,7 +72,7 @@ export function ProfileCard() {
         elevation="0"
         loading={loading || !profile}
       >
-        <ProfileHeader onVerifyAccount={handleVerifyAccount} user={profile!} />
+        <ProfileHeader onEdit={handleEdit} onVerifyAccount={handleVerifyAccount} user={profile!} />
         <Text className="italic" color="muted">
           &quot;{profile?.about || 'Sin descripción'}&quot;
         </Text>
@@ -92,7 +101,7 @@ export function ProfileCard() {
         )}
       </CardWrapper>
 
-      <ProfileModal />
+      <ProfileModal key={formKey} />
     </>
   )
 }

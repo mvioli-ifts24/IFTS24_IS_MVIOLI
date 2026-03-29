@@ -47,7 +47,7 @@ export function PreferencesModal() {
       return
     }
 
-    updateProfile(response.data)
+    updateProfile({ accept_newsletter: data.accept_newsletter ? 1 : 0 })
     toast.success('Preferencias actualizadas')
     close()
   }

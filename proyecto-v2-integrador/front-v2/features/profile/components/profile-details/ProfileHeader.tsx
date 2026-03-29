@@ -2,19 +2,17 @@
 
 import { PencilSimpleIcon, SealCheckIcon, SealWarningIcon } from '@phosphor-icons/react'
 
-import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
-import { useModal } from '@/features/shared/store/modals.store'
 import { User } from '@/features/shared/types/user.types'
 import { Avatar, Button, Heading, Tag, Text } from '@/ui'
 
 type ProfileHeaderProps = {
   user: User
   onVerifyAccount: () => void
+  onEdit: () => void
 }
 
-export function ProfileHeader({ user, onVerifyAccount }: ProfileHeaderProps) {
+export function ProfileHeader({ user, onVerifyAccount, onEdit }: ProfileHeaderProps) {
   const isVerified = Boolean(user.email_verified)
-  const { open } = useModal(MODAL_IDS.EDIT_PROFILE)
 
   return (
     <div className="flex gap-4">
@@ -35,7 +33,7 @@ export function ProfileHeader({ user, onVerifyAccount }: ProfileHeaderProps) {
                 Verificar mi cuenta
               </Button>
             )}
-            <Button iconLeft={PencilSimpleIcon} onClick={open} size="xs" variant="outlined">
+            <Button iconLeft={PencilSimpleIcon} onClick={onEdit} size="xs" variant="outlined">
               Editar
             </Button>
           </div>
@@ -45,7 +43,7 @@ export function ProfileHeader({ user, onVerifyAccount }: ProfileHeaderProps) {
         </Text>
         <div className="flex flex-wrap items-center gap-2 pt-2">
           {user.role && user.role !== 'user' && (
-            <Tag variant={user.role === 'admin' ? 0 : 3}>
+            <Tag variant={user.role === 'admin' ? 'primary' : 'neutral'}>
               {user.role === 'admin'
                 ? 'Administrador'
                 : user.role === 'moderator'
@@ -53,7 +51,7 @@ export function ProfileHeader({ user, onVerifyAccount }: ProfileHeaderProps) {
                   : 'Usuario'}
             </Tag>
           )}
-          <Tag className="flex gap-1" variant={isVerified ? 4 : 1}>
+          <Tag className="flex gap-1" variant={isVerified ? 'secondary' : 'danger'}>
             {isVerified ? (
               <SealCheckIcon size={16} weight="bold" />
             ) : (
