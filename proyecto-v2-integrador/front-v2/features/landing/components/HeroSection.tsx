@@ -58,7 +58,7 @@ interface TestimonialCardProps {
 
 function TestimonialCard({ review }: TestimonialCardProps) {
   return (
-    <div className="glass min-w-[320px] space-y-4 rounded-2xl p-6">
+    <article className="glass min-w-[320px] space-y-4 rounded-2xl p-6">
       {/* User Info */}
       <div className="flex items-center gap-3">
         <div className="from-primary-300 to-secondary-300 flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-r">
@@ -81,7 +81,7 @@ function TestimonialCard({ review }: TestimonialCardProps) {
       <Text className="leading-relaxed" color="muted" size="sm">
         &ldquo;{review.comment}&rdquo;
       </Text>
-    </div>
+    </article>
   )
 }
 

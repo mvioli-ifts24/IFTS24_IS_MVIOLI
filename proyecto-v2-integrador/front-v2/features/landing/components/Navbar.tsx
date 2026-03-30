@@ -73,7 +73,7 @@ export function Navbar() {
           <div className="flex items-center justify-between gap-24 lg:gap-16">
             <Logo />
 
-            <nav className="hidden items-center gap-8 lg:flex">
+            <nav aria-label="Navegación principal" className="hidden items-center gap-8 lg:flex">
               <MenuLinks links={navigationLinks} onClose={handleClose} />
             </nav>
 
@@ -105,7 +105,7 @@ export function Navbar() {
               : 'pointer-events-none -translate-y-2 opacity-0'
           ].join(' ')}
         >
-          <nav className="flex flex-col gap-2">
+          <nav aria-label="Menú móvil" className="flex flex-col gap-2">
             <MenuLinks links={navigationLinks} onClose={handleClose} />
           </nav>
           <Separator />

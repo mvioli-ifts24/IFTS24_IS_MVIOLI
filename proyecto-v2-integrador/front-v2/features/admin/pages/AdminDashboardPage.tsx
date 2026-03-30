@@ -15,7 +15,7 @@ import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { ROUTES } from '@/features/shared/constants/nav.constants'
-import { PageSkeleton, StatCard, type StatCardProps, Text } from '@/ui'
+import { StatCard, type StatCardProps, Text } from '@/ui'
 
 import { TopGamesList } from '../components/TopGamesList'
 import { AdminService, type AdminStats, type TopGames } from '../services/admin.service'
@@ -126,8 +126,6 @@ export function AdminDashboardPage() {
       .catch(() => toast.error('No se pudo conectar con el servidor.'))
       .finally(() => setLoading(false))
   }, [token])
-
-  if (loading) return <PageSkeleton />
 
   return (
     <section className="mx-auto flex w-full max-w-5xl flex-col gap-8">

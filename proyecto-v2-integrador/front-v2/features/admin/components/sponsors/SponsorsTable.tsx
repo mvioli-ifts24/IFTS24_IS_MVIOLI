@@ -4,7 +4,8 @@ import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
 
 import { type Sponsor } from '@/features/shared/types/media.types'
-import { type ColumnDef, SearchFiltersTable, type TableActionDef, Text } from '@/ui'
+import { type ColumnDef, SearchFiltersTable, type TableActionDef } from '@/ui'
+import { LinkCell } from '@/ui/molecules/table/table-cells'
 
 export interface SponsorsTableProps {
   sponsors: Sponsor[]
@@ -55,30 +56,11 @@ export function SponsorsTable({
     {
       id: 'link',
       header: 'Enlace',
-      cell: sponsor =>
-        sponsor.link ? (
-          <a
-            className="text-primary text-sm underline underline-offset-2"
-            href={sponsor.link}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {sponsor.link}
-          </a>
-        ) : (
-          <Text color="muted" size="sm">
-            —
-          </Text>
-        )
+      cell: sponsor => <LinkCell href={sponsor.link} />
     },
     {
       id: 'contact',
-      header: 'Contacto',
-      cell: sponsor => (
-        <Text color="muted" size="sm">
-          {sponsor.contact ?? '—'}
-        </Text>
-      )
+      header: 'Contacto'
     }
   ]
 

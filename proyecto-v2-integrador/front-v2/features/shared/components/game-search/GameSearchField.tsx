@@ -4,8 +4,8 @@ import { XIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
 import { useState } from 'react'
 
-import { GameSearchItem } from '@/features/profile/services/profile.service'
-import { SearchInput } from '@/ui'
+import { type GameSearchItem } from '@/features/shared/types/game.types'
+import { SearchInput, Text } from '@/ui'
 
 import { GamesSearchDropdown } from './GamesSearchDropdown'
 
@@ -54,7 +54,9 @@ export function GameSearchField({
   if (selectedGame) {
     return (
       <div className="flex flex-col gap-1">
-        <span className="text-foreground/60 px-0.5 text-xs">{label}</span>
+        <Text className="px-0.5" color="muted" size="xs">
+          {label}
+        </Text>
         <div className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 dark:bg-neutral-100">
           <Image
             alt={selectedGame.title}
@@ -63,7 +65,9 @@ export function GameSearchField({
             src={selectedGame.thumbnail}
             width={28}
           />
-          <span className="min-w-0 flex-1 truncate text-sm font-medium">{selectedGame.title}</span>
+          <Text className="flex-1 truncate" size="sm" weight="medium">
+            {selectedGame.title}
+          </Text>
           {!disabled && (
             <button
               aria-label="Quitar juego favorito"

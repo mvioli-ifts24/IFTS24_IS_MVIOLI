@@ -3,7 +3,8 @@
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 
 import { type Banner } from '@/features/shared/types/media.types'
-import { type ColumnDef, SearchFiltersTable, type TableActionDef, Text } from '@/ui'
+import { type ColumnDef, SearchFiltersTable, type TableActionDef } from '@/ui'
+import { LinkCell } from '@/ui/molecules/table/table-cells'
 
 export interface BannersTableProps {
   banners: Banner[]
@@ -67,30 +68,11 @@ export function BannersTable({
     {
       id: 'link',
       header: 'Enlace',
-      cell: banner =>
-        banner.link ? (
-          <a
-            className="text-primary text-sm underline underline-offset-2"
-            href={banner.link}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {banner.link}
-          </a>
-        ) : (
-          <Text color="muted" size="sm">
-            —
-          </Text>
-        )
+      cell: banner => <LinkCell href={banner.link} />
     },
     {
       id: 'contact',
-      header: 'Contacto',
-      cell: banner => (
-        <Text color="muted" size="sm">
-          {banner.contact ?? '—'}
-        </Text>
-      )
+      header: 'Contacto'
     }
   ]
 

@@ -62,10 +62,6 @@ export function UserDashboardPage() {
     })
   }, [token, ratingFilter, setReviews, setLoading])
 
-  const handleOpenCreate = () => {
-    open()
-  }
-
   const handleReviewSameGame = (review: Review) => {
     setPreSelectedGame({
       id: review.api_game_id,
@@ -165,7 +161,7 @@ export function UserDashboardPage() {
                     : 'Todavía no hay reseñas publicadas. ¡Sé el primero!'}
                 </Text>
                 {!ratingFilter && (
-                  <Button iconLeft={PlusIcon} onClick={handleOpenCreate} size="sm">
+                  <Button iconLeft={PlusIcon} onClick={open} size="sm">
                     Crear la primera reseña
                   </Button>
                 )}
@@ -205,7 +201,7 @@ export function UserDashboardPage() {
         className="fixed right-8 bottom-8 z-40 rounded-full!"
         color="primary"
         iconLeft={PlusIcon}
-        onClick={handleOpenCreate}
+        onClick={open}
         size="xl"
         variant="filled"
       />

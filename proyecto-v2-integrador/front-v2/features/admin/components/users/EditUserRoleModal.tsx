@@ -9,6 +9,7 @@ import { useAuthStore } from '@/features/auth/store/auth.store'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
 import { useModal } from '@/features/shared/store/modals.store'
 import { type User, type UserRoleOption } from '@/features/shared/types/user.types'
+import { getUserDisplayName } from '@/features/shared/utils/user.utils'
 import { Button, ConfirmActionModal, Modal, Select } from '@/ui'
 
 import { editUserRoleSchema, type EditUserRoleFormData } from '../../schemas/edit-user-role.schema'
@@ -77,11 +78,7 @@ export function EditUserRoleModal({ user, roles, onSuccess }: EditUserRoleModalP
     close()
   }
 
-  const displayName = user
-    ? user.name && user.surname
-      ? `${user.name} ${user.surname}`
-      : (user.name ?? user.email)
-    : ''
+  const displayName = user ? getUserDisplayName(user) : ''
 
   return (
     <>

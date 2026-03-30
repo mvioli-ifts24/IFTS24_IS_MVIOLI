@@ -7,6 +7,7 @@ import { useAuthStore } from '@/features/auth/store/auth.store'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
 import { useModal } from '@/features/shared/store/modals.store'
 import { type User, type UserRoleOption } from '@/features/shared/types/user.types'
+import { getUserDisplayName } from '@/features/shared/utils/user.utils'
 import { CardWrapper, ConfirmActionModal } from '@/ui'
 
 import { EditUserRoleModal } from '../components/users/EditUserRoleModal'
@@ -90,10 +91,7 @@ export function AdminUsersPage() {
         return
       }
 
-      const displayName =
-        selectedUser.name && selectedUser.surname
-          ? `${selectedUser.name} ${selectedUser.surname}`
-          : (selectedUser.name ?? selectedUser.email)
+      const displayName = getUserDisplayName(selectedUser)
 
       toast.success(`Usuario ${displayName} eliminado`)
       setUsers(prev => prev.filter(u => u.id !== selectedUser.id))
@@ -109,11 +107,7 @@ export function AdminUsersPage() {
     }
   }
 
-  const deleteDisplayName = selectedUser
-    ? selectedUser.name && selectedUser.surname
-      ? `${selectedUser.name} ${selectedUser.surname}`
-      : (selectedUser.name ?? selectedUser.email)
-    : ''
+  const deleteDisplayName = selectedUser ? getUserDisplayName(selectedUser) : ''
 
   return (
     <section className="mx-auto flex w-full max-w-5xl flex-col gap-6">

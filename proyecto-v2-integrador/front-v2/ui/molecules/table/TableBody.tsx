@@ -8,6 +8,8 @@ import { Button } from '@/ui/atoms/Button'
 import { Text } from '@/ui/atoms/Text'
 import { Skeleton } from '@/ui/atoms/skeleton/Skeleton'
 
+import { TextCell } from './table-cells'
+
 // ─────────────────────────────────────────────
 // Helper interno de render de celda
 // ─────────────────────────────────────────────
@@ -18,13 +20,8 @@ function renderCell<TRow>(col: ColumnDef<TRow>, row: TRow): ReactNode {
   }
 
   const value = row[col.id as keyof TRow]
-  const text = value === null || value === undefined ? '—' : String(value)
 
-  return (
-    <Text size="sm" weight="medium">
-      {text}
-    </Text>
-  )
+  return <TextCell value={value === null || value === undefined ? null : String(value)} />
 }
 
 // ─────────────────────────────────────────────

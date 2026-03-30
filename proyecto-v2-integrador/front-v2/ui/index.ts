@@ -67,8 +67,6 @@ export { CardWrapper, type CardWrapperProps } from './atoms/CardWrapper'
 
 export { Skeleton, type SkeletonProps } from './atoms/skeleton/Skeleton'
 
-export { PageSkeleton, type PageSkeletonProps } from './atoms/skeleton/PageSkeleton'
-
 export { Logo, type LogoProps } from './atoms/Logo'
 
 export { Separator, type SeparatorProps } from './atoms/Separator'
@@ -80,6 +78,8 @@ export { StarRating, type StarRatingProps } from './atoms/StarRating'
 export { SearchInput, type SearchInputProps } from './atoms/inputs/SearchInput'
 
 export { Toggle, type ToggleColor, type ToggleProps } from './atoms/inputs/Toggle'
+
+export { Textarea, type TextareaProps, type TextareaState } from './atoms/inputs/Textarea'
 
 export { ConfirmActionModal, type ConfirmActionModalProps } from './molecules/ConfirmActionModal'
 
@@ -120,6 +120,8 @@ export {
 } from './molecules/table/Table'
 
 export { SearchFilterBar, type SearchFilterBarProps } from './molecules/table/SearchFilterBar'
+
+export { LinkCell, TextCell } from './molecules/table/table-cells'
 
 export {
   LogoLoop,

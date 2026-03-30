@@ -38,7 +38,7 @@ function RatingDots({ value }: { value: number }) {
 
 function GameRow({ game, rank }: { game: TopGameEntry; rank: number }) {
   return (
-    <li className="flex items-center gap-3 border-b border-neutral-100 py-2.5 last:border-0 dark:border-neutral-200">
+    <li className="flex items-center gap-3 border-b border-neutral-100 py-2.5 last:border-0 dark:border-neutral-700">
       <Text className="w-5 shrink-0 text-right tabular-nums" color="muted" size="xs">
         {rank}
       </Text>

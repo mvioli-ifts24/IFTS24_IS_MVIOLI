@@ -1,12 +1,11 @@
 'use client'
 
-import type { GameSearchItem } from '@/features/profile/services/profile.service'
-
 import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 
-import { ProfileService } from '@/features/profile/services/profile.service'
-import { SpinLoader } from '@/ui'
+import { GamesService } from '@/features/shared/services/games.service'
+import { type GameSearchItem } from '@/features/shared/types/game.types'
+import { SpinLoader, Text } from '@/ui'
 
 type GamesSearchDropdownProps = {
   token: string
@@ -39,7 +38,7 @@ export function GamesSearchDropdown({
       if (!isOpen || disabled || games.length) return
 
       setLoading(true)
-      const response = await ProfileService.searchGames(token)
+      const response = await GamesService.searchAll(token)
 
       if (!response.error && response.data) {
         setGames(response.data)
@@ -72,7 +71,9 @@ export function GamesSearchDropdown({
               }}
               type="button"
             >
-              <span className="truncate text-sm">{game.title}</span>
+              <Text className="truncate" size="sm">
+                {game.title}
+              </Text>
               <Image
                 alt={game.title}
                 className="h-10 w-16 rounded object-cover"
@@ -84,7 +85,9 @@ export function GamesSearchDropdown({
           ))}
         </div>
       ) : (
-        <p className="text-foreground/70 px-2 py-4 text-sm">No se encontraron juegos.</p>
+        <Text className="px-2 py-4" color="muted" size="sm">
+          No se encontraron juegos.
+        </Text>
       )}
     </div>
   )

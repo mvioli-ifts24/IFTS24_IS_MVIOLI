@@ -6,8 +6,10 @@ import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
+import { GameSearchField } from '@/features/shared/components/game-search/GameSearchField'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
 import { useModal } from '@/features/shared/store/modals.store'
+import { type GameSearchItem } from '@/features/shared/types/game.types'
 import { AvatarUpload, Button, DatePicker, Input, Modal, Select } from '@/ui'
 
 import {
@@ -15,10 +17,8 @@ import {
   type ProfileFormData,
   type ProfileFormInput
 } from '../../../schemas/profile.schema'
-import { GameSearchItem, ProfileService } from '../../../services/profile.service'
+import { ProfileService } from '../../../services/profile.service'
 import { useProfileStore } from '../../../store/profile.store'
-
-import { GameSearchField } from './GameSearchField'
 
 function gameFromProfile(
   profile: {

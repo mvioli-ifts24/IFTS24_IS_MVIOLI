@@ -35,17 +35,19 @@ export function ProfileCard({ user: userProp, readonly = false }: ProfileCardPro
     open()
   }
 
+  // Efecto 1: sincroniza el usuario externo al store cuando viene como prop
   useEffect(() => {
-    // Si nos pasan el usuario desde fuera, lo sincronizamos al store
-    // para que AccountSettings y ReviewerSections lo lean correctamente.
-    if (userProp) {
-      setProfile(userProp)
-      setLoading(false)
+    if (!userProp) return
 
-      return
-    }
+    setProfile(userProp)
+    setLoading(false)
+  }, [userProp, setProfile, setLoading])
 
-    if (!token || profile) return
+  // Efecto 2: carga el perfil propio cuando no viene de fuera
+  useEffect(() => {
+    if (userProp || !token) return
+
+    if (useProfileStore.getState().profile) return
 
     const fetchOwn = async () => {
       const response = await ProfileService.getOwnProfile(token)
@@ -63,7 +65,7 @@ export function ProfileCard({ user: userProp, readonly = false }: ProfileCardPro
     }
 
     fetchOwn()
-  }, [userProp, token, profile, updateUser, setProfile, setLoading])
+  }, [userProp, token, updateUser, setProfile, setLoading])
 
   const handleVerifyAccount = async () => {
     if (readonly || !token || !profile || profile?.email_verified) return
