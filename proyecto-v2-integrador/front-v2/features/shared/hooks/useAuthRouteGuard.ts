@@ -74,19 +74,13 @@ export function useAuthRouteGuard({
     userRole
   ])
 
-  const canRender = hydrated && computeCanRender()
-
-  function computeCanRender() {
-    if (redirectAuthenticatedToDashboard) {
-      return !isAuthenticated
-    }
-
-    if (!isAuthenticated || !userRole) {
-      return false
-    }
-
-    return !allowedRoles || allowedRoles.includes(userRole)
-  }
+  const canRender =
+    hydrated &&
+    (() => {
+      if (redirectAuthenticatedToDashboard) return !isAuthenticated
+      if (!isAuthenticated || !userRole) return false
+      return !allowedRoles || allowedRoles.includes(userRole)
+    })()
 
   return {
     canRender,

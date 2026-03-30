@@ -69,23 +69,28 @@ export function SponsorFormModal({ sponsor, onSuccess }: SponsorFormModalProps) 
 
     setIsLoading(true)
 
-    const response = isEditing
-      ? await SponsorsAdminService.update(token, sponsor.id, formData)
-      : await SponsorsAdminService.create(token, formData)
+    try {
+      const response = isEditing
+        ? await SponsorsAdminService.update(token, sponsor.id, formData)
+        : await SponsorsAdminService.create(token, formData)
 
-    setIsLoading(false)
+      if (response.error || !response.data) {
+        toast.error(response.error ?? 'No se pudo guardar el sponsor.')
+        setIsConfirmOpen(false)
 
-    if (response.error || !response.data) {
-      toast.error(response.error ?? 'No se pudo guardar el sponsor.')
+        return
+      }
+
+      toast.success(isEditing ? 'Sponsor actualizado' : 'Sponsor creado')
+      onSuccess(response.data)
       setIsConfirmOpen(false)
-
-      return
+      close()
+    } catch {
+      toast.error('No se pudo conectar con el servidor.')
+      setIsConfirmOpen(false)
+    } finally {
+      setIsLoading(false)
     }
-
-    toast.success(isEditing ? 'Sponsor actualizado' : 'Sponsor creado')
-    onSuccess(response.data)
-    setIsConfirmOpen(false)
-    close()
   }
 
   return (

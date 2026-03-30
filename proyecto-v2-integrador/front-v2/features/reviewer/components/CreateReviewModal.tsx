@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -40,13 +40,11 @@ export function CreateReviewModal({ onSuccess }: CreateReviewModalProps) {
     }
   })
 
-  useEffect(() => {
-    // Clear the pre-selected game from the store once the modal mounts and picked it up
-    if (preSelectedGame) {
-      setPreSelectedGame(null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const clearedRef = useRef(false)
+  if (!clearedRef.current && preSelectedGame) {
+    setPreSelectedGame(null)
+    clearedRef.current = true
+  }
 
   const errors = form.formState.errors
   const watchedRatingId = useWatch({ control: form.control, name: 'rating_id' })

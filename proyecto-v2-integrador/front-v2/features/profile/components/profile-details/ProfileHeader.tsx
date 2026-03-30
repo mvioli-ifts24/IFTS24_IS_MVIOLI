@@ -34,7 +34,7 @@ export function ProfileHeader({
       />
       <div className="flex flex-1 flex-col">
         <div className="flex items-center justify-between gap-2">
-          <Heading className="truncate" level="h2" size="xs">
+          <Heading className="truncate" level="h1" size="xs">
             {user.name || 'Sin nombre'} {user.surname || ''}
           </Heading>
           {!readonly && (

@@ -8,12 +8,12 @@ import {
   StarIcon
 } from '@phosphor-icons/react'
 import { CaretDownIcon } from '@phosphor-icons/react/dist/ssr'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
+import { useTableQueryParams } from '@/features/shared/hooks/useTableQueryParams'
 import { useModal } from '@/features/shared/store/modals.store'
 import {
   Button,
@@ -36,32 +36,16 @@ export function UserDashboardPage() {
   const { token, user } = useAuthStore()
   const { reviews, loading, setReviews, setLoading, addReview, setPreSelectedGame } =
     useReviewsStore()
-  const { open } = useModal(MODAL_IDS.CREATE_REVIEW)
-  const [formKey, setFormKey] = useState(0)
+  const { isOpen: isCreateOpen, open } = useModal(MODAL_IDS.CREATE_REVIEW)
   const [reportingReview, setReportingReview] = useState<Review | null>(null)
   const [reportLoading, setReportLoading] = useState(false)
 
   const isModerator = user?.role === 'moderator' || user?.role === 'admin'
 
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const ratingFilter = Number(searchParams.get('filter_rating') ?? 0)
-
-  const setRatingFilter = useCallback(
-    (v: string | number) => {
-      const params = new URLSearchParams(searchParams.toString())
-
-      if (!v || v === 0) {
-        params.delete('filter_rating')
-      } else {
-        params.set('filter_rating', String(v))
-      }
-
-      router.replace(`${pathname}?${params.toString()}`)
-    },
-    [router, pathname, searchParams]
-  )
+  const { getFilter, setFilter } = useTableQueryParams()
+  const ratingFilter = Number(getFilter('rating') ?? 0)
+  const setRatingFilter = (v: string | number) =>
+    setFilter('rating', !v || v === 0 ? null : String(v))
 
   useEffect(() => {
     if (!token) return
@@ -79,7 +63,6 @@ export function UserDashboardPage() {
   }, [token, ratingFilter, setReviews, setLoading])
 
   const handleOpenCreate = () => {
-    setFormKey(k => k + 1)
     open()
   }
 
@@ -89,7 +72,6 @@ export function UserDashboardPage() {
       thumbnail: review.game_thumbnail,
       title: review.game_title
     })
-    setFormKey(k => k + 1)
     open()
   }
 
@@ -227,8 +209,7 @@ export function UserDashboardPage() {
         size="xl"
         variant="filled"
       />
-      {/* Modal nueva reseña — se remonta con key para reinicializar el estado */}
-      <CreateReviewModal key={formKey} onSuccess={handleReviewCreated} />
+      {isCreateOpen && <CreateReviewModal onSuccess={handleReviewCreated} />}
 
       {/* Modal denunciar reseña */}
       <ConfirmActionModal

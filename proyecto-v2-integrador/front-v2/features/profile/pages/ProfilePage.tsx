@@ -74,7 +74,7 @@ export function ProfilePage({ email: rawEmail }: ProfilePageProps) {
         elevation="0"
         loading={loading}
       >
-        <Heading level="h3" size="xs" variant="primary">
+        <Heading level="h2" size="xs" variant="primary">
           {isOwnProfile ? 'Mis reseñas' : `Reseñas de ${user.name || 'este usuario'}`}
         </Heading>
         <ReviewList
