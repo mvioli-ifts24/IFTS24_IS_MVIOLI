@@ -19,10 +19,6 @@ export interface SponsorFormModalProps {
   onSuccess: (sponsor: Sponsor) => void
 }
 
-/**
- * Modal de creación/edición de sponsor.
- * Se remonta con un key distinto cada vez desde el padre para reinicializar el estado.
- */
 export function SponsorFormModal({ sponsor, onSuccess }: SponsorFormModalProps) {
   const { token } = useAuthStore()
   const { isOpen, close } = useModal(MODAL_IDS.ADMIN_SPONSOR_FORM)
@@ -173,20 +169,15 @@ export function SponsorFormModal({ sponsor, onSuccess }: SponsorFormModalProps) 
       </Modal>
 
       <ConfirmActionModal
-        confirmColor="primary"
-        confirmWord={isEditing ? 'editar' : 'crear'}
-        description={
-          isEditing
-            ? `Estás por editar el sponsor "${sponsor?.name ?? ''}". Esta acción modificará los datos en el sistema.`
-            : 'Estás por crear un nuevo sponsor en el sistema.'
-        }
         isOpen={isConfirmOpen}
         loading={isLoading}
+        name={isEditing ? (sponsor?.name ?? undefined) : 'sponsor'}
         onClose={() => {
           if (!isLoading) setIsConfirmOpen(false)
         }}
         onConfirm={handleConfirm}
         title="Mensaje de seguridad"
+        type={isEditing ? 'edit' : 'create'}
       />
     </>
   )

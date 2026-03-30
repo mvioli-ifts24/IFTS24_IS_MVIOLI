@@ -70,7 +70,7 @@ export function ProfilePage({ email: rawEmail }: ProfilePageProps) {
       {isOwnProfile && <AccountSettings />}
 
       <CardWrapper
-        className="mx-auto flex w-full max-w-5xl flex-col gap-4"
+        className="mx-auto flex w-full max-w-5xl flex-col gap-6"
         elevation="0"
         loading={loading}
       >

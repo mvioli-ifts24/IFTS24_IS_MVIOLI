@@ -1,72 +1,51 @@
 'use client'
 
 import { PlusIcon } from '@phosphor-icons/react'
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
-import { useTableQueryParams } from '@/features/shared/hooks/useTableQueryParams'
 import { useModal } from '@/features/shared/store/modals.store'
 import { type Banner } from '@/features/shared/types/media.types'
-import { Button, CardWrapper } from '@/ui'
+import { Button, CardWrapper, ConfirmActionModal } from '@/ui'
 
 import { BannerFormModal } from '../components/banners/BannerFormModal'
 import { BannersTable } from '../components/banners/BannersTable'
-import { DeleteBannerModal } from '../components/banners/DeleteBannerModal'
+import { useAdminCrud } from '../hooks/useAdminCrud'
 import { BannersAdminService } from '../services/banners.service'
 
 export function AdminBannersPage() {
   const { token } = useAuthStore()
-  const [banners, setBanners] = useState<Banner[]>([])
-  const [initialLoading, setInitialLoading] = useState(true)
-  const [selectedBanner, setSelectedBanner] = useState<Banner | null>(null)
-  const [formKey, setFormKey] = useState(0)
-  const [total, setTotal] = useState(0)
+  const { isOpen: isFormOpen, open: openFormModal } = useModal(MODAL_IDS.ADMIN_BANNER_FORM)
+  const {
+    isOpen: isDeleteOpen,
+    open: openDeleteModal,
+    close: closeDelete
+  } = useModal(MODAL_IDS.ADMIN_BANNER_DELETE)
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false)
 
-  // URL query params — búsqueda y paginación sincronizadas con la URL
-  const { search, urlSearch, page, pageSize, setSearch, setPage, setPageSize } =
-    useTableQueryParams({ defaultPageSize: 5 })
-
-  const { open: openFormModal } = useModal(MODAL_IDS.ADMIN_BANNER_FORM)
-  const { open: openDeleteModal } = useModal(MODAL_IDS.ADMIN_BANNER_DELETE)
-
-  const fetchBanners = useCallback(async () => {
-    if (!token) return
-
-    try {
-      const response = await BannersAdminService.getAll(token, {
-        page,
-        pageSize,
-        search: urlSearch || undefined
-      })
-
-      if (response.error) {
-        toast.error(response.error)
-      } else {
-        setBanners(response.data ?? [])
-        setTotal(response.total ?? 0)
-      }
-    } catch {
-      toast.error('No se pudo conectar con el servidor.')
-    } finally {
-      setInitialLoading(false)
-    }
-  }, [token, page, pageSize, urlSearch])
-
-  useEffect(() => {
-    fetchBanners()
-  }, [fetchBanners])
+  const {
+    items: banners,
+    initialLoading,
+    selected: selectedBanner,
+    setSelected: setSelectedBanner,
+    total,
+    tableParams: { search, page, pageSize, setSearch, setPage, setPageSize },
+    refetch
+  } = useAdminCrud<Banner>({
+    token,
+    fetchFn: ({ page, pageSize, urlSearch }) =>
+      BannersAdminService.getAll(token!, { page, pageSize, search: urlSearch || undefined })
+  })
 
   const handleCreate = () => {
     setSelectedBanner(null)
-    setFormKey(k => k + 1)
     openFormModal()
   }
 
   const handleEdit = (banner: Banner) => {
     setSelectedBanner(banner)
-    setFormKey(k => k + 1)
     openFormModal()
   }
 
@@ -75,17 +54,30 @@ export function AdminBannersPage() {
     openDeleteModal()
   }
 
-  const handleSaved = () => {
-    fetchBanners()
-  }
+  const handleConfirmDelete = async () => {
+    if (!token || !selectedBanner) return
 
-  const handleDeleted = () => {
-    const remainingOnPage = banners.length - 1
+    setIsDeleteLoading(true)
 
-    if (remainingOnPage === 0 && page > 1) {
-      setPage(page - 1)
-    } else {
-      fetchBanners()
+    try {
+      const response = await BannersAdminService.remove(token, selectedBanner.id)
+
+      if (response.error) {
+        toast.error(response.error)
+
+        return
+      }
+
+      toast.success(`Banner "${selectedBanner.name}" eliminado`)
+
+      if (banners.length - 1 === 0 && page > 1) setPage(page - 1)
+      else refetch()
+
+      closeDelete()
+    } catch {
+      toast.error('No se pudo conectar con el servidor.')
+    } finally {
+      setIsDeleteLoading(false)
     }
   }
 
@@ -111,8 +103,19 @@ export function AdminBannersPage() {
         </Button>
       </CardWrapper>
 
-      <BannerFormModal key={formKey} banner={selectedBanner} onSuccess={handleSaved} />
-      <DeleteBannerModal banner={selectedBanner} onSuccess={handleDeleted} />
+      {isFormOpen && <BannerFormModal banner={selectedBanner} onSuccess={refetch} />}
+
+      <ConfirmActionModal
+        isOpen={isDeleteOpen}
+        loading={isDeleteLoading}
+        name={selectedBanner?.name}
+        onClose={() => {
+          if (!isDeleteLoading) closeDelete()
+        }}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar banner"
+        type="delete"
+      />
     </section>
   )
 }

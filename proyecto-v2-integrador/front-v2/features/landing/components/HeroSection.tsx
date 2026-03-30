@@ -1,6 +1,6 @@
 import { StarIcon, UserIcon } from '@phosphor-icons/react/dist/ssr'
 
-import { AnimatedCounter, Button, Heading, Text } from '@/ui'
+import { AnimatedCounter, Button, Heading, StarRating, Text } from '@/ui'
 
 /**
  * Datos mockup de reviews de usuarios
@@ -52,11 +52,11 @@ const stats = [
 /**
  * Review Card Component
  */
-interface ReviewCardProps {
+interface TestimonialCardProps {
   review: (typeof userReviews)[0]
 }
 
-function ReviewCard({ review }: ReviewCardProps) {
+function TestimonialCard({ review }: TestimonialCardProps) {
   return (
     <div className="glass min-w-[320px] space-y-4 rounded-2xl p-6">
       {/* User Info */}
@@ -75,18 +75,7 @@ function ReviewCard({ review }: ReviewCardProps) {
       </div>
 
       {/* Rating */}
-      <div className="flex items-center gap-1">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <StarIcon
-            key={i}
-            className={
-              i < review.rating ? 'text-yellow-400' : 'text-neutral-400 dark:text-neutral-300'
-            }
-            size={16}
-            weight={i < review.rating ? 'fill' : 'regular'}
-          />
-        ))}
-      </div>
+      <StarRating size={16} value={review.rating} />
 
       {/* Comment */}
       <Text className="leading-relaxed" color="muted" size="sm">
@@ -186,7 +175,7 @@ export function HeroSection() {
           {/* Reviews Carousel */}
           <div className="scrollbar-hide flex gap-6 overflow-x-auto pb-4">
             {userReviews.map(review => (
-              <ReviewCard key={review.id} review={review} />
+              <TestimonialCard key={review.id} review={review} />
             ))}
           </div>
 

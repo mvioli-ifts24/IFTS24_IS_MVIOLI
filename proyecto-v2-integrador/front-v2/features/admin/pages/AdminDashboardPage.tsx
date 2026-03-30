@@ -15,9 +15,8 @@ import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { ROUTES } from '@/features/shared/constants/nav.constants'
-import { PageSkeleton, Text } from '@/ui'
+import { PageSkeleton, StatCard, type StatCardProps, Text } from '@/ui'
 
-import { StatCard, type StatCardProps } from '../../../ui/molecules/StatCard'
 import { TopGamesList } from '../components/TopGamesList'
 import { AdminService, type AdminStats, type TopGames } from '../services/admin.service'
 

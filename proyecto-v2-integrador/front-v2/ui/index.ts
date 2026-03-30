@@ -136,6 +136,8 @@ export {
 
 export { SearchFiltersTable, type SearchFiltersTableProps } from './organisms/SearchFiltersTable'
 
+export { StatCard, type StatCardAccent, type StatCardProps } from './molecules/StatCard'
+
 export { Navbar, type NavbarProps } from './organisms/Navbar'
 
 export { UserMenu, type UserMenuProps } from './organisms/UserMenu'

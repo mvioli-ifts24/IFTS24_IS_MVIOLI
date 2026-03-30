@@ -1,50 +1,58 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
-import { useTableQueryParams } from '@/features/shared/hooks/useTableQueryParams'
 import { useModal } from '@/features/shared/store/modals.store'
 import { type User, type UserRoleOption } from '@/features/shared/types/user.types'
-import { CardWrapper } from '@/ui'
+import { CardWrapper, ConfirmActionModal } from '@/ui'
 
-import { DeleteUserModal } from '../components/users/DeleteUserModal'
 import { EditUserRoleModal } from '../components/users/EditUserRoleModal'
 import { UsersTable } from '../components/users/UsersTable'
+import { useAdminCrud } from '../hooks/useAdminCrud'
 import { AdminService } from '../services/admin.service'
 import { UsersAdminService } from '../services/users.service'
 
 export function AdminUsersPage() {
   const { token } = useAuthStore()
-
-  // Datos
-  const [users, setUsers] = useState<User[]>([])
   const [roles, setRoles] = useState<UserRoleOption[]>([])
-  const [initialLoading, setInitialLoading] = useState(true)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [total, setTotal] = useState(0)
 
-  // URL query params — search, filtros y paginación sincronizados con la URL
+  const { open: openEditModal } = useModal(MODAL_IDS.ADMIN_EDIT_USER_ROLE)
   const {
-    search,
-    urlSearch,
-    page,
-    pageSize,
-    getFilter,
-    setSearch,
-    setFilter,
-    setPage,
-    setPageSize
-  } = useTableQueryParams({ defaultPageSize: 5 })
+    isOpen: isDeleteOpen,
+    open: openDeleteModal,
+    close: closeDelete
+  } = useModal(MODAL_IDS.ADMIN_DELETE_USER)
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false)
+
+  const {
+    items: users,
+    setItems: setUsers,
+    initialLoading,
+    selected: selectedUser,
+    setSelected: setSelectedUser,
+    total,
+    setTotal,
+    tableParams: { search, page, pageSize, getFilter, setSearch, setFilter, setPage, setPageSize }
+  } = useAdminCrud<User>({
+    token,
+    fetchFn: ({ page, pageSize, urlSearch, getFilter }) => {
+      const filterRoleIdStr = getFilter('role')
+      const role_id = filterRoleIdStr ? parseInt(filterRoleIdStr) : undefined
+
+      return UsersAdminService.getAll(token!, {
+        page,
+        pageSize,
+        search: urlSearch || undefined,
+        role_id
+      })
+    }
+  })
 
   const filterRoleIdStr = getFilter('role')
   const filterRoleId = filterRoleIdStr ? parseInt(filterRoleIdStr) : null
-
-  // Modales
-  const { open: openEditModal } = useModal(MODAL_IDS.ADMIN_EDIT_USER_ROLE)
-  const { open: openDeleteModal } = useModal(MODAL_IDS.ADMIN_DELETE_USER)
 
   // Cargar roles (una sola vez)
   useEffect(() => {
@@ -54,36 +62,6 @@ export function AdminUsersPage() {
     })
   }, [token])
 
-  // Fetch de usuarios — se dispara al cambiar cualquier parámetro de la URL
-  const fetchUsers = useCallback(async () => {
-    if (!token) return
-
-    try {
-      const response = await UsersAdminService.getAll(token, {
-        page,
-        pageSize,
-        search: urlSearch || undefined,
-        role_id: filterRoleId ?? undefined
-      })
-
-      if (response.error) {
-        toast.error(response.error)
-      } else {
-        setUsers(response.data ?? [])
-        setTotal(response.total ?? 0)
-      }
-    } catch {
-      toast.error('No se pudo conectar con el servidor.')
-    } finally {
-      setInitialLoading(false)
-    }
-  }, [token, page, pageSize, urlSearch, filterRoleId])
-
-  useEffect(() => {
-    fetchUsers()
-  }, [fetchUsers])
-
-  // Handlers de modales
   const handleEditRole = (user: User) => {
     setSelectedUser(user)
     openEditModal()
@@ -94,22 +72,48 @@ export function AdminUsersPage() {
     openDeleteModal()
   }
 
-  // Handlers de éxito
   const handleRoleUpdated = (updated: User) => {
     setUsers(prev => prev.map(u => (u.id === updated.id ? updated : u)))
   }
 
-  const handleDeleted = (userId: number) => {
-    setUsers(prev => prev.filter(u => u.id !== userId))
-    setTotal(prev => prev - 1)
+  const handleConfirmDelete = async () => {
+    if (!token || !selectedUser) return
 
-    // Si eliminamos el último elemento de una página > 1, retroceder
-    const remainingOnPage = users.length - 1
+    setIsDeleteLoading(true)
 
-    if (remainingOnPage === 0 && page > 1) {
-      setPage(page - 1)
+    try {
+      const response = await UsersAdminService.remove(token, selectedUser.id)
+
+      if (response.error) {
+        toast.error(response.error)
+
+        return
+      }
+
+      const displayName =
+        selectedUser.name && selectedUser.surname
+          ? `${selectedUser.name} ${selectedUser.surname}`
+          : (selectedUser.name ?? selectedUser.email)
+
+      toast.success(`Usuario ${displayName} eliminado`)
+      setUsers(prev => prev.filter(u => u.id !== selectedUser.id))
+      setTotal(prev => prev - 1)
+
+      if (users.length - 1 === 0 && page > 1) setPage(page - 1)
+
+      closeDelete()
+    } catch {
+      toast.error('No se pudo conectar con el servidor.')
+    } finally {
+      setIsDeleteLoading(false)
     }
   }
+
+  const deleteDisplayName = selectedUser
+    ? selectedUser.name && selectedUser.surname
+      ? `${selectedUser.name} ${selectedUser.surname}`
+      : (selectedUser.name ?? selectedUser.email)
+    : ''
 
   return (
     <section className="mx-auto flex w-full max-w-5xl flex-col gap-6">
@@ -133,7 +137,18 @@ export function AdminUsersPage() {
       </CardWrapper>
 
       <EditUserRoleModal onSuccess={handleRoleUpdated} roles={roles} user={selectedUser} />
-      <DeleteUserModal onSuccess={handleDeleted} user={selectedUser} />
+
+      <ConfirmActionModal
+        isOpen={isDeleteOpen}
+        loading={isDeleteLoading}
+        name={deleteDisplayName}
+        onClose={() => {
+          if (!isDeleteLoading) closeDelete()
+        }}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar usuario"
+        type="delete"
+      />
     </section>
   )
 }

@@ -19,10 +19,6 @@ export interface BannerFormModalProps {
   onSuccess: (banner: Banner) => void
 }
 
-/**
- * Modal de creación/edición de banner.
- * Se remonta con un key distinto cada vez desde el padre para reinicializar el estado.
- */
 export function BannerFormModal({ banner, onSuccess }: BannerFormModalProps) {
   const { token } = useAuthStore()
   const { isOpen, close } = useModal(MODAL_IDS.ADMIN_BANNER_FORM)
@@ -212,20 +208,15 @@ export function BannerFormModal({ banner, onSuccess }: BannerFormModalProps) {
       </Modal>
 
       <ConfirmActionModal
-        confirmColor="primary"
-        confirmWord={isEditing ? 'editar' : 'crear'}
-        description={
-          isEditing
-            ? `Estás por editar el banner "${banner?.name ?? ''}". Esta acción modificará los datos en el sistema.`
-            : 'Estás por crear un nuevo banner en el sistema.'
-        }
         isOpen={isConfirmOpen}
         loading={isLoading}
+        name={banner?.name ?? 'banner'}
         onClose={() => {
           if (!isLoading) setIsConfirmOpen(false)
         }}
         onConfirm={handleConfirm}
         title="Mensaje de seguridad"
+        type={isEditing ? 'edit' : 'create'}
       />
     </>
   )

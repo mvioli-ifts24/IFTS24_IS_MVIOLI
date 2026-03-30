@@ -42,7 +42,7 @@ export function ReviewList({
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-6">
       {reviews.map(review => (
         <ReviewCard
           key={review.id}
