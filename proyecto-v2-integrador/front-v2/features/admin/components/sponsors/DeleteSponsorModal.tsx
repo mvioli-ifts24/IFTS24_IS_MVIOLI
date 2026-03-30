@@ -31,19 +31,23 @@ export function DeleteSponsorModal({ sponsor, onSuccess }: DeleteSponsorModalPro
 
     setIsLoading(true)
 
-    const response = await SponsorsAdminService.remove(token, sponsor.id)
+    try {
+      const response = await SponsorsAdminService.remove(token, sponsor.id)
 
-    setIsLoading(false)
+      if (response.error) {
+        toast.error(response.error)
 
-    if (response.error) {
-      toast.error(response.error)
+        return
+      }
 
-      return
+      toast.success(`Sponsor "${sponsor.name}" eliminado`)
+      onSuccess(sponsor.id)
+      close()
+    } catch {
+      toast.error('No se pudo conectar con el servidor.')
+    } finally {
+      setIsLoading(false)
     }
-
-    toast.success(`Sponsor "${sponsor.name}" eliminado`)
-    onSuccess(sponsor.id)
-    close()
   }
 
   return (

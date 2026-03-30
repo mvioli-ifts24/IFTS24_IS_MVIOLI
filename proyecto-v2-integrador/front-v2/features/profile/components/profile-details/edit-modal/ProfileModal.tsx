@@ -46,30 +46,24 @@ export function ProfileModal() {
   const { isOpen, close } = useModal(MODAL_IDS.EDIT_PROFILE)
   const { profile, setProfile, genders } = useProfileStore()
 
-  const [selectedGame, setSelectedGame] = useState<GameSearchItem | null>(() =>
-    gameFromProfile(profile)
-  )
+  // null = sin override (se deriva del profile); { value: ... } = usuario tocó el campo
+  const [gameOverride, setGameOverride] = useState<{ value: GameSearchItem | null } | null>(null)
+  const selectedGame = gameOverride === null ? gameFromProfile(profile) : gameOverride.value
 
   const form = useForm<ProfileFormInput, unknown, ProfileFormData>({
-    resolver: zodResolver(profileSchema)
-  })
-
-  const errors = form.formState.errors
-  const isSubmitting = form.formState.isSubmitting
-  const aboutValue = useWatch({ control: form.control, name: 'about' })
-
-  // Sincronizar valores del formulario cuando el modal se abre
-  useEffect(() => {
-    if (!isOpen || !profile) return
-
-    form.reset({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
       about: profile?.about || '',
       favorite_game_id: profile?.favorite_game_id ?? undefined,
       birth_date: profile?.birth_date?.slice(0, 10) || '',
       gender_id: profile?.gender_id ? String(profile?.gender_id) : '',
       profile_picture: undefined
-    })
-  }, [isOpen, profile, form])
+    }
+  })
+
+  const errors = form.formState.errors
+  const isSubmitting = form.formState.isSubmitting
+  const aboutValue = useWatch({ control: form.control, name: 'about' })
 
   // Cargar géneros al abrir (sólo si no están ya en el store).
   // Se guarda en el store para no repetir la llamada cada vez que se abre el modal.
@@ -114,7 +108,7 @@ export function ProfileModal() {
     }
 
     setProfile(response.data)
-    setSelectedGame(gameFromProfile(response.data))
+    setGameOverride(null)
     toast.success('Perfil actualizado')
     close()
   }
@@ -122,7 +116,7 @@ export function ProfileModal() {
   const handleClose = () => {
     if (isSubmitting) return
 
-    setSelectedGame(gameFromProfile(profile))
+    setGameOverride(null)
     close()
   }
 
@@ -191,7 +185,7 @@ export function ProfileModal() {
               id="favorite_game_modal"
               label="Juego favorito"
               onSelect={game => {
-                setSelectedGame(game)
+                setGameOverride({ value: game })
                 form.setValue('favorite_game_id', game?.id ?? null, { shouldDirty: true })
               }}
               selectedGame={selectedGame}

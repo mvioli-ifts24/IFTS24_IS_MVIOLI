@@ -1,11 +1,8 @@
+import { getAuthHeaders as authHeaders } from '@/features/shared/services/api.helpers'
 import { type ApiResponse, type PaginatedApiResponse } from '@/features/shared/types/api.types'
 import { type User } from '@/features/shared/types/user.types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
-
-function authHeaders(token: string) {
-  return { Authorization: `Bearer ${token}` }
-}
 
 export type GetAllUsersParams = {
   page?: number

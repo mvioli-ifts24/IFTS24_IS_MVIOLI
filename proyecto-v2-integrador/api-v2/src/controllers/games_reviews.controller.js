@@ -1,12 +1,14 @@
 import { connection as Database } from "#database";
 
+const API_HOST = (process.env.API_HOST || "").replace(/\/+$/, "");
+const PROFILE_PICTURES_PATH = API_HOST + "/storage/uploads/profile_pictures/";
+
 const indexGameReviews = async (req, res) => {
   try {
     const { game_id } = req.params;
     const user_id = req.user_id;
 
-    const QUERY_BASE =
-      "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id WHERE api_game_id = ?";
+    const QUERY_BASE = `SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, users.name as user_name, users.surname as user_surname, IF(users.profile_picture_filename IS NULL OR users.profile_picture_filename = '', NULL, CONCAT('${PROFILE_PICTURES_PATH}', users.profile_picture_filename)) as user_avatar, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM \`games_reviews\` JOIN \`games_reviews_ratings\` ON games_reviews.rating_id = games_reviews_ratings.id JOIN \`users\` ON games_reviews.user_id = users.id JOIN \`cached_games\` ON games_reviews.api_game_id = cached_games.api_id WHERE api_game_id = ?`;
 
     const [results] = await Database.execute(
       `${QUERY_BASE} AND users.id != ?`,
@@ -26,15 +28,13 @@ const indexGameReviews = async (req, res) => {
       error: null,
     });
   } catch (err) {
-    return res
-      .status(400)
-      .send({
-        data: null,
-        error:
-          typeof err === "string"
-            ? err
-            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
-      });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -42,8 +42,7 @@ const indexOwnReviews = async (req, res) => {
   try {
     const user_id = req.user_id;
 
-    const QUERY_BASE =
-      "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id WHERE 1 = 1";
+    const QUERY_BASE = `SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, users.name as user_name, users.surname as user_surname, IF(users.profile_picture_filename IS NULL OR users.profile_picture_filename = '', NULL, CONCAT('${PROFILE_PICTURES_PATH}', users.profile_picture_filename)) as user_avatar, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM \`games_reviews\` JOIN \`games_reviews_ratings\` ON games_reviews.rating_id = games_reviews_ratings.id JOIN \`users\` ON games_reviews.user_id = users.id JOIN \`cached_games\` ON games_reviews.api_game_id = cached_games.api_id WHERE 1 = 1`;
 
     const [resultsOwn] = await Database.execute(
       `${QUERY_BASE} AND users.id = ?`,
@@ -52,15 +51,13 @@ const indexOwnReviews = async (req, res) => {
 
     return res.send({ data: resultsOwn, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({
-        data: null,
-        error:
-          typeof err === "string"
-            ? err
-            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
-      });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -68,24 +65,25 @@ const indexUserReviews = async (req, res) => {
   try {
     const { user_id } = req.params;
 
-    const QUERY_BASE =
-      "SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM `games_reviews` JOIN `games_reviews_ratings` ON games_reviews.rating_id = games_reviews_ratings.id JOIN `users` ON games_reviews.user_id = users.id JOIN `cached_games` ON games_reviews.api_game_id = cached_games.api_id WHERE 1 = 1";
+    const QUERY_BASE = `SELECT games_reviews.*, games_reviews_ratings.description as rating, users.email as user_email, users.name as user_name, users.surname as user_surname, IF(users.profile_picture_filename IS NULL OR users.profile_picture_filename = '', NULL, CONCAT('${PROFILE_PICTURES_PATH}', users.profile_picture_filename)) as user_avatar, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM \`games_reviews\` JOIN \`games_reviews_ratings\` ON games_reviews.rating_id = games_reviews_ratings.id JOIN \`users\` ON games_reviews.user_id = users.id JOIN \`cached_games\` ON games_reviews.api_game_id = cached_games.api_id WHERE 1 = 1`;
 
-    const [results] = await Database.execute(`${QUERY_BASE} AND users.id = ?`, [
+    // Si el parámetro contiene @, hacer lookup por email; si no, por ID numérico
+    const isEmail = typeof user_id === "string" && user_id.includes("@");
+    const condition = isEmail ? "AND users.email = ?" : "AND users.id = ?";
+
+    const [results] = await Database.execute(`${QUERY_BASE} ${condition}`, [
       user_id,
     ]);
 
     return res.send({ data: results, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({
-        data: null,
-        error:
-          typeof err === "string"
-            ? err
-            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
-      });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -144,15 +142,13 @@ const store = async (req, res) => {
       error: null,
     });
   } catch (err) {
-    return res
-      .status(400)
-      .send({
-        data: null,
-        error:
-          typeof err === "string"
-            ? err
-            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
-      });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -192,15 +188,13 @@ const update = async (req, res) => {
 
     return res.send({ data: results.length ? results[0] : null, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({
-        data: null,
-        error:
-          typeof err === "string"
-            ? err
-            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
-      });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -226,15 +220,43 @@ const destroy = async (req, res) => {
 
     return res.send({ data: null, error: null });
   } catch (err) {
-    return res
-      .status(400)
-      .send({
-        data: null,
-        error:
-          typeof err === "string"
-            ? err
-            : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
-      });
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
+  }
+};
+
+const indexRecentReviews = async (req, res) => {
+  try {
+    const { rating_id } = req.query;
+
+    const QUERY_BASE = `SELECT games_reviews.id, games_reviews.user_id, games_reviews.api_game_id, games_reviews.title, games_reviews.description, games_reviews.created_at, games_reviews_ratings.id as rating_id, games_reviews_ratings.description as rating, users.email as user_email, users.name as user_name, users.surname as user_surname, IF(users.profile_picture_filename IS NULL OR users.profile_picture_filename = '', NULL, CONCAT('${PROFILE_PICTURES_PATH}', users.profile_picture_filename)) as user_avatar, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM \`games_reviews\` JOIN \`games_reviews_ratings\` ON games_reviews.rating_id = games_reviews_ratings.id JOIN \`users\` ON games_reviews.user_id = users.id JOIN \`cached_games\` ON games_reviews.api_game_id = cached_games.api_id WHERE 1 = 1`;
+
+    const params = [];
+    let query = QUERY_BASE;
+
+    if (rating_id) {
+      query += " AND games_reviews.rating_id = ?";
+      params.push(rating_id);
+    }
+
+    query += " ORDER BY games_reviews.created_at DESC LIMIT 50";
+
+    const [results] = await Database.execute(query, params);
+
+    return res.send({ data: results, error: null });
+  } catch (err) {
+    return res.status(400).send({
+      data: null,
+      error:
+        typeof err === "string"
+          ? err
+          : "Ocurrió un error inesperado. Intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -242,6 +264,7 @@ export {
   destroy,
   indexGameReviews,
   indexOwnReviews,
+  indexRecentReviews,
   indexUserReviews,
   store,
   update,

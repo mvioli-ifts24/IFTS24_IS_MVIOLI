@@ -158,10 +158,17 @@ const show = async (req, res) => {
     if (id === "own") {
       id = req.user_id;
     }
-    const [results] = await Database.execute(
-      `${USER_SELECT} WHERE users.id = ?`,
-      [PROFILE_PICTURES_PATH, id],
-    );
+
+    // Si el parámetro contiene @, hacer lookup por email; si no, por ID numérico
+    const isEmail = typeof id === "string" && id.includes("@");
+    const whereClause = isEmail
+      ? "WHERE users.email = ?"
+      : "WHERE users.id = ?";
+
+    const [results] = await Database.execute(`${USER_SELECT} ${whereClause}`, [
+      PROFILE_PICTURES_PATH,
+      id,
+    ]);
     const user = results.length ? await enrichFavoriteGame(results[0]) : null;
 
     return res.send({ data: user, error: null });

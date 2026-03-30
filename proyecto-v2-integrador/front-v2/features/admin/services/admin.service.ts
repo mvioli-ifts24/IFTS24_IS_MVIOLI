@@ -1,3 +1,4 @@
+import { getAuthHeaders as authHeaders } from '@/features/shared/services/api.helpers'
 import { ApiResponse } from '@/features/shared/types/api.types'
 import { type UserRoleOption } from '@/features/shared/types/user.types'
 
@@ -25,10 +26,6 @@ export type TopGames = {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
-
-function authHeaders(token: string) {
-  return { Authorization: `Bearer ${token}` }
-}
 
 export const AdminService = {
   async getStats(token: string): Promise<ApiResponse<AdminStats>> {

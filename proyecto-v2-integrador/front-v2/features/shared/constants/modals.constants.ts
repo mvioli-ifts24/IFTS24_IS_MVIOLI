@@ -29,7 +29,11 @@ export const MODAL_IDS = {
 
   // Admin — Sponsors
   ADMIN_SPONSOR_FORM: 'modal/admin/sponsor-form',
-  ADMIN_SPONSOR_DELETE: 'modal/admin/sponsor-delete'
+  ADMIN_SPONSOR_DELETE: 'modal/admin/sponsor-delete',
+
+  // Reviewer
+  CREATE_REVIEW: 'modal/reviewer/create-review',
+  REPORT_REVIEW: 'modal/reviewer/report-review'
 } as const
 
 /**

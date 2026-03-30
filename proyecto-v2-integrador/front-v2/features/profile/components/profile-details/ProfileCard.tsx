@@ -1,32 +1,50 @@
 'use client'
 
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
 import { useModal } from '@/features/shared/store/modals.store'
+import { type User } from '@/features/shared/types/user.types'
 import { CardWrapper, Text } from '@/ui'
 
 import { ProfileService } from '../../services/profile.service'
 import { useProfileStore } from '../../store/profile.store'
 
+import { FavoriteGameSection } from './FavoriteGameSection'
 import { ProfileHeader } from './ProfileHeader'
 import { ProfileModal } from './edit-modal/ProfileModal'
 
-export function ProfileCard() {
+type ProfileCardProps = {
+  /** Perfil a mostrar. Si no se pasa, carga el perfil propio desde el store. */
+  user?: User
+  /** Modo solo lectura: oculta botones de editar/verificar y no muestra el modal. */
+  readonly?: boolean
+}
+
+export function ProfileCard({ user: userProp, readonly = false }: ProfileCardProps) {
   const { token, updateUser } = useAuthStore()
   const { profile, loading, setProfile, setLoading } = useProfileStore()
   const { open } = useModal(MODAL_IDS.EDIT_PROFILE)
-  const [formKey, setFormKey] = useState(0)
+
+  const displayUser = userProp ?? profile
+  const isLoading = userProp ? false : loading || !profile
 
   const handleEdit = () => {
-    setFormKey(k => k + 1)
     open()
   }
 
   useEffect(() => {
+    // Si nos pasan el usuario desde fuera, lo sincronizamos al store
+    // para que AccountSettings y ReviewerSections lo lean correctamente.
+    if (userProp) {
+      setProfile(userProp)
+      setLoading(false)
+
+      return
+    }
+
     if (!token || profile) return
 
     const fetchOwn = async () => {
@@ -45,10 +63,10 @@ export function ProfileCard() {
     }
 
     fetchOwn()
-  }, [token, profile, updateUser, setProfile, setLoading])
+  }, [userProp, token, profile, updateUser, setProfile, setLoading])
 
   const handleVerifyAccount = async () => {
-    if (!token || !profile || profile?.email_verified) return
+    if (readonly || !token || !profile || profile?.email_verified) return
 
     const response = await ProfileService.verifyAccount(token)
 
@@ -70,38 +88,26 @@ export function ProfileCard() {
       <CardWrapper
         className="mx-auto flex w-full max-w-5xl flex-col gap-4"
         elevation="0"
-        loading={loading || !profile}
+        loading={isLoading}
       >
-        <ProfileHeader onEdit={handleEdit} onVerifyAccount={handleVerifyAccount} user={profile!} />
+        <ProfileHeader
+          onEdit={handleEdit}
+          onVerifyAccount={handleVerifyAccount}
+          readonly={readonly}
+          user={displayUser!}
+        />
         <Text className="italic" color="muted">
-          &quot;{profile?.about || 'Sin descripción'}&quot;
+          &quot;{displayUser?.about || 'Sin descripción'}&quot;
         </Text>
-        {profile?.favorite_game_id &&
-        profile?.favorite_game_title &&
-        profile?.favorite_game_thumbnail ? (
-          <div className="flex gap-4">
-            <Image
-              alt={profile?.favorite_game_title}
-              className="aspect-12/16 rounded object-cover"
-              height={80}
-              src={profile?.favorite_game_thumbnail}
-              width={45}
-            />
-            <div className="flex flex-col">
-              <Text color="muted" size="xs" weight="medium">
-                Mi juego favorito
-              </Text>
-              <Text weight="medium">{profile?.favorite_game_title}</Text>
-            </div>
-          </div>
-        ) : (
-          <Text color="muted" size="sm">
-            Sin juego favorito seleccionado
-          </Text>
-        )}
+        <FavoriteGameSection
+          gameId={displayUser?.favorite_game_id}
+          gameThumbnail={displayUser?.favorite_game_thumbnail}
+          gameTitle={displayUser?.favorite_game_title}
+          label={readonly ? 'Juego favorito' : 'Mi juego favorito'}
+        />
       </CardWrapper>
 
-      <ProfileModal key={formKey} />
+      {!readonly && <ProfileModal />}
     </>
   )
 }

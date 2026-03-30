@@ -132,7 +132,7 @@ export function Text({
     : (preset?.weightClass ?? weightClasses['normal'])
 
   const classes = [
-    'transition-colors duration-200 cursor-default',
+    'transition-colors duration-200',
     resolvedSizeClass,
     resolvedColorClass,
     resolvedWeightClass,

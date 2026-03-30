@@ -2,6 +2,7 @@ import {
   destroy,
   indexGameReviews,
   indexOwnReviews,
+  indexRecentReviews,
   indexUserReviews,
   store,
   update,
@@ -10,6 +11,7 @@ import express from "express";
 
 const gamesReviewsRoutesGroup = express.Router();
 
+gamesReviewsRoutesGroup.get("/", indexRecentReviews);
 gamesReviewsRoutesGroup.get("/game/:game_id", indexGameReviews);
 gamesReviewsRoutesGroup.get("/user", indexOwnReviews);
 gamesReviewsRoutesGroup.get("/user/:user_id", indexUserReviews);

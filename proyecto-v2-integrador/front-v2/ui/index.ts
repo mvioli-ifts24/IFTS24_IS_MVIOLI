@@ -57,8 +57,6 @@ export {
   type TextWeight
 } from './atoms/Text'
 
-export { Breadcrumbs, type BreadcrumbsProps } from './organisms/Breadcrumbs'
-
 export { SpinLoader, type SpinLoaderProps, type SpinLoaderSize } from './atoms/SpinLoader'
 
 export { Tag, type TagProps, type TagVariant } from './atoms/Tag'
@@ -76,6 +74,8 @@ export { Logo, type LogoProps } from './atoms/Logo'
 export { Separator, type SeparatorProps } from './atoms/Separator'
 
 export { Modal, type ModalProps } from './atoms/Modal'
+
+export { StarRating, type StarRatingProps } from './atoms/StarRating'
 
 export { SearchInput, type SearchInputProps } from './atoms/inputs/SearchInput'
 
@@ -96,6 +96,12 @@ export { AvatarUpload, type AvatarUploadProps } from './molecules/AvatarUpload'
 export { ReviewCard, type ReviewCardProps } from './molecules/ReviewCard'
 
 export { ThemeToggle, type ThemeToggleProps } from './molecules/ThemeToggle'
+
+export {
+  DropdownMenu,
+  type DropdownMenuItemDef,
+  type DropdownMenuProps
+} from './molecules/DropdownMenu'
 
 export { ImageUpload, type ImageUploadProps, type ImageUploadState } from './molecules/ImageUpload'
 

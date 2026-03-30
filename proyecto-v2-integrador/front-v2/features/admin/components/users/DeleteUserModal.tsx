@@ -31,22 +31,26 @@ export function DeleteUserModal({ user, onSuccess }: DeleteUserModalProps) {
 
     setIsLoading(true)
 
-    const response = await UsersAdminService.remove(token, user.id)
+    try {
+      const response = await UsersAdminService.remove(token, user.id)
 
-    setIsLoading(false)
+      if (response.error) {
+        toast.error(response.error)
 
-    if (response.error) {
-      toast.error(response.error)
+        return
+      }
 
-      return
+      const displayName =
+        user.name && user.surname ? `${user.name} ${user.surname}` : (user.name ?? user.email)
+
+      toast.success(`Usuario ${displayName} eliminado`)
+      onSuccess(user.id)
+      close()
+    } catch {
+      toast.error('No se pudo conectar con el servidor.')
+    } finally {
+      setIsLoading(false)
     }
-
-    const displayName =
-      user.name && user.surname ? `${user.name} ${user.surname}` : (user.name ?? user.email)
-
-    toast.success(`Usuario ${displayName} eliminado`)
-    onSuccess(user.id)
-    close()
   }
 
   const displayName = user

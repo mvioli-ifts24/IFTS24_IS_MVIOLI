@@ -9,9 +9,19 @@ type ProfileHeaderProps = {
   user: User
   onVerifyAccount: () => void
   onEdit: () => void
+  /**
+   * Modo solo lectura: oculta los botones de editar/verificar y el tag de rol.
+   * Útil para mostrar el perfil de otro usuario.
+   */
+  readonly?: boolean
 }
 
-export function ProfileHeader({ user, onVerifyAccount, onEdit }: ProfileHeaderProps) {
+export function ProfileHeader({
+  onEdit,
+  onVerifyAccount,
+  readonly = false,
+  user
+}: ProfileHeaderProps) {
   const isVerified = Boolean(user.email_verified)
 
   return (
@@ -27,22 +37,24 @@ export function ProfileHeader({ user, onVerifyAccount, onEdit }: ProfileHeaderPr
           <Heading className="truncate" level="h2" size="xs">
             {user.name || 'Sin nombre'} {user.surname || ''}
           </Heading>
-          <div className="flex items-center gap-2">
-            {!isVerified && (
-              <Button onClick={onVerifyAccount} size="xs" variant="text">
-                Verificar mi cuenta
+          {!readonly && (
+            <div className="flex items-center gap-2">
+              {!isVerified && (
+                <Button onClick={onVerifyAccount} size="xs" variant="text">
+                  Verificar mi cuenta
+                </Button>
+              )}
+              <Button iconLeft={PencilSimpleIcon} onClick={onEdit} size="xs" variant="outlined">
+                Editar
               </Button>
-            )}
-            <Button iconLeft={PencilSimpleIcon} onClick={onEdit} size="xs" variant="outlined">
-              Editar
-            </Button>
-          </div>
+            </div>
+          )}
         </div>
         <Text className="truncate" color="muted">
           {user.email}
         </Text>
         <div className="flex flex-wrap items-center gap-2 pt-2">
-          {user.role && user.role !== 'user' && (
+          {!readonly && user.role && user.role !== 'user' && (
             <Tag variant={user.role === 'admin' ? 'primary' : 'neutral'}>
               {user.role === 'admin'
                 ? 'Administrador'

@@ -1,3 +1,4 @@
+import { getAuthHeaders } from '@/features/shared/services/api.helpers'
 import { ApiResponse } from '@/features/shared/types/api.types'
 import { User } from '@/features/shared/types/user.types'
 
@@ -12,6 +13,8 @@ export type OwnReview = {
   title: string
   description: string
   rating: string
+  rating_id?: number
+  created_at?: string
   game_title: string
   game_thumbnail: string
 }
@@ -22,12 +25,6 @@ export type UserGenderItem = {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
-
-function getAuthHeaders(token: string) {
-  return {
-    Authorization: `Bearer ${token}`
-  }
-}
 
 export const ProfileService = {
   async getOwnProfile(token: string): Promise<ApiResponse<User>> {
@@ -130,6 +127,14 @@ export const ProfileService = {
 
   async searchGames(token: string): Promise<ApiResponse<GameSearchItem[]>> {
     const response = await fetch(`${API_URL}/games`, {
+      headers: getAuthHeaders(token)
+    })
+
+    return await response.json()
+  },
+
+  async getUserById(token: string, userId: number | string): Promise<ApiResponse<User>> {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
       headers: getAuthHeaders(token)
     })
 
