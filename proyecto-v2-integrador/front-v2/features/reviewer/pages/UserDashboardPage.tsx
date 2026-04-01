@@ -3,6 +3,7 @@
 import {
   FlagIcon,
   FunnelIcon,
+  NotePencilIcon,
   PencilSimpleLineIcon,
   PlusIcon,
   StarIcon
@@ -122,7 +123,7 @@ export function UserDashboardPage() {
                     iconRight={CaretDownIcon}
                     variant="outlined"
                   >
-                    Valoración
+                    Filtros
                   </Button>
                   {ratingFilter > 0 && (
                     <div className="bg-danger-400 absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full" />
@@ -151,7 +152,11 @@ export function UserDashboardPage() {
             </DropdownMenu>
           </div>
 
-          <CardWrapper className="flex flex-col gap-6" elevation="0">
+          <CardWrapper
+            className="flex flex-col gap-6"
+            elevation="0"
+            loading={loading && reviews.length === 0}
+          >
             {!loading && reviews.length === 0 && (
               <div className="flex flex-col items-center gap-3 py-10 text-center">
                 <StarIcon className="text-foreground/20" size={40} weight="thin" />
@@ -200,7 +205,7 @@ export function UserDashboardPage() {
         aria-label="Nueva reseña"
         className="fixed right-8 bottom-8 z-40 rounded-full!"
         color="primary"
-        iconLeft={PlusIcon}
+        iconLeft={NotePencilIcon}
         onClick={open}
         size="xl"
         variant="filled"

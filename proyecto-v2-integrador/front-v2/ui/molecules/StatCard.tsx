@@ -16,6 +16,8 @@ export type StatCardProps = {
   href?: string
   /** Nivel visual del acento (1 = más sutil → 5 = más intenso). Sin significado semántico. */
   accent?: StatCardAccent
+  /** Muestra el skeleton de carga. @default false */
+  loading?: boolean
 }
 
 const accentClasses: Record<StatCardAccent, string> = {
@@ -75,7 +77,14 @@ function SpotlightWrapper({
   )
 }
 
-export function StatCard({ icon: Icon, label, value, href, accent = 1 }: StatCardProps) {
+export function StatCard({
+  icon: Icon,
+  label,
+  value,
+  href,
+  accent = 1,
+  loading = false
+}: StatCardProps) {
   const inner = (
     <CardWrapper
       className={[
@@ -85,6 +94,7 @@ export function StatCard({ icon: Icon, label, value, href, accent = 1 }: StatCar
         .join(' ')
         .trim()}
       elevation="0"
+      loading={loading}
       padding="none"
     >
       <SpotlightWrapper accent={accent} className="flex h-full gap-4 p-4">

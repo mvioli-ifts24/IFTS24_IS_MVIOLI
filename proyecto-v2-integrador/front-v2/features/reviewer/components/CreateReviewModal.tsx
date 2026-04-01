@@ -124,6 +124,7 @@ export function CreateReviewModal({ onSuccess }: CreateReviewModalProps) {
           errorMessage={errors.description?.message}
           id="description"
           label="Reseña"
+          maxLength={1000}
           placeholder="Contá tu experiencia con el juego..."
           rows={4}
           state={errors.description ? 'error' : 'default'}
@@ -143,9 +144,6 @@ export function CreateReviewModal({ onSuccess }: CreateReviewModalProps) {
         </div>
 
         <div className="flex justify-end gap-2 pt-1">
-          <Button color="muted" onClick={handleClose} type="button" variant="outlined">
-            Cancelar
-          </Button>
           <Button loading={form.formState.isSubmitting} type="submit">
             Publicar reseña
           </Button>

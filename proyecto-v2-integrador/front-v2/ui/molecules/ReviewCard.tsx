@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { Avatar } from '../atoms/Avatar'
 import { CardWrapper } from '../atoms/CardWrapper'
+import { Separator } from '../atoms/Separator'
 import { StarRating } from '../atoms/StarRating'
 import { Text } from '../atoms/Text'
 
@@ -44,6 +45,11 @@ export interface ReviewCardProps {
    */
   menuItems?: DropdownMenuItemDef[]
   className?: string
+  /**
+   * Muestra el skeleton de carga (CardWrapper loading).
+   * @default false
+   */
+  loading?: boolean
 }
 
 function formatDate(iso: string): string {
@@ -76,26 +82,60 @@ export function ReviewCard({
   const displayName = [authorName, authorSurname].filter(Boolean).join(' ')
 
   return (
-    <CardWrapper
-      className={`flex flex-col gap-3 ${className}`.trim()}
-      elevation="1"
-      loading={loading}
-    >
+    <CardWrapper className={`flex flex-col ${className}`.trim()} elevation="1" loading={loading}>
+      {/* Header: autor + fecha */}
+      {hasAuthor && (
+        <>
+          <div className="flex items-center justify-between">
+            {hasAuthor ? (
+              authorHref ? (
+                <Link className="group flex items-center gap-2" href={authorHref}>
+                  <Avatar name={authorName} size="xs" src={authorAvatar} surname={authorSurname} />
+                  <Text
+                    className="group-hover:text-primary-400 transition-colors"
+                    color="muted"
+                    size="xs"
+                  >
+                    {displayName}
+                  </Text>
+                </Link>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Avatar name={authorName} size="xs" src={authorAvatar} surname={authorSurname} />
+                  <Text color="muted" size="xs">
+                    {displayName}
+                  </Text>
+                </div>
+              )
+            ) : (
+              <div />
+            )}
+            {hasMenu && <DropdownMenu items={menuItems} />}
+          </div>
+          <Separator className="mt-3 mb-4" />
+        </>
+      )}
       {/* Fila principal: portada + contenido + menú */}
       <div className="flex items-start gap-3">
         {gameThumbnail && (
           <Image
             alt={gameTitle}
             className="aspect-12/16 shrink-0 rounded object-cover"
-            height={120}
+            height={180}
             src={gameThumbnail}
-            width={80}
+            width={100}
           />
         )}
-        <div className="flex min-w-0 flex-1 flex-col gap-3">
-          <Text weight="medium">{gameTitle}</Text>
-
-          <div className="mt-1.5">
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            {createdAt && (
+              <Text color="muted" size="2xs">
+                {formatDate(createdAt)}
+              </Text>
+            )}
+            <Text color="muted" variant="label">
+              {gameTitle}
+            </Text>
             {ratingNumeric ? (
               <StarRating size={14} value={ratingNumeric} />
             ) : (
@@ -104,46 +144,11 @@ export function ReviewCard({
               </Text>
             )}
           </div>
-          <Text className="mt-0.5 line-clamp-2 italic" color="muted" size="sm">
-            {description}
+          <Text className="line-clamp-2 italic" color="muted" size="sm">
+            &quot;{description}&quot;
           </Text>
         </div>
-        {hasMenu && <DropdownMenu items={menuItems} />}
       </div>
-
-      {/* Footer: autor + fecha */}
-      {(hasAuthor || createdAt) && (
-        <div className="flex items-center justify-between border-t border-neutral-100 pt-2 dark:border-neutral-200">
-          {hasAuthor ? (
-            authorHref ? (
-              <Link className="group flex items-center gap-1.5" href={authorHref}>
-                <Avatar name={authorName} size="xs" src={authorAvatar} surname={authorSurname} />
-                <Text
-                  className="group-hover:text-primary-400 transition-colors"
-                  color="muted"
-                  size="xs"
-                >
-                  {displayName}
-                </Text>
-              </Link>
-            ) : (
-              <div className="flex items-center gap-1.5">
-                <Avatar name={authorName} size="xs" src={authorAvatar} surname={authorSurname} />
-                <Text color="muted" size="xs">
-                  {displayName}
-                </Text>
-              </div>
-            )
-          ) : (
-            <div />
-          )}
-          {createdAt && (
-            <Text color="muted" size="xs">
-              {formatDate(createdAt)}
-            </Text>
-          )}
-        </div>
-      )}
     </CardWrapper>
   )
 }

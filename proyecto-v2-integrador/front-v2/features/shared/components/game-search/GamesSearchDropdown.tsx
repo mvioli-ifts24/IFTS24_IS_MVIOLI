@@ -56,7 +56,7 @@ export function GamesSearchDropdown({
     <div className="bg-background absolute z-30 mt-1 max-h-80 w-full overflow-auto rounded-xl border border-neutral-200 p-2 shadow-lg">
       {loading ? (
         <div className="flex justify-center py-6">
-          <SpinLoader size="m" />
+          <SpinLoader fullScreen={false} size="m" />
         </div>
       ) : filteredGames.length ? (
         <div className="scroll flex max-h-36 flex-col gap-1 overflow-visible">

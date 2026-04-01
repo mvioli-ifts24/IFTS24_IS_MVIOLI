@@ -1,4 +1,5 @@
-import { type TextareaHTMLAttributes } from 'react'
+'use client'
+import { type TextareaHTMLAttributes, useState } from 'react'
 
 import { Text } from '../Text'
 
@@ -42,8 +43,26 @@ export function Textarea({
   state = 'default',
   errorMessage,
   className = '',
+  maxLength,
+  value,
+  defaultValue,
+  onChange,
   ...props
 }: TextareaProps) {
+  const [charCount, setCharCount] = useState(() => {
+    if (value !== undefined) return String(value).length
+    if (defaultValue !== undefined) return String(defaultValue).length
+
+    return 0
+  })
+
+  const currentLength = value !== undefined ? String(value).length : charCount
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCharCount(e.target.value.length)
+    onChange?.(e)
+  }
+
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -63,14 +82,30 @@ export function Textarea({
         ]
           .filter(Boolean)
           .join(' ')}
+        defaultValue={defaultValue}
         id={id}
+        maxLength={maxLength}
+        onChange={handleChange}
+        value={value}
         {...props}
       />
-      {errorMessage && (
-        <Text className="text-error" size="xs">
-          {errorMessage}
-        </Text>
-      )}
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          {errorMessage && (
+            <Text className="text-error" size="xs">
+              {errorMessage}
+            </Text>
+          )}
+        </div>
+        {maxLength !== undefined && (
+          <Text
+            className={currentLength > maxLength ? 'text-error' : 'text-foreground/40'}
+            size="xs"
+          >
+            {currentLength}/{maxLength}
+          </Text>
+        )}
+      </div>
     </div>
   )
 }

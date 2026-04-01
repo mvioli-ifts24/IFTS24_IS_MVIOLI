@@ -9,7 +9,7 @@ export const reviewSchema = z.object({
   description: z
     .string()
     .min(10, 'La reseña debe tener al menos 10 caracteres')
-    .max(2000, 'La reseña no puede superar los 2000 caracteres'),
+    .max(1000, 'La reseña no puede superar los 2000 caracteres'),
   rating_id: z.number().int().min(1, 'Elegí una valoración').max(5)
 })
 

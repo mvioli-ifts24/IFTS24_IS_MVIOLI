@@ -136,7 +136,7 @@ export function AdminDashboardPage() {
             <Text variant="label">{group.section}</Text>
             <div className="flex flex-wrap gap-3">
               {group.items.map(({ key, ...cardProps }) => (
-                <StatCard key={key} {...cardProps} value={stats?.[key] ?? 0} />
+                <StatCard key={key} {...cardProps} loading={loading} value={stats?.[key] ?? 0} />
               ))}
             </div>
           </div>
