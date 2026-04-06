@@ -7,6 +7,47 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * Divide un script SQL en statements individuales respetando
+ * los literales de cadena (no parte por ';' dentro de comillas simples).
+ */
+function splitSqlStatements(sql) {
+  const statements = [];
+  let current = "";
+  let inString = false;
+
+  for (let i = 0; i < sql.length; i++) {
+    const char = sql[i];
+
+    if (inString) {
+      current += char;
+      // Comillas escapadas al estilo MySQL: '' dentro de una cadena
+      if (char === "'" && sql[i + 1] === "'") {
+        current += sql[++i];
+      } else if (char === "'") {
+        inString = false;
+      }
+    } else if (char === "'") {
+      inString = true;
+      current += char;
+    } else if (char === "-" && sql[i + 1] === "-") {
+      // Saltar línea de comentario completa
+      while (i < sql.length && sql[i] !== "\n") i++;
+    } else if (char === ";") {
+      const stmt = current.trim();
+      if (stmt) statements.push(stmt);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+
+  const last = current.trim();
+  if (last) statements.push(last);
+
+  return statements;
+}
+
 function syncSeedImages() {
   const UPLOADS_DIR = path.join(__dirname, "../public/uploads/images");
   const SOURCE_DIRS = [
@@ -131,10 +172,7 @@ async function initializeDatabase() {
       // Reemplazar CREATE TABLE por CREATE TABLE IF NOT EXISTS
       sql = sql.replace(/CREATE TABLE/g, "CREATE TABLE IF NOT EXISTS");
 
-      // Dividir en statements individuales (por CREATE TABLE)
-      const statements = sql
-        .split(";")
-        .filter((stmt) => stmt.trim().length > 0);
+      const statements = splitSqlStatements(sql);
 
       for (const statement of statements) {
         if (statement.trim()) {
@@ -297,6 +335,9 @@ async function initializeDatabase() {
       "games_reviews_ratings.sql",
       "sponsors.sql",
       "banners.sql",
+      "cached_games.sql",
+      "users.sql",
+      "games_reviews.sql",
     ];
 
     console.log(chalk.yellow("🌱 Ejecutando seeders..."));
@@ -308,10 +349,7 @@ async function initializeDatabase() {
       // Reemplazar INSERT por INSERT IGNORE para evitar duplicados
       sql = sql.replace(/INSERT INTO/g, "INSERT IGNORE INTO");
 
-      // Ejecutar cada INSERT por separado
-      const statements = sql
-        .split("\n")
-        .filter((stmt) => stmt.trim().length > 0);
+      const statements = splitSqlStatements(sql);
 
       for (const statement of statements) {
         if (statement.trim()) {
@@ -322,6 +360,19 @@ async function initializeDatabase() {
       console.log(chalk.green(`✅ ${seeder}`));
     }
 
+    // Limpiar profile_picture_filename='default.jpg' de usuarios seed para que muestren iniciales
+    try {
+      await connection.execute(
+        "ALTER TABLE users MODIFY COLUMN profile_picture_filename VARCHAR(255) NOT NULL DEFAULT ''",
+      );
+    } catch (_) {
+      // Ignorar si falla (ej. constraint)
+    }
+    await connection.execute(
+      "UPDATE users SET profile_picture_filename = '' WHERE profile_picture_filename = 'default.jpg'",
+    );
+    console.log(chalk.green("✅ Fotos de perfil placeholder limpiadas"));
+
     // Crear usuario administrador por defecto
     console.log(chalk.yellow("👤 Creando usuario administrador..."));
 
@@ -331,16 +382,8 @@ async function initializeDatabase() {
     await connection.execute(
       `INSERT INTO users (name, surname, email, password, gender_id, role, profile_picture_filename)
        VALUES (?, ?, ?, ?, ?, ?, ?)
-       ON DUPLICATE KEY UPDATE email=email`,
-      [
-        "Admin",
-        "Sistema",
-        "admin@rank.com",
-        adminPassword,
-        1,
-        "admin",
-        "default.jpg",
-      ],
+       ON DUPLICATE KEY UPDATE role = 'admin', profile_picture_filename = ''`,
+      ["Admin", "Sistema", "admin@rank.com", adminPassword, 1, "admin", ""],
     );
 
     console.log(chalk.green("✅ Usuario administrador creado"));

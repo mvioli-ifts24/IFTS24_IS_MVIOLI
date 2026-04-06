@@ -239,7 +239,11 @@ const destroy = async (req, res) => {
 
 const indexRecentReviews = async (req, res) => {
   try {
-    const { rating_id } = req.query;
+    const { rating_id, page = 1, limit = 10 } = req.query;
+
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limitNum = Math.min(50, Math.max(1, parseInt(limit, 10) || 10));
+    const offset = (pageNum - 1) * limitNum;
 
     const QUERY_BASE = `SELECT games_reviews.id, games_reviews.user_id, games_reviews.api_game_id, games_reviews.title, games_reviews.description, games_reviews.created_at, games_reviews_ratings.id as rating_id, games_reviews_ratings.description as rating, users.email as user_email, users.name as user_name, users.surname as user_surname, IF(users.profile_picture_filename IS NULL OR users.profile_picture_filename = '', NULL, CONCAT('${PROFILE_PICTURES_PATH}', users.profile_picture_filename)) as user_avatar, cached_games.title as game_title, cached_games.thumbnail as game_thumbnail FROM \`games_reviews\` JOIN \`games_reviews_ratings\` ON games_reviews.rating_id = games_reviews_ratings.id JOIN \`users\` ON games_reviews.user_id = users.id JOIN \`cached_games\` ON games_reviews.api_game_id = cached_games.api_id WHERE 1 = 1`;
 
@@ -251,14 +255,18 @@ const indexRecentReviews = async (req, res) => {
       params.push(rating_id);
     }
 
-    query += " ORDER BY games_reviews.created_at DESC LIMIT 50";
+    query += ` ORDER BY games_reviews.created_at DESC LIMIT ${limitNum + 1} OFFSET ${offset}`;
 
     const [results] = await Database.execute(query, params);
 
-    return res.send({ data: results, error: null });
+    const hasMore = results.length > limitNum;
+    const data = hasMore ? results.slice(0, limitNum) : results;
+
+    return res.send({ data, hasMore, error: null });
   } catch (err) {
     return res.status(400).send({
       data: null,
+      hasMore: false,
       error:
         typeof err === "string"
           ? err

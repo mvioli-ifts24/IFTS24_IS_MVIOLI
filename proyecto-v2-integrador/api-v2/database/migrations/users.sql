@@ -10,7 +10,7 @@ CREATE TABLE `users` (
   `email_verified` tinyint NOT NULL DEFAULT '0',
   `accept_newsletter` tinyint NOT NULL DEFAULT '0',
   `favorite_game_id` bigint unsigned DEFAULT NULL,
-  `profile_picture_filename` varchar(255) NOT NULL,
+  `profile_picture_filename` varchar(255) NOT NULL DEFAULT '',
   `about` varchar(150) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
