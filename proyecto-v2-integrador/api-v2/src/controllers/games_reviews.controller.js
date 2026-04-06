@@ -20,10 +20,17 @@ const indexGameReviews = async (req, res) => {
       [game_id, user_id],
     );
 
+    const [[stats]] = await Database.execute(
+      "SELECT ROUND(AVG(rating_id), 2) as avg_rating, COUNT(*) as review_count FROM `games_reviews` WHERE api_game_id = ?",
+      [game_id],
+    );
+
     return res.send({
       data: {
         ownReview: resultsOwn.length ? resultsOwn[0] : null,
         othersReviews: results,
+        avg_rating: stats.avg_rating ? Number(stats.avg_rating) : null,
+        review_count: Number(stats.review_count),
       },
       error: null,
     });
