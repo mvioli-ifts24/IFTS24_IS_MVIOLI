@@ -16,7 +16,7 @@ export interface SearchInputProps {
   /**
    * Texto de la etiqueta flotante
    */
-  label: string
+  label?: string
 
   /**
    * Valor actual del input de búsqueda
@@ -71,7 +71,7 @@ export interface SearchInputProps {
  */
 export function SearchInput({
   id,
-  label,
+  label = 'Buscar', // Etiqueta por defecto si no se proporciona
   value,
   onChange,
   onFocus,

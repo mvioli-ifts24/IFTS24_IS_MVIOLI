@@ -6,7 +6,8 @@
  */
 export const ROUTES = {
   dashboard: '/dashboard',
-  busqueda: '/dashboard/busqueda',
+  explorar: '/dashboard/explorar',
+  juegos: '/dashboard/juegos',
   ayuda: '/dashboard/ayuda',
   perfil: '/dashboard/perfil',
   sobreNosotros: '/dashboard/sobre-nosotros',
@@ -45,8 +46,8 @@ export type NavItem = {
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Inicio', href: ROUTES.dashboard, icon: HouseIcon },
   {
-    label: 'Búsqueda',
-    href: ROUTES.busqueda,
+    label: 'Explorar',
+    href: ROUTES.explorar,
     icon: MagnifyingGlassIcon,
     allowedRoles: ['user', 'moderator']
   },
@@ -78,7 +79,8 @@ export const SEGMENT_LABELS: Record<string, string> = {
   banners: 'Banners',
   sponsors: 'Sponsors',
   perfil: 'Perfil',
-  busqueda: 'Búsqueda',
+  explorar: 'Explorar',
+  juegos: 'Juegos',
   ayuda: 'Ayuda',
   'sobre-nosotros': 'Sobre nosotros',
   login: 'Iniciar sesión',
@@ -92,7 +94,8 @@ export const SEGMENT_ICONS: Record<string, typeof HouseIcon> = {
   banners: FolderOpenIcon,
   sponsors: HashIcon,
   perfil: UserIcon,
-  busqueda: MagnifyingGlassIcon,
+  explorar: MagnifyingGlassIcon,
+  juegos: MagnifyingGlassIcon,
   ayuda: BookOpenIcon,
   'sobre-nosotros': GraduationCapIcon
 }

@@ -3,8 +3,7 @@
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 
 import { type Banner } from '@/features/shared/types/media.types'
-import { type ColumnDef, SearchFiltersTable, type TableActionDef } from '@/ui'
-import { LinkCell } from '@/ui/molecules/table/table-cells'
+import { type ColumnDef, LinkCell, SearchFiltersTable, type TableActionDef } from '@/ui'
 
 export interface BannersTableProps {
   banners: Banner[]

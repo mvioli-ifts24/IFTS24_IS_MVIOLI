@@ -2,23 +2,6 @@ import { getAuthHeaders } from '@/features/shared/services/api.helpers'
 import { ApiResponse } from '@/features/shared/types/api.types'
 import { User } from '@/features/shared/types/user.types'
 
-export type GameSearchItem = {
-  id: number
-  title: string
-  thumbnail: string
-}
-
-export type OwnReview = {
-  id: number
-  title: string
-  description: string
-  rating: string
-  rating_id?: number
-  created_at?: string
-  game_title: string
-  game_thumbnail: string
-}
-
 export type UserGenderItem = {
   id: number
   label: string
@@ -112,22 +95,6 @@ export const ProfileService = {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    })
-
-    return await response.json()
-  },
-
-  async getOwnReviews(token: string): Promise<ApiResponse<OwnReview[]>> {
-    const response = await fetch(`${API_URL}/games_reviews/user`, {
-      headers: getAuthHeaders(token)
-    })
-
-    return await response.json()
-  },
-
-  async searchGames(token: string): Promise<ApiResponse<GameSearchItem[]>> {
-    const response = await fetch(`${API_URL}/games`, {
-      headers: getAuthHeaders(token)
     })
 
     return await response.json()

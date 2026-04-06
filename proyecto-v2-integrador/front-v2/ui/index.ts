@@ -95,6 +95,8 @@ export { AvatarUpload, type AvatarUploadProps } from './molecules/AvatarUpload'
 
 export { ReviewCard, type ReviewCardProps } from './molecules/ReviewCard'
 
+export { UserMiniCard, type UserMiniCardProps } from './molecules/UserMiniCard'
+
 export { ThemeToggle, type ThemeToggleProps } from './molecules/ThemeToggle'
 
 export {

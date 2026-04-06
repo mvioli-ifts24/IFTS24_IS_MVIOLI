@@ -1,70 +1,53 @@
-'use client'
-
 import Image from 'next/image'
+import Link from 'next/link'
 
-import { CardWrapper, Text } from '@/ui'
+import { ROUTES } from '@/features/shared/constants/nav.constants'
+import { CardWrapper, StarRating, Text } from '@/ui'
 
 import { type TopGameEntry } from '../services/admin.service'
 
-const RATING_LABELS: Record<number, string> = {
-  1: 'Muy malo',
-  2: 'Malo',
-  3: 'Normal',
-  4: 'Bueno',
-  5: 'Muy bueno'
-}
-
-function ratingLabel(avg: number) {
-  const rounded = Math.round(avg)
-
-  return RATING_LABELS[rounded] ?? String(avg)
-}
-
-function RatingDots({ value }: { value: number }) {
-  return (
-    <span className="flex items-center gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <span
-          key={i}
-          className={[
-            'inline-block h-1.5 w-1.5 rounded-full',
-            i < Math.round(value) ? 'bg-primary' : 'bg-neutral-300 dark:bg-neutral-600'
-          ].join(' ')}
-        />
-      ))}
-    </span>
-  )
-}
-
 function GameRow({ game, rank }: { game: TopGameEntry; rank: number }) {
+  const avgRating = Number(game.avg_rating)
+
   return (
-    <li className="flex items-center gap-3 border-b border-neutral-100 py-2.5 last:border-0 dark:border-neutral-700">
-      <Text className="w-5 shrink-0 text-right tabular-nums" color="muted" size="xs">
-        {rank}
-      </Text>
+    <li>
+      <Link href={`${ROUTES.juegos}/${game.api_id}`}>
+        <CardWrapper className="flex gap-3 transition-all" elevation="1" padding="sm">
+          <div className="relative overflow-hidden rounded">
+            <Text
+              className="bg-foreground text-background! absolute top-0 left-0 rounded p-1 text-center"
+              color="muted"
+              size="xs"
+              weight="bold"
+            >
+              # {rank}
+            </Text>
 
-      <div className="relative h-8 w-14 shrink-0 overflow-hidden rounded-md">
-        <Image
-          fill
-          unoptimized
-          alt={game.title}
-          className="object-cover"
-          sizes="56px"
-          src={game.thumbnail}
-        />
-      </div>
+            <Image
+              alt={game.title}
+              className="aspect-12/16 shrink-0 rounded object-cover"
+              height={40}
+              src={game.thumbnail}
+              width={70}
+            />
+          </div>
+          <div className="flex flex-1 flex-col gap-1.5">
+            <Text className="truncate" variant="label">
+              {game.title}
+            </Text>
 
-      <Text className="flex-1 truncate" size="sm" weight="medium">
-        {game.title}
-      </Text>
-
-      <div className="flex shrink-0 flex-col items-end gap-0.5">
-        <RatingDots value={game.avg_rating} />
-        <Text color="muted" size="xs">
-          {ratingLabel(game.avg_rating)} · {game.review_count}{' '}
-          {game.review_count === 1 ? 'reseña' : 'reseñas'}
-        </Text>
-      </div>
+            {avgRating > 0 && (
+              <div className="mt-1 flex items-center gap-2">
+                <StarRating size={16} value={Math.round(avgRating * 2) / 2} />
+                <Text color="muted" size="xs">
+                  {avgRating.toFixed(1)} ({game.review_count} reseña
+                  {game.review_count !== 1 ? 's' : ''})
+                </Text>
+              </div>
+            )}
+          </div>
+        </CardWrapper>
+      </Link>
     </li>
   )
 }
@@ -77,19 +60,17 @@ export type TopGamesListProps = {
 export function TopGamesList({ games, emptyMessage = 'Aún no hay datos.' }: TopGamesListProps) {
   if (!games.length) {
     return (
-      <CardWrapper elevation="1" padding="md">
+      <CardWrapper elevation="0" padding="md">
         <Text color="muted">{emptyMessage}</Text>
       </CardWrapper>
     )
   }
 
   return (
-    <CardWrapper elevation="1" padding="md">
-      <ul>
-        {games.map((game, i) => (
-          <GameRow key={game.api_id} game={game} rank={i + 1} />
-        ))}
-      </ul>
+    <CardWrapper as="ul" className="flex flex-col gap-4" elevation="0" padding="md">
+      {games.map((game, i) => (
+        <GameRow key={game.api_id} game={game} rank={i + 1} />
+      ))}
     </CardWrapper>
   )
 }

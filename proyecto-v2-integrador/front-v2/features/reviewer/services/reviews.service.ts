@@ -1,6 +1,12 @@
 import { getAuthHeaders } from '@/features/shared/services/api.helpers'
 import { ApiResponse } from '@/features/shared/types/api.types'
 
+export type ReviewsPagedResponse = {
+  data: Review[] | null
+  hasMore: boolean
+  error: string | null
+}
+
 export type Review = {
   id: number
   title: string
@@ -18,12 +24,6 @@ export type Review = {
   user_email?: string
 }
 
-export type GameItem = {
-  id: number
-  title: string
-  thumbnail: string
-}
-
 export type CreateReviewData = {
   title: string
   description: string
@@ -34,17 +34,17 @@ export type CreateReviewData = {
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export const ReviewsService = {
-  async getRecentReviews(token: string, ratingId?: number): Promise<ApiResponse<Review[]>> {
-    const params = ratingId ? `?rating_id=${ratingId}` : ''
-    const response = await fetch(`${API_URL}/games_reviews${params}`, {
-      headers: getAuthHeaders(token)
-    })
+  async getRecentReviews(
+    token: string,
+    ratingId?: number,
+    page = 1,
+    limit = 10
+  ): Promise<ReviewsPagedResponse> {
+    const params = new URLSearchParams({ page: String(page), limit: String(limit) })
 
-    return response.json()
-  },
+    if (ratingId) params.set('rating_id', String(ratingId))
 
-  async getOwnReviews(token: string): Promise<ApiResponse<Review[]>> {
-    const response = await fetch(`${API_URL}/games_reviews/user`, {
+    const response = await fetch(`${API_URL}/games_reviews?${params}`, {
       headers: getAuthHeaders(token)
     })
 
@@ -53,14 +53,6 @@ export const ReviewsService = {
 
   async getUserReviews(token: string, userId: number | string): Promise<ApiResponse<Review[]>> {
     const response = await fetch(`${API_URL}/games_reviews/user/${userId}`, {
-      headers: getAuthHeaders(token)
-    })
-
-    return response.json()
-  },
-
-  async searchGames(token: string): Promise<ApiResponse<GameItem[]>> {
-    const response = await fetch(`${API_URL}/games`, {
       headers: getAuthHeaders(token)
     })
 

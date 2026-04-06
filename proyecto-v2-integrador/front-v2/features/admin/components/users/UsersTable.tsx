@@ -1,6 +1,7 @@
 'use client'
 
-import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
+import { EyeIcon, PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
+import { useRouter } from 'next/navigation'
 
 import { type User, type UserRoleOption } from '@/features/shared/types/user.types'
 import {
@@ -53,6 +54,8 @@ export function UsersTable({
   total,
   loading
 }: UsersTableProps) {
+  const router = useRouter()
+
   const columns: ColumnDef<User>[] = [
     {
       id: 'user',
@@ -95,6 +98,11 @@ export function UsersTable({
   ]
 
   const actions: TableActionDef<User>[] = [
+    {
+      icon: EyeIcon,
+      label: 'Ver perfil',
+      onClick: user => router.push(`/dashboard/perfil/${user.email}`)
+    },
     {
       icon: PencilSimpleIcon,
       label: 'Editar rol',

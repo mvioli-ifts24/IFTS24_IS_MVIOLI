@@ -50,14 +50,14 @@ const STAT_GROUPS: StatGroup[] = [
       {
         key: 'admins',
         label: 'Administradores',
-        href: ROUTES.usuarios,
+        href: ROUTES.usuarios + '?filter_role=1',
         icon: UserCircleGearIcon,
         accent: 1
       },
       {
         key: 'moderators',
         label: 'Moderadores',
-        href: ROUTES.usuarios,
+        href: ROUTES.usuarios + '?filter_role=2',
         icon: ShieldIcon,
         accent: 4
       }
