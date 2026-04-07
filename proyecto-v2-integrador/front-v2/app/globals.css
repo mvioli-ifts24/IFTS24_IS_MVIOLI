@@ -154,6 +154,15 @@ html {
   }
 }
 
+@keyframes fill-progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 .review-highlight {
   animation: review-highlight 1.2s linear;
 }

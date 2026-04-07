@@ -6,10 +6,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
+import { AdBanner } from '@/features/shared/components/ad-banners/AdBanner'
+import { ReviewList } from '@/features/shared/components/ReviewList'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
 import { useTableQueryParams } from '@/features/shared/hooks/useTableQueryParams'
 import { useModal } from '@/features/shared/store/modals.store'
-import { Button, CardWrapper, DropdownMenu, ReviewCard, SpinLoader, StarRating, Text } from '@/ui'
+import { Button, CardWrapper, DropdownMenu, SpinLoader, StarRating, Text } from '@/ui'
 
 import { CreateReviewModal } from '../components/CreateReviewModal'
 import { ReviewsService, type Review } from '../services/reviews.service'
@@ -110,6 +112,7 @@ export function UserDashboardPage() {
   return (
     <>
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+        <AdBanner orientation="horizontal" />
         {/* Feed: header fuera del CardWrapper para que el dropdown no quede recortado */}
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3 px-1">
@@ -174,23 +177,22 @@ export function UserDashboardPage() {
               </div>
             )}
 
-            {reviews.length > 0 &&
-              reviews.map(review => (
-                <ReviewCard
-                  key={review.id}
-                  showAuthor
-                  extraItems={[
-                    {
-                      icon: NotePencilIcon,
-                      label: 'Reseñar',
-                      onClick: () => handleReviewSameGame(review)
-                    }
-                  ]}
-                  onDeleted={removeReview}
-                  onUpdated={r => updateReview(r.id, r)}
-                  review={review}
-                />
-              ))}
+            {reviews.length > 0 && (
+              <ReviewList
+                showAuthor
+                adEvery={10}
+                extraItems={review => [
+                  {
+                    icon: NotePencilIcon,
+                    label: 'Reseñar',
+                    onClick: () => handleReviewSameGame(review)
+                  }
+                ]}
+                onDeleted={removeReview}
+                onUpdated={r => updateReview(r.id, r)}
+                reviews={reviews}
+              />
+            )}
 
             {/* Sentinel para scroll infinito */}
             {hasMore && !loading && (

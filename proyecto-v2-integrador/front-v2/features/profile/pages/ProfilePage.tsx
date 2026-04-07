@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { ReviewsService, type Review } from '@/features/reviewer/services/reviews.service'
+import { AdBanner } from '@/features/shared/components/ad-banners/AdBanner'
 import { ReviewList } from '@/features/shared/components/ReviewList'
 import { type User } from '@/features/shared/types/user.types'
 import { Button, CardWrapper, Heading, Text } from '@/ui'
@@ -82,7 +83,9 @@ export function ProfilePage({ email: rawEmail }: ProfilePageProps) {
     <>
       <ProfileCard readonly={!isOwnProfile} user={user} />
       {isOwnProfile && <AccountSettings />}
-
+      <section className="mx-auto w-full max-w-5xl">
+        <AdBanner mode="card" orientation="horizontal" />
+      </section>
       <CardWrapper
         className="mx-auto flex w-full max-w-5xl flex-col gap-6"
         elevation="0"

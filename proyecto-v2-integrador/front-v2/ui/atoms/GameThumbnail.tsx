@@ -71,8 +71,7 @@ export function GameThumbnail({
 }: GameThumbnailProps) {
   const { height, width } = sizeMap[size]
 
-  const sharedClass =
-    `aspect-12/16 shrink-0 rounded bg-neutral-100 dark:bg-neutral-800 ${className}`.trim()
+  const sharedClass = `aspect-12/16 shrink-0 rounded bg-neutral-50 ${className}`.trim()
 
   const img = src ? (
     <Image

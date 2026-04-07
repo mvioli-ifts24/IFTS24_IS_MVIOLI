@@ -5,17 +5,10 @@ import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { type Review } from '@/features/reviewer/services/reviews.service'
+import { AdBanner } from '@/features/shared/components/ad-banners/AdBanner'
+import { ReviewList } from '@/features/shared/components/ReviewList'
 import { ROUTES } from '@/features/shared/constants/nav.constants'
-import {
-  Button,
-  CardWrapper,
-  GameThumbnail,
-  Heading,
-  ReviewCard,
-  StarRating,
-  Tag,
-  Text
-} from '@/ui'
+import { Button, CardWrapper, GameThumbnail, Heading, StarRating, Tag, Text } from '@/ui'
 
 import {
   type GameDetail,
@@ -122,7 +115,9 @@ export function GameDetailPage({ gameId }: GameDetailPageProps) {
           </div>
         </CardWrapper>
       </section>
-
+      <section className="mx-auto w-full max-w-5xl">
+        <AdBanner mode="card" orientation="horizontal" />
+      </section>
       {/* Reseñas de la comunidad */}
       <section className="mx-auto w-full max-w-5xl">
         <CardWrapper className="flex flex-col gap-6" elevation="0" loading={loading}>
@@ -130,25 +125,15 @@ export function GameDetailPage({ gameId }: GameDetailPageProps) {
             Reseñas de la comunidad
           </Heading>
 
-          {!loading && allReviews.length === 0 ? (
-            <Text className="py-6 text-center" color="muted" size="sm">
-              Este juego aún no tiene reseñas. ¡Sé el primero en opinar!
-            </Text>
-          ) : (
-            <div className="flex flex-col gap-6">
-              {allReviews.map(review => (
-                <ReviewCard
-                  key={review.id}
-                  showAuthor
-                  loading={loading}
-                  onDeleted={handleReviewDeleted}
-                  onUpdated={handleReviewUpdated}
-                  review={review}
-                  showGame={false}
-                />
-              ))}
-            </div>
-          )}
+          <ReviewList
+            showAuthor
+            emptyMessage="Este juego aún no tiene reseñas. ¡Sé el primero en opinar!"
+            loading={loading}
+            onDeleted={handleReviewDeleted}
+            onUpdated={handleReviewUpdated}
+            reviews={allReviews}
+            showGame={false}
+          />
         </CardWrapper>
       </section>
     </>

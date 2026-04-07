@@ -3,6 +3,7 @@ import { authMiddleware } from "#middlewares/auth.middleware.js";
 import express from "express";
 import adminRoutesGroup from "./admin.route.js";
 import authRoutesGroup from "./auth.route.js";
+import bannersRoutesGroup from "./banners.route.js";
 import contactMessagesRoutesGroup from "./contact_messages.route.js";
 import gamesRouteGroup from "./games.route.js";
 import gamesReviewsRoutesGroup from "./games_reviews.route.js";
@@ -22,6 +23,7 @@ const rootRouter = router
   .use("/contact_messages", contactMessagesRoutesGroup)
   .use("/users", usersRouteGroup)
   .use("/games", gamesRouteGroup)
+  .use("/banners", bannersRoutesGroup)
   .use("/sponsors", sponsorsRoutesGroup)
   .use("/admin", adminMiddleware, adminRoutesGroup);
 
