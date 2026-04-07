@@ -1,33 +1,15 @@
 'use client'
 
-import {
-  FlagIcon,
-  FunnelIcon,
-  NotePencilIcon,
-  PencilSimpleLineIcon,
-  PlusIcon,
-  StarIcon
-} from '@phosphor-icons/react'
+import { FunnelIcon, NotePencilIcon, PlusIcon, StarIcon } from '@phosphor-icons/react'
 import { CaretDownIcon } from '@phosphor-icons/react/dist/ssr'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { MODAL_IDS } from '@/features/shared/constants/modals.constants'
-import { ROUTES } from '@/features/shared/constants/nav.constants'
 import { useTableQueryParams } from '@/features/shared/hooks/useTableQueryParams'
 import { useModal } from '@/features/shared/store/modals.store'
-import {
-  Button,
-  CardWrapper,
-  ConfirmActionModal,
-  DropdownMenu,
-  ReviewCard,
-  SpinLoader,
-  StarRating,
-  Text,
-  type DropdownMenuItemDef
-} from '@/ui'
+import { Button, CardWrapper, DropdownMenu, ReviewCard, SpinLoader, StarRating, Text } from '@/ui'
 
 import { CreateReviewModal } from '../components/CreateReviewModal'
 import { ReviewsService, type Review } from '../services/reviews.service'
@@ -36,18 +18,23 @@ import { useReviewsStore } from '../store/reviews.store'
 // Sin opción "Todas" — la deselección ocurre al volver a clickear la misma estrella
 
 export function UserDashboardPage() {
-  const { token, user } = useAuthStore()
-  const { reviews, loading, setReviews, setLoading, addReview, appendReviews, setPreSelectedGame } =
-    useReviewsStore()
+  const { token } = useAuthStore()
+  const {
+    reviews,
+    loading,
+    setReviews,
+    setLoading,
+    addReview,
+    appendReviews,
+    setPreSelectedGame,
+    updateReview,
+    removeReview
+  } = useReviewsStore()
   const { isOpen: isCreateOpen, open } = useModal(MODAL_IDS.CREATE_REVIEW)
-  const [reportingReview, setReportingReview] = useState<Review | null>(null)
-  const [reportLoading, setReportLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const sentinelRef = useRef<HTMLDivElement>(null)
-
-  const isModerator = user?.role === 'moderator' || user?.role === 'admin'
 
   const { getFilter, setFilter } = useTableQueryParams()
   const ratingFilter = Number(getFilter('rating') ?? 0)
@@ -114,36 +101,6 @@ export function UserDashboardPage() {
       title: review.game_title
     })
     open()
-  }
-
-  const handleConfirmReport = async () => {
-    setReportLoading(true)
-    // Simulamos la acción de denuncia (el endpoint aún no existe)
-    await new Promise(resolve => setTimeout(resolve, 600))
-    toast.success('Reseña denunciada. Será revisada por el equipo.')
-    setReportLoading(false)
-    setReportingReview(null)
-  }
-
-  const buildMenuItems = (review: Review): DropdownMenuItemDef[] => {
-    const items: DropdownMenuItemDef[] = [
-      {
-        icon: PencilSimpleLineIcon,
-        label: 'Reseñar',
-        onClick: () => handleReviewSameGame(review)
-      }
-    ]
-
-    if (isModerator) {
-      items.push({
-        icon: FlagIcon,
-        label: 'Denunciar reseña',
-        onClick: () => setReportingReview(review),
-        variant: 'danger'
-      })
-    }
-
-    return items
   }
 
   const handleReviewCreated = (review: Review) => {
@@ -221,26 +178,17 @@ export function UserDashboardPage() {
               reviews.map(review => (
                 <ReviewCard
                   key={review.id}
-                  authorAvatar={review.user_avatar}
-                  authorHref={
-                    review.user_email
-                      ? review.user_id === user?.id
-                        ? '/dashboard/perfil'
-                        : `/dashboard/perfil/${review.user_email}`
-                      : undefined
-                  }
-                  authorName={review.user_name ?? undefined}
-                  authorSurname={review.user_surname ?? undefined}
-                  createdAt={review.created_at}
-                  description={review.description}
-                  gameHref={
-                    review.api_game_id ? `${ROUTES.juegos}/${review.api_game_id}` : undefined
-                  }
-                  gameThumbnail={review.game_thumbnail}
-                  gameTitle={review.game_title}
-                  menuItems={buildMenuItems(review)}
-                  rating={review.rating}
-                  ratingNumeric={review.rating_id}
+                  showAuthor
+                  extraItems={[
+                    {
+                      icon: NotePencilIcon,
+                      label: 'Reseñar',
+                      onClick: () => handleReviewSameGame(review)
+                    }
+                  ]}
+                  onDeleted={removeReview}
+                  onUpdated={r => updateReview(r.id, r)}
+                  review={review}
                 />
               ))}
 
@@ -252,7 +200,7 @@ export function UserDashboardPage() {
             )}
 
             {!hasMore && reviews.length > 0 && (
-              <div className="flex justify-center border-t border-dashed py-6">
+              <div className="mt-12 flex justify-center border-t border-dashed py-12 opacity-50">
                 <Text color="muted" size="sm">
                   Ya viste todas las reseñas por ahora.
                 </Text>
@@ -273,17 +221,6 @@ export function UserDashboardPage() {
         variant="filled"
       />
       {isCreateOpen && <CreateReviewModal onSuccess={handleReviewCreated} />}
-
-      {/* Modal denunciar reseña */}
-      <ConfirmActionModal
-        confirmColor="danger"
-        description={`¿Estás seguro/a de que querés denunciar la reseña de "${reportingReview?.game_title ?? ''}"? Esta acción será revisada por el equipo de moderación.`}
-        isOpen={reportingReview !== null}
-        loading={reportLoading}
-        onClose={() => setReportingReview(null)}
-        onConfirm={handleConfirmReport}
-        title="Denunciar reseña"
-      />
     </>
   )
 }

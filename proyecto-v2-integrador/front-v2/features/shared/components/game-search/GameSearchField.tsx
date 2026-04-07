@@ -1,11 +1,10 @@
 'use client'
 
 import { XIcon } from '@phosphor-icons/react'
-import Image from 'next/image'
 import { useState } from 'react'
 
 import { type GameSearchItem } from '@/features/shared/types/game.types'
-import { SearchInput, Text } from '@/ui'
+import { Button, GameRow, SearchInput, Text } from '@/ui'
 
 import { GamesSearchDropdown } from './GamesSearchDropdown'
 
@@ -27,23 +26,15 @@ export function GameSearchField({
   disabled = false
 }: GameSearchFieldProps) {
   const [query, setQuery] = useState('')
-  const [isOpen, setIsOpen] = useState(false)
-
-  const handleFocus = () => {
-    if (disabled) return
-    setIsOpen(true)
-  }
 
   const handleChange = (value: string) => {
     if (disabled) return
     setQuery(value)
-    setIsOpen(true)
   }
 
   const handleSelect = (game: GameSearchItem) => {
     onSelect(game)
     setQuery('')
-    setIsOpen(false)
   }
 
   const handleClear = () => {
@@ -57,46 +48,38 @@ export function GameSearchField({
         <Text className="px-0.5" color="muted" size="xs">
           {label}
         </Text>
-        <div className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 dark:bg-neutral-100">
-          <Image
-            alt={selectedGame.title}
-            className="aspect-12/16 shrink-0 rounded object-cover"
-            height={48}
-            src={selectedGame.thumbnail}
-            width={28}
-          />
-          <Text className="flex-1 truncate" size="sm" weight="medium">
-            {selectedGame.title}
-          </Text>
-          {!disabled && (
-            <button
-              aria-label="Quitar juego favorito"
-              className="text-foreground/40 hover:text-foreground/70 shrink-0 transition-colors"
-              onClick={handleClear}
-              type="button"
-            >
-              <XIcon size={16} />
-            </button>
-          )}
-        </div>
+        <GameRow
+          className="border border-neutral-200 bg-neutral-50 dark:bg-neutral-100"
+          size="m"
+          suffix={
+            !disabled && (
+              <Button
+                color="muted"
+                iconLeft={XIcon}
+                onClick={handleClear}
+                size="sm"
+                variant="text"
+              />
+            )
+          }
+          thumbnail={selectedGame.thumbnail}
+          title={selectedGame.title}
+        />
       </div>
     )
   }
 
   return (
-    <div className="relative w-full">
+    <div className="flex w-full flex-col gap-2">
       <SearchInput
         disabled={disabled}
         id={id}
         label={label}
-        onBlur={() => setTimeout(() => setIsOpen(false), 150)}
         onChange={handleChange}
-        onFocus={handleFocus}
         value={query}
       />
       <GamesSearchDropdown
         disabled={disabled}
-        isOpen={isOpen}
         onSelectGame={handleSelect}
         query={query}
         token={token}

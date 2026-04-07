@@ -1,16 +1,14 @@
 'use client'
 
-import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 
 import { GamesService } from '@/features/shared/services/games.service'
 import { type GameSearchItem } from '@/features/shared/types/game.types'
-import { SpinLoader, Text } from '@/ui'
+import { CardWrapper, GameRow, SpinLoader, Text } from '@/ui'
 
 type GamesSearchDropdownProps = {
   token: string
   query: string
-  isOpen: boolean
   disabled?: boolean
   onSelectGame: (game: GameSearchItem) => void
 }
@@ -18,7 +16,6 @@ type GamesSearchDropdownProps = {
 export function GamesSearchDropdown({
   token,
   query,
-  isOpen,
   disabled = false,
   onSelectGame
 }: GamesSearchDropdownProps) {
@@ -35,7 +32,7 @@ export function GamesSearchDropdown({
 
   useEffect(() => {
     const fetchGames = async () => {
-      if (!isOpen || disabled || games.length) return
+      if (disabled || games.length) return
 
       setLoading(true)
       const response = await GamesService.searchAll(token)
@@ -48,47 +45,42 @@ export function GamesSearchDropdown({
     }
 
     fetchGames()
-  }, [disabled, games.length, isOpen, token])
+  }, [disabled, games.length, token])
 
-  if (!isOpen || !query.trim()) return null
+  const isEmpty = !query.trim()
+  const noResults = !isEmpty && !loading && filteredGames.length === 0
 
   return (
-    <div className="bg-background absolute z-30 mt-1 max-h-80 w-full overflow-auto rounded-xl border border-neutral-200 p-2 shadow-lg">
+    <CardWrapper className="h-32 w-full rounded-sm!" elevation="1" padding="sm">
       {loading ? (
         <div className="flex justify-center py-6">
           <SpinLoader fullScreen={false} size="m" />
         </div>
-      ) : filteredGames.length ? (
-        <div className="scroll flex max-h-36 flex-col gap-1 overflow-visible">
+      ) : isEmpty ? (
+        <Text className="px-2 py-4 text-center" color="muted" size="sm">
+          Escribí el nombre de un juego para buscarlo
+        </Text>
+      ) : noResults ? (
+        <Text className="px-2 py-4 text-center" color="muted" size="sm">
+          No se encontraron juegos para &ldquo;{query}&rdquo;
+        </Text>
+      ) : (
+        <div className="flex max-h-52 flex-col gap-1 overflow-y-auto">
           {filteredGames.map(game => (
-            <button
+            <GameRow
               key={game.id}
-              className="flex w-full items-center justify-between gap-3 rounded-lg px-2 py-2 text-left hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={disabled}
               onMouseDown={event => {
                 event.preventDefault()
                 onSelectGame(game)
               }}
-              type="button"
-            >
-              <Text className="truncate" size="sm">
-                {game.title}
-              </Text>
-              <Image
-                alt={game.title}
-                className="h-10 w-16 rounded object-cover"
-                height={40}
-                src={game.thumbnail}
-                width={64}
-              />
-            </button>
+              size="m"
+              thumbnail={game.thumbnail}
+              title={game.title}
+            />
           ))}
         </div>
-      ) : (
-        <Text className="px-2 py-4" color="muted" size="sm">
-          No se encontraron juegos.
-        </Text>
       )}
-    </div>
+    </CardWrapper>
   )
 }

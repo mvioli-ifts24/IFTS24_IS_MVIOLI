@@ -1,14 +1,12 @@
 'use client'
 
-import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { type Review } from '@/features/reviewer/services/reviews.service'
 import { ROUTES } from '@/features/shared/constants/nav.constants'
 import { type GameSearchItem } from '@/features/shared/types/game.types'
-import { CardWrapper, Heading, SearchInput, Text, UserMiniCard } from '@/ui'
+import { CardWrapper, GameRow, Heading, SearchInput, Text, UserMiniCard } from '@/ui'
 
 import { ExplorerService } from '../services/explorer.service'
 
@@ -93,20 +91,13 @@ export function ExplorerPage() {
               </Heading>
               <div className="flex flex-col gap-1">
                 {filteredGames.map(game => (
-                  <Link
+                  <GameRow
                     key={game.id}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-neutral-100"
                     href={`${ROUTES.juegos}/${game.id}`}
-                  >
-                    <Image
-                      alt={game.title}
-                      className="aspect-12/16 shrink-0 rounded object-cover"
-                      height={28}
-                      src={game.thumbnail}
-                      width={48}
-                    />
-                    <Text variant="label">{game.title}</Text>
-                  </Link>
+                    size="m"
+                    thumbnail={game.thumbnail}
+                    title={game.title}
+                  />
                 ))}
               </div>
             </CardWrapper>
@@ -123,7 +114,7 @@ export function ExplorerPage() {
                     key={u.email}
                     avatar={u.avatar}
                     email={u.email}
-                    href={u.email ? `${ROUTES.perfil}/${encodeURIComponent(u.email)}` : undefined}
+                    href={u.email ? `${ROUTES.perfil}/${u.email}` : undefined}
                     name={u.name}
                     surname={u.surname}
                   />

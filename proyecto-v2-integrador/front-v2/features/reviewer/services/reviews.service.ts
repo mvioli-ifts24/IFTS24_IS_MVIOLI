@@ -31,6 +31,8 @@ export type CreateReviewData = {
   api_game_id: number
 }
 
+export type UpdateReviewData = CreateReviewData
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export const ReviewsService = {
@@ -67,6 +69,32 @@ export const ReviewsService = {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
+    })
+
+    return response.json()
+  },
+
+  async updateReview(
+    token: string,
+    id: number,
+    data: UpdateReviewData
+  ): Promise<ApiResponse<null>> {
+    const response = await fetch(`${API_URL}/games_reviews/${id}`, {
+      method: 'PUT',
+      headers: {
+        ...getAuthHeaders(token),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    return response.json()
+  },
+
+  async deleteReview(token: string, id: number): Promise<ApiResponse<null>> {
+    const response = await fetch(`${API_URL}/games_reviews/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(token)
     })
 
     return response.json()

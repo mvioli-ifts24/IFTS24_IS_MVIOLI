@@ -136,6 +136,28 @@ html {
   scroll-padding-top: 24px;
 }
 
+@keyframes review-highlight {
+  0% {
+    box-shadow: 0 0 0 0px transparent;
+  }
+  20% {
+    box-shadow: 0 0 0 1px var(--primary-400);
+  }
+  50% {
+    box-shadow: 0 0 0 2px var(--primary-300);
+  }
+  80% {
+    box-shadow: 0 0 0 1px var(--primary-400);
+  }
+  100% {
+    box-shadow: 0 0 0 0px transparent;
+  }
+}
+
+.review-highlight {
+  animation: review-highlight 1.2s linear;
+}
+
 .glass {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);

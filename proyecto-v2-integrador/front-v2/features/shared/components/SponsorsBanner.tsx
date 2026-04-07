@@ -21,7 +21,7 @@ export function SponsorsBanner() {
     })
   }, [token])
 
-  if (loading) return <Skeleton className="mt-4 h-10 w-full" />
+  if (loading) return <Skeleton className="h-10 w-full" />
 
   if (sponsors.length === 0) return null
 
@@ -32,7 +32,7 @@ export function SponsorsBanner() {
   }))
 
   return (
-    <div className="pt-4">
+    <div className="p-2">
       <LogoLoop
         fadeOut
         invertOnDark

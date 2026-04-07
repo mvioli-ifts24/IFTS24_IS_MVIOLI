@@ -1,5 +1,6 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -25,6 +26,13 @@ export function ProfilePage({ email: rawEmail }: ProfilePageProps) {
   const [user, setUser] = useState<User | null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
+  const searchParams = useSearchParams()
+  const highlightId = searchParams.get('highlight') ?? undefined
+
+  const handleReviewUpdated = (updated: Review) =>
+    setReviews(prev => prev.map(r => (r.id === updated.id ? updated : r)))
+
+  const handleReviewDeleted = (id: number) => setReviews(prev => prev.filter(r => r.id !== id))
 
   useEffect(() => {
     if (!token) return
@@ -46,6 +54,12 @@ export function ProfilePage({ email: rawEmail }: ProfilePageProps) {
       setLoading(false)
     })
   }, [token, email])
+
+  useEffect(() => {
+    if (loading || reviews.length === 0 || !highlightId?.startsWith('review-')) return
+
+    document.getElementById(highlightId)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [loading, reviews, highlightId])
 
   if (!user) {
     return (
@@ -79,7 +93,10 @@ export function ProfilePage({ email: rawEmail }: ProfilePageProps) {
         </Heading>
         <ReviewList
           emptyMessage="Este usuario aún no ha publicado reseñas."
+          highlightId={highlightId}
           loading={loading}
+          onDeleted={handleReviewDeleted}
+          onUpdated={handleReviewUpdated}
           reviews={reviews}
         />
       </CardWrapper>

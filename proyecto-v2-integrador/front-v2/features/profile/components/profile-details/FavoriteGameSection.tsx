@@ -1,11 +1,10 @@
-import Image from 'next/image'
-
-import { Text } from '@/ui'
+import { ROUTES } from '@/features/shared/constants/nav.constants'
+import { GameRow, Text } from '@/ui'
 
 type FavoriteGameSectionProps = {
   gameId: number | null | undefined
-  gameThumbnail: string | null | undefined
-  gameTitle: string | null | undefined
+  thumbnail: string | null | undefined
+  title: string | null | undefined
   label?: string
 }
 
@@ -16,11 +15,11 @@ type FavoriteGameSectionProps = {
  */
 export function FavoriteGameSection({
   gameId,
-  gameThumbnail,
-  gameTitle,
+  thumbnail,
+  title,
   label = 'Juego favorito'
 }: FavoriteGameSectionProps) {
-  if (!gameId || !gameTitle || !gameThumbnail) {
+  if (!gameId || !title || !thumbnail) {
     return (
       <Text color="muted" size="sm">
         Sin juego favorito seleccionado
@@ -29,20 +28,11 @@ export function FavoriteGameSection({
   }
 
   return (
-    <div className="flex gap-4">
-      <Image
-        alt={gameTitle}
-        className="aspect-12/16 rounded object-cover"
-        height={80}
-        src={gameThumbnail}
-        width={45}
-      />
-      <div className="flex flex-col justify-center">
-        <Text color="muted" size="xs" weight="medium">
-          {label}
-        </Text>
-        <Text weight="medium">{gameTitle}</Text>
-      </div>
+    <div className="flex flex-col gap-1">
+      <Text color="muted" size="xs" weight="medium">
+        {label}
+      </Text>
+      <GameRow href={`${ROUTES.juegos}/${gameId}`} size="m" thumbnail={thumbnail} title={title} />
     </div>
   )
 }

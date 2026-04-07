@@ -1,24 +1,17 @@
 import { StarIcon } from '@phosphor-icons/react'
 
-import { ROUTES } from '@/features/shared/constants/nav.constants'
+import { type Review } from '@/features/reviewer/services/reviews.service'
 import { ReviewCard, Text } from '@/ui'
 
-export type ReviewListItem = {
-  id: number
-  description: string
-  rating: string
-  rating_id?: number
-  api_game_id?: number
-  game_title: string
-  game_thumbnail: string
-  created_at?: string
-}
-
 type ReviewListProps = {
-  reviews: ReviewListItem[]
+  reviews: Review[]
   emptyMessage?: string
   showAuthor?: boolean
   loading?: boolean
+  onUpdated?: (updated: Review) => void
+  onDeleted?: (id: number) => void
+  /** Id del elemento a destacar con animación (ej: 'review-123') */
+  highlightId?: string
 }
 
 /**
@@ -29,6 +22,9 @@ type ReviewListProps = {
 export function ReviewList({
   reviews,
   emptyMessage = 'Todavía no hay reseñas publicadas.',
+  highlightId,
+  onDeleted,
+  onUpdated,
   showAuthor = false,
   loading = false
 }: ReviewListProps) {
@@ -48,14 +44,11 @@ export function ReviewList({
       {reviews.map(review => (
         <ReviewCard
           key={review.id}
-          createdAt={review.created_at}
-          description={review.description}
-          gameHref={review.api_game_id ? `${ROUTES.juegos}/${review.api_game_id}` : undefined}
-          gameThumbnail={review.game_thumbnail}
-          gameTitle={review.game_title}
+          highlight={highlightId === `review-${review.id}`}
           loading={loading}
-          rating={review.rating}
-          ratingNumeric={review.rating_id}
+          onDeleted={onDeleted}
+          onUpdated={onUpdated}
+          review={review}
           showAuthor={showAuthor}
         />
       ))}

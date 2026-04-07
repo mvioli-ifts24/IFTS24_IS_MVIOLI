@@ -1,13 +1,21 @@
 'use client'
 
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth/store/auth.store'
 import { type Review } from '@/features/reviewer/services/reviews.service'
 import { ROUTES } from '@/features/shared/constants/nav.constants'
-import { Button, CardWrapper, Heading, ReviewCard, StarRating, Tag, Text } from '@/ui'
+import {
+  Button,
+  CardWrapper,
+  GameThumbnail,
+  Heading,
+  ReviewCard,
+  StarRating,
+  Tag,
+  Text
+} from '@/ui'
 
 import {
   type GameDetail,
@@ -24,6 +32,7 @@ export function GameDetailPage({ gameId }: GameDetailPageProps) {
   const [game, setGame] = useState<GameDetail | null>(null)
   const [reviewsData, setReviewsData] = useState<GameReviewsData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [allReviews, setAllReviews] = useState<Review[]>([])
 
   useEffect(() => {
     if (!token) return
@@ -39,14 +48,19 @@ export function GameDetailPage({ gameId }: GameDetailPageProps) {
       }
       if (!reviewsRes.error && reviewsRes.data) {
         setReviewsData(reviewsRes.data)
+        setAllReviews([
+          ...(reviewsRes.data.ownReview ? [reviewsRes.data.ownReview] : []),
+          ...reviewsRes.data.othersReviews
+        ])
       }
       setLoading(false)
     })
   }, [token, gameId])
 
-  const allReviews: Review[] = reviewsData
-    ? [...(reviewsData.ownReview ? [reviewsData.ownReview] : []), ...reviewsData.othersReviews]
-    : []
+  const handleReviewUpdated = (updated: Review) =>
+    setAllReviews(prev => prev.map(r => (r.id === updated.id ? updated : r)))
+
+  const handleReviewDeleted = (id: number) => setAllReviews(prev => prev.filter(r => r.id !== id))
 
   if (!loading && !game?.status) {
     return (
@@ -68,12 +82,11 @@ export function GameDetailPage({ gameId }: GameDetailPageProps) {
         <CardWrapper className="flex flex-col gap-4" elevation="0" loading={loading}>
           <div className="flex gap-6">
             {game?.thumbnail && (
-              <Image
+              <GameThumbnail
                 alt={game.title}
-                className="shrink-0 rounded-lg object-cover"
-                height={113}
+                className="rounded-lg"
+                size="xl"
                 src={game.thumbnail}
-                width={200}
               />
             )}
             <div className="flex min-w-0 flex-col gap-2">
@@ -82,7 +95,7 @@ export function GameDetailPage({ gameId }: GameDetailPageProps) {
                   {game?.title}
                 </Heading>
                 {game?.developer && (
-                  <Text color="muted" size="2xs" variant="label">
+                  <Text className="pl-2" color="muted" size="2xs" variant="label">
                     {game.developer}
                   </Text>
                 )}
@@ -127,21 +140,10 @@ export function GameDetailPage({ gameId }: GameDetailPageProps) {
                 <ReviewCard
                   key={review.id}
                   showAuthor
-                  authorAvatar={review.user_avatar ?? undefined}
-                  authorHref={
-                    review.user_email
-                      ? `${ROUTES.perfil}/${encodeURIComponent(review.user_email)}`
-                      : undefined
-                  }
-                  authorName={review.user_name ?? undefined}
-                  authorSurname={review.user_surname ?? undefined}
-                  createdAt={review.created_at}
-                  description={review.description}
-                  gameThumbnail={review.game_thumbnail}
-                  gameTitle={review.game_title}
                   loading={loading}
-                  rating={review.rating}
-                  ratingNumeric={review.rating_id}
+                  onDeleted={handleReviewDeleted}
+                  onUpdated={handleReviewUpdated}
+                  review={review}
                   showGame={false}
                 />
               ))}

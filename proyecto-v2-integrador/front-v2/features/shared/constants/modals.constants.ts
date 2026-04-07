@@ -33,6 +33,8 @@ export const MODAL_IDS = {
 
   // Reviewer
   CREATE_REVIEW: 'modal/reviewer/create-review',
+  EDIT_REVIEW: 'modal/reviewer/edit-review',
+  DELETE_REVIEW: 'modal/reviewer/delete-review',
   REPORT_REVIEW: 'modal/reviewer/report-review'
 } as const
 

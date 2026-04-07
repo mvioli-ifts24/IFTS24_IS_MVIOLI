@@ -65,6 +65,12 @@ export interface CardWrapperProps {
    */
   as?: ElementType
   className?: string
+  id?: string
+  /**
+   * Activa la animación de pulso (ring pulsante) sobre la card.
+   * Útil para señalar la card al navegar hacia ella.
+   */
+  highlight?: boolean
   onClick?: () => void
 }
 
@@ -111,14 +117,17 @@ export function CardWrapper({
   padding = 'md',
   as: Component = 'div',
   className = '',
+  highlight = false,
+  id,
   onClick
 }: CardWrapperProps) {
   const classes = [
-    'relative overflow-hidden',
+    'relative',
     elevationClasses[elevation],
     radiusClasses[radius],
     paddingClasses[padding],
     onClick && 'cursor-pointer',
+    highlight && 'review-highlight',
     className,
     loading && 'h-24 w-full animate-pulse'
   ]
@@ -126,7 +135,7 @@ export function CardWrapper({
     .join(' ')
 
   return (
-    <Component className={classes} onClick={onClick}>
+    <Component className={classes} id={id} onClick={onClick}>
       {loading ? <div /> : children}
     </Component>
   )

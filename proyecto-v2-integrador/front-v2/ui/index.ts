@@ -17,6 +17,8 @@ export type { ColorVariant, Size, StyleVariant, Weight } from './types'
 // ATOMS - Componentes básicos
 // ================================
 
+export { GameTitle, type GameTitleProps, type GameTitleSize } from './atoms/GameTitle'
+
 export {
   Button,
   type ButtonColor,
@@ -65,6 +67,12 @@ export { AnimatedCounter, type AnimatedCounterProps } from './atoms/AnimatedCoun
 
 export { CardWrapper, type CardWrapperProps } from './atoms/CardWrapper'
 
+export {
+  GameThumbnail,
+  type GameThumbnailProps,
+  type GameThumbnailSize
+} from './atoms/GameThumbnail'
+
 export { Skeleton, type SkeletonProps } from './atoms/skeleton/Skeleton'
 
 export { Logo, type LogoProps } from './atoms/Logo'
@@ -93,7 +101,11 @@ export { CardBorderGlow, type CardBorderGlowProps } from './molecules/CardBorder
 
 export { AvatarUpload, type AvatarUploadProps } from './molecules/AvatarUpload'
 
+export { GameRow, type GameRowProps, type GameRowSize } from './molecules/GameRow'
+
 export { ReviewCard, type ReviewCardProps } from './molecules/ReviewCard'
+
+export { ReviewCardMenu, type ReviewCardMenuProps } from './molecules/ReviewCardMenu'
 
 export { UserMiniCard, type UserMiniCardProps } from './molecules/UserMiniCard'
 

@@ -1,59 +1,35 @@
-import Image from 'next/image'
-import Link from 'next/link'
+import { type Review } from '@/features/reviewer/services/reviews.service'
+import { ROUTES } from '@/features/shared/constants/nav.constants'
 
 import { CardWrapper } from '../atoms/CardWrapper'
+import { GameThumbnail } from '../atoms/GameThumbnail'
+import { GameTitle } from '../atoms/GameTitle'
 import { Separator } from '../atoms/Separator'
 import { StarRating } from '../atoms/StarRating'
 import { Text } from '../atoms/Text'
 
-import { DropdownMenu, type DropdownMenuItemDef } from './DropdownMenu'
+import { type DropdownMenuItemDef } from './DropdownMenu'
+import { ReviewCardMenu } from './ReviewCardMenu'
 import { UserMiniCard } from './UserMiniCard'
 
 export interface ReviewCardProps {
-  gameTitle: string
-  description: string
-  rating: string | number
-  /**
-   * Valor numérico de 1-5 para renderizar estrellas.
-   * Si se pasa, se muestra StarRating en lugar del texto.
-   */
-  ratingNumeric?: number
-  /**
-   * Etiqueta previa al valor de la valoración (solo si no hay ratingNumeric).
-   * @default 'Valoración'
-   */
-  ratingLabel?: string
-  gameThumbnail?: string
-  /** URL a la que redirige la imagen y el título del juego */
-  gameHref?: string
-  /** Muestra la imagen y el título del juego. @default true */
-  showGame?: boolean
-  /** Nombre visible del autor de la reseña */
-  authorName?: string
-  /** Apellido visible del autor de la reseña */
-  authorSurname?: string
-  /** URL de la foto de perfil del autor */
-  authorAvatar?: string | null
-  /** Fecha de creación de la reseña (ISO string) */
-  createdAt?: string
-  /** URL del perfil del autor — convierte el nombre en un link clickeable */
-  authorHref?: string
-  /**
-   * Muestra el footer con datos del autor (avatar + nombre + fecha).
-   * @default true
-   */
+  review: Review
+  /** @default true */
   showAuthor?: boolean
-  /**
-   * Items adicionales para el menú de tres puntos.
-   * Si el array está vacío o no se pasa, el menú no se renderiza.
-   */
-  menuItems?: DropdownMenuItemDef[]
-  className?: string
-  /**
-   * Muestra el skeleton de carga (CardWrapper loading).
-   * @default false
-   */
+  /** @default true */
+  showGame?: boolean
+  /** Activa la animación de pulso para destacar la card al navegar hacia ella. */
+  highlight?: boolean
+  /** @default false */
   loading?: boolean
+  className?: string
+  onUpdated?: (updated: Review) => void
+  onDeleted?: (id: number) => void
+  /**
+   * Items adicionales para el menú. Solo se muestran en reseñas ajenas.
+   * Ej: "Reseñar mismo juego".
+   */
+  extraItems?: DropdownMenuItemDef[]
 }
 
 function formatDate(iso: string): string {
@@ -65,99 +41,77 @@ function formatDate(iso: string): string {
 }
 
 export function ReviewCard({
-  authorAvatar,
-  authorHref,
-  authorName,
-  authorSurname,
   className = '',
-  createdAt,
-  description,
-  gameTitle,
-  gameHref,
-  gameThumbnail,
-  menuItems,
-  rating,
-  ratingLabel = 'Valoración',
-  ratingNumeric,
+  extraItems,
+  highlight = false,
+  loading = false,
+  onDeleted,
+  onUpdated,
+  review,
   showAuthor = true,
-  showGame = true,
-  loading = false
+  showGame = true
 }: ReviewCardProps) {
-  const hasMenu = menuItems && menuItems.length > 0
+  const authorHref = review.user_email ? `${ROUTES.perfil}/${review.user_email}` : undefined
+
+  const gameHref = review.api_game_id ? `${ROUTES.juegos}/${review.api_game_id}` : undefined
 
   return (
-    <CardWrapper className={`flex flex-col ${className}`.trim()} elevation="1" loading={loading}>
-      {/* Header: autor */}
-      {showAuthor && (
-        <>
-          <div className="flex items-center justify-between">
-            <UserMiniCard
-              avatar={authorAvatar}
-              href={authorHref}
-              name={authorName}
-              surname={authorSurname}
-            />
-            {hasMenu && <DropdownMenu items={menuItems} />}
-          </div>
-          <Separator className="mt-3 mb-4" />
-        </>
-      )}
+    <CardWrapper
+      className={`flex flex-col ${className}`.trim()}
+      elevation="1"
+      highlight={highlight}
+      id={`review-${review.id}`}
+      loading={loading}
+    >
+      {/* Header: autor + menú */}
+      <div className="flex items-center justify-between gap-2">
+        {showAuthor && (
+          <UserMiniCard
+            avatar={review.user_avatar}
+            href={authorHref}
+            name={review.user_name ?? undefined}
+            surname={review.user_surname ?? undefined}
+          />
+        )}
+        <div className={showAuthor ? '' : 'absolute top-4 right-4'}>
+          <ReviewCardMenu
+            extraItems={extraItems}
+            onDeleted={onDeleted}
+            onUpdated={onUpdated}
+            review={review}
+          />
+        </div>
+      </div>
+      {showAuthor && <Separator className="mt-3 mb-4" />}
+
       {/* Fila principal: portada + contenido */}
       <div className="flex items-start gap-3">
-        {showGame &&
-          gameThumbnail &&
-          (gameHref ? (
-            <Link className="shrink-0" href={gameHref}>
-              <Image
-                alt={gameTitle}
-                className="aspect-12/16 rounded object-cover"
-                height={180}
-                src={gameThumbnail}
-                width={100}
-              />
-            </Link>
-          ) : (
-            <Image
-              alt={gameTitle}
-              className="aspect-12/16 shrink-0 rounded object-cover"
-              height={180}
-              src={gameThumbnail}
-              width={100}
-            />
-          ))}
+        {showGame && (
+          <GameThumbnail
+            alt={review.game_title}
+            href={gameHref}
+            size="lg"
+            src={review.game_thumbnail}
+          />
+        )}
         <div className="flex min-w-0 flex-1 flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            {createdAt && (
+            {review.created_at && (
               <Text color="muted" size="2xs">
-                {formatDate(createdAt)}
+                {formatDate(review.created_at)}
               </Text>
             )}
-            {showGame &&
-              (gameHref ? (
-                <Link href={gameHref}>
-                  <Text
-                    className="hover:text-primary-400 transition-colors"
-                    color="muted"
-                    variant="label"
-                  >
-                    {gameTitle}
-                  </Text>
-                </Link>
-              ) : (
-                <Text color="muted" variant="label">
-                  {gameTitle}
-                </Text>
-              ))}
-            {ratingNumeric ? (
-              <StarRating size={14} value={ratingNumeric} />
+            {showGame && <GameTitle href={gameHref} size="sm" title={review.game_title} />}
+            {review.rating_id ? (
+              <StarRating size={14} value={review.rating_id} />
             ) : (
               <Text color="muted" size="xs">
-                {ratingLabel}: {rating}
+                Valoración: {review.rating}
               </Text>
             )}
           </div>
-          <Text className="line-clamp-2 italic" color="muted" size="sm">
-            &quot;{description}&quot;
+          <Text className="italic" color="muted" size="sm">
+            &quot;{review.description}&quot;
           </Text>
         </div>
       </div>

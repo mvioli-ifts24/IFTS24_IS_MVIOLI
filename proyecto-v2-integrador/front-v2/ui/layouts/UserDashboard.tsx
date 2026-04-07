@@ -43,6 +43,8 @@ export function UserDashboard({ children, role }: UserDashboardProps) {
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
+      <SponsorsBanner />
+
       <Navbar
         onLogout={handleLogout}
         onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -57,9 +59,8 @@ export function UserDashboard({ children, role }: UserDashboardProps) {
           user={user}
           viewMode={viewMode}
         />
-        <main className="bg-background flex flex-1 flex-col overflow-auto p-4 sm:p-6 lg:p-8">
-          <div className="flex flex-1 flex-col gap-6">{children}</div>
-          <SponsorsBanner />
+        <main className="bg-background flex flex-1 flex-col gap-6 overflow-auto p-4 sm:p-6 lg:p-8">
+          {children}
         </main>
       </div>
     </div>

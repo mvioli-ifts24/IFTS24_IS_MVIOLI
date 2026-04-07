@@ -103,9 +103,9 @@ export function ProfileCard({ user: userProp, readonly = false }: ProfileCardPro
         </Text>
         <FavoriteGameSection
           gameId={displayUser?.favorite_game_id}
-          gameThumbnail={displayUser?.favorite_game_thumbnail}
-          gameTitle={displayUser?.favorite_game_title}
           label={readonly ? 'Juego favorito' : 'Mi juego favorito'}
+          thumbnail={displayUser?.favorite_game_thumbnail}
+          title={displayUser?.favorite_game_title}
         />
       </CardWrapper>
 

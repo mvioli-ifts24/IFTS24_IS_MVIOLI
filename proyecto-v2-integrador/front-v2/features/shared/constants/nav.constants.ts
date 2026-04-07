@@ -32,7 +32,7 @@ import {
   UserCircleGearIcon,
   UserIcon,
   UsersIcon
-} from '@phosphor-icons/react'
+} from '@phosphor-icons/react/ssr'
 
 import { UserRole } from '@/features/shared/types/user.types'
 
