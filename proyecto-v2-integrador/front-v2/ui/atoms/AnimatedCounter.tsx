@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * Props para el contador animado
@@ -32,7 +32,8 @@ export interface AnimatedCounterProps {
 /**
  * Componente de Contador Animado
  *
- * Anima un número desde 0 hasta el targetNumber
+ * Anima un número desde 0 hasta el targetNumber cuando el elemento
+ * entra en el viewport (Intersection Observer).
  * Útil para mostrar estadísticas
  */
 export function AnimatedCounter({
@@ -42,38 +43,57 @@ export function AnimatedCounter({
   decimals = 0
 }: AnimatedCounterProps) {
   const [count, setCount] = useState(0)
+  const spanRef = useRef<HTMLSpanElement>(null)
+  const hasAnimated = useRef(false)
 
   useEffect(() => {
-    let startTime: number | null = null
-    let animationFrameId: number
+    const element = spanRef.current
+    if (!element) return
 
-    const animate = (currentTime: number) => {
-      if (startTime === null) {
-        startTime = currentTime
-      }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true
+          observer.disconnect()
 
-      const elapsed = currentTime - startTime
-      const progress = Math.min(elapsed / duration, 1)
+          let startTime: number | null = null
+          let animationFrameId: number
 
-      // Ease-out cúbico para animación más natural
-      const easedProgress = 1 - Math.pow(1 - progress, 3)
-      const factor = Math.pow(10, decimals)
-      const currentCount = Math.floor(targetNumber * easedProgress * factor) / factor
+          const animate = (currentTime: number) => {
+            if (startTime === null) {
+              startTime = currentTime
+            }
 
-      setCount(currentCount)
+            const elapsed = currentTime - startTime
+            const progress = Math.min(elapsed / duration, 1)
 
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(animate)
-      }
-    }
+            // Ease-out cúbico para animación más natural
+            const easedProgress = 1 - Math.pow(1 - progress, 3)
+            const factor = Math.pow(10, decimals)
+            const currentCount = Math.floor(targetNumber * easedProgress * factor) / factor
 
-    animationFrameId = requestAnimationFrame(animate)
+            setCount(currentCount)
 
-    return () => cancelAnimationFrame(animationFrameId)
+            if (progress < 1) {
+              animationFrameId = requestAnimationFrame(animate)
+            }
+          }
+
+          animationFrameId = requestAnimationFrame(animate)
+
+          return () => cancelAnimationFrame(animationFrameId)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    observer.observe(element)
+
+    return () => observer.disconnect()
   }, [targetNumber, duration, decimals])
 
   return (
-    <span style={{ willChange: 'contents' }}>
+    <span ref={spanRef} style={{ willChange: 'contents' }}>
       {count.toFixed(decimals)}
       {suffix}
     </span>

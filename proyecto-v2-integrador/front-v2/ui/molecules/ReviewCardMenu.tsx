@@ -85,13 +85,13 @@ export function ReviewCardMenu({
   const menuItems: DropdownMenuItemDef[] = [
     ...(isOwn
       ? [
-          ...(!pathname.startsWith(`${ROUTES.perfil}/${user!.email}`)
+          ...(!pathname.startsWith(`${ROUTES.perfil}/${user?.email}`)
             ? [
                 {
                   icon: EyeIcon,
                   label: 'Ver en mi perfil',
                   onClick: () =>
-                    router.push(`${ROUTES.perfil}/${user!.email}?highlight=review-${review.id}`)
+                    router.push(`${ROUTES.perfil}/${user?.email}?highlight=review-${review.id}`)
                 }
               ]
             : []),

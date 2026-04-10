@@ -1,0 +1,30 @@
+<svg
+  aria-label=".RANK icon"
+  height="32"
+  role="img"
+  viewBox="0 0 32 32"
+  width="32"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <style>
+      @media (prefers-color-scheme: light) {
+        #iso-start { stop-color: #8b5cf6; }
+        #iso-end   { stop-color: #059669; }
+      }
+      @media (prefers-color-scheme: dark) {
+        #iso-start { stop-color: #c4b5fd; }
+        #iso-end   { stop-color: #6ee7b7; }
+      }
+    </style>
+    <linearGradient id="iso-grad" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop id="iso-start" offset="0%"   stop-color="#8b5cf6" />
+      <stop id="iso-end"   offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+
+  <!-- Pixel principal -->
+  <rect fill="url(#iso-grad)" height="22" rx="3" width="22" x="5" y="5" />
+  <!-- Núcleo interior con menor opacidad -->
+  <rect fill="url(#iso-grad)" height="9" opacity="0.35" rx="1" width="9" x="12" y="12" />
+</svg>

@@ -19,9 +19,7 @@ export default function LandingLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Navbar />
-      <main className="bg-background flex min-h-screen flex-col items-center justify-center">
-        {children}
-      </main>
+      <main className="bg-background flex w-full flex-col items-center">{children}</main>
       <Footer />
     </>
   )

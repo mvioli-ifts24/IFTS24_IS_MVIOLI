@@ -2,24 +2,20 @@
 
 import { useEffect, useState } from 'react'
 
-import { useAuthStore } from '@/features/auth/store/auth.store'
-import { SponsorsService } from '@/features/shared/services/sponsors.service'
+import { PublicService } from '@/features/shared/services/public.service'
 import { type Sponsor } from '@/features/shared/types/media.types'
 import { LogoLoop, Skeleton, type LogoImageItem } from '@/ui'
 
 export function SponsorsBanner() {
-  const token = useAuthStore(state => state.token)
   const [sponsors, setSponsors] = useState<Sponsor[]>([])
   const [loading, setLoading] = useState(true)
 
-  /* Carga los sponsors una sola vez al montar */
   useEffect(() => {
-    if (!token) return
-    SponsorsService.getAll(token).then(res => {
+    PublicService.getSponsors().then(res => {
       if (res.data) setSponsors(res.data)
       setLoading(false)
     })
-  }, [token])
+  }, [])
 
   if (loading) return <Skeleton className="h-10 w-full" />
 
@@ -43,7 +39,7 @@ export function SponsorsBanner() {
         hoverSpeed={15}
         logoHeight={24}
         logos={logos}
-        speed={45}
+        speed={35}
       />
     </div>
   )

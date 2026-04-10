@@ -17,7 +17,7 @@ export interface NavLink {
 
 const navigationLinks: NavLink[] = [
   { label: 'Inicio', href: '/#hero', variant: 'action', color: 'secondary' },
-  { label: 'Sponsors', href: '#sponsors', variant: 'action', color: 'secondary' }
+  { label: 'Sobre Nosotros', href: '/#sobrenosotros', variant: 'action', color: 'secondary' }
 ]
 
 const authLinks: NavLink[] = [
@@ -67,7 +67,7 @@ export function Navbar() {
   const handleClose = () => setIsOpen(false)
 
   return (
-    <header className="sticky top-4 z-50 flex w-full justify-center">
+    <header className="fixed top-4 z-50 flex w-full justify-center">
       <div ref={navRef} className="relative w-fit">
         <div className="bg-background/50 rounded-full px-4 py-4 shadow shadow-neutral-200 backdrop-blur-lg transition-all duration-300">
           <div className="flex items-center justify-between gap-24 lg:gap-16">

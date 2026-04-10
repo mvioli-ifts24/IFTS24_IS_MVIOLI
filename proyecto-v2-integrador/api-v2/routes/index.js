@@ -8,6 +8,7 @@ import contactMessagesRoutesGroup from "./contact_messages.route.js";
 import gamesRouteGroup from "./games.route.js";
 import gamesReviewsRoutesGroup from "./games_reviews.route.js";
 import gamesReviewsRatingsRoutesGroup from "./games_reviews_ratings.route.js";
+import publicRoutesGroup from "./public.route.js";
 import sponsorsRoutesGroup from "./sponsors.route.js";
 import usersRouteGroup from "./users.route.js";
 import usersGendersRouteGroup from "./users_genders.route.js";
@@ -16,6 +17,7 @@ const router = express.Router();
 
 const rootRouter = router
   .use("/auth", authRoutesGroup)
+  .use("/public", publicRoutesGroup)
   .use("", authMiddleware)
   .use("/users_genders", usersGendersRouteGroup)
   .use("/games_reviews", gamesReviewsRoutesGroup)

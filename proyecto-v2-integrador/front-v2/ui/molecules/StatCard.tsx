@@ -1,9 +1,10 @@
 'use client'
 
-import { type Icon } from '@phosphor-icons/react'
+import { PlusIcon, type Icon } from '@phosphor-icons/react'
 import Link from 'next/link'
-import { type MouseEvent, type ReactNode, useRef, useState } from 'react'
+import { useRef, useState, type MouseEvent, type ReactNode } from 'react'
 
+import { AnimatedCounter } from '../atoms/AnimatedCounter'
 import { CardWrapper } from '../atoms/CardWrapper'
 import { Text } from '../atoms/Text'
 
@@ -18,6 +19,8 @@ export type StatCardProps = {
   accent?: StatCardAccent
   /** Muestra el skeleton de carga. @default false */
   loading?: boolean
+  /** Anima el valor desde 0 hasta value. @default false */
+  animated?: boolean
 }
 
 const accentClasses: Record<StatCardAccent, string> = {
@@ -83,7 +86,8 @@ export function StatCard({
   value,
   href,
   accent = 1,
-  loading = false
+  loading = false,
+  animated = false
 }: StatCardProps) {
   const inner = (
     <CardWrapper
@@ -110,7 +114,10 @@ export function StatCard({
           <Text className="line-clamp-2 w-full truncate" size="2xs" variant="label">
             {label}
           </Text>
-          <span className="text-foreground text-2xl leading-none font-bold">{value}</span>
+          <span className="text-foreground text-2xl leading-none font-bold">
+            {animated && <PlusIcon className="mr inline-block" size={16} weight="bold" />}
+            {animated ? <AnimatedCounter targetNumber={value} /> : value}
+          </span>
         </div>
       </SpotlightWrapper>
     </CardWrapper>

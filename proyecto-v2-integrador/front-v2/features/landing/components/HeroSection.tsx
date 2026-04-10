@@ -1,190 +1,128 @@
-import { StarIcon, UserIcon } from '@phosphor-icons/react/dist/ssr'
+import { type Review } from '@/features/reviewer/services/reviews.service'
+import { PublicService } from '@/features/shared/services/public.service'
+import { Button, Heading, ReviewCard, Text } from '@/ui'
 
-import { AnimatedCounter, Button, Heading, StarRating, Text } from '@/ui'
+// ── ReviewCard tiene width mínimo usable ~280px — gap-3 (12px) → 292px/card
+// Estilado obtenido de React Bits (https://www.reactbits.dev/) por su simplicidad y rendimiento
 
-/**
- * Datos mockup de reviews de usuarios
- */
-const userReviews = [
-  {
-    id: 1,
-    user: 'María González',
-    avatar: null,
-    rating: 5,
-    comment: 'Increíble plataforma, encontré juegos que no sabía que existían. ¡Recomendado 100%!',
-    game: 'Cyberpunk 2077'
-  },
-  {
-    id: 2,
-    user: 'Carlos Ruiz',
-    avatar: null,
-    rating: 5,
-    comment: 'La comunidad es genial, siempre encuentro gente para jugar en línea.',
-    game: 'Apex Legends'
-  },
-  {
-    id: 3,
-    user: 'Ana Silva',
-    avatar: null,
-    rating: 4,
-    comment: 'Buena variedad de juegos y precio justo. El servicio al cliente es excelente.',
-    game: 'The Witcher 3'
-  },
-  {
-    id: 4,
-    user: 'Diego Martinez',
-    avatar: null,
-    rating: 5,
-    comment: 'Las promociones son fantásticas, he ahorrado mucho en mis juegos favoritos.',
-    game: 'FIFA 24'
-  }
-]
+const CARD_PX = 292
 
-/**
- * Stats mockup que vendrán del backend
- */
-const stats = [
-  { label: 'USUARIOS ACTIVOS', value: 2500, suffix: 'K+', icon: UserIcon },
-  { label: 'REVIEWS PUBLICADOS', value: 8200, suffix: 'K+', icon: StarIcon },
-  { label: 'JUEGOS DISPONIBLES', value: 500, suffix: '+', icon: StarIcon }
-]
+// ── Fila con animación CSS pura ────────────────────────────────────────────
 
-/**
- * Review Card Component
- */
-interface TestimonialCardProps {
-  review: (typeof userReviews)[0]
+interface GridRowProps {
+  reviews: Review[]
+  reverse?: boolean
+  speed?: number
 }
 
-function TestimonialCard({ review }: TestimonialCardProps) {
-  return (
-    <article className="glass min-w-[320px] space-y-4 rounded-2xl p-6">
-      {/* User Info */}
-      <div className="flex items-center gap-3">
-        <div className="from-primary-300 to-secondary-300 flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-r">
-          <UserIcon className="text-white" size={20} weight="fill" />
-        </div>
-        <div>
-          <Text size="sm" weight="medium">
-            {review.user}
-          </Text>
-          <Text color="muted" size="xs">
-            {review.game}
-          </Text>
-        </div>
-      </div>
-
-      {/* Rating */}
-      <StarRating size={16} value={review.rating} />
-
-      {/* Comment */}
-      <Text className="leading-relaxed" color="muted" size="sm">
-        &ldquo;{review.comment}&rdquo;
-      </Text>
-    </article>
-  )
-}
-
-/**
- * Animated Stats Component
- */
-interface StatItemProps {
-  stat: (typeof stats)[0]
-}
-
-function StatItem({ stat }: StatItemProps) {
-  const Icon = stat.icon
+function GridRow({ reviews, reverse = false, speed = 28 }: GridRowProps) {
+  const halfWidthPx = reviews.length * CARD_PX - 12
+  const duration = (halfWidthPx / speed).toFixed(1)
+  const animName = reverse ? 'grid-scroll-right' : 'grid-scroll-left'
+  const doubled = [...reviews, ...reviews]
 
   return (
-    <div className="space-y-2 text-center">
-      <div className="from-primary-100 to-primary-100 border-primary-400/20 dark:from-primary-400/10 dark:to-secondary-400/10 inline-flex rounded-xl border bg-linear-to-r p-3">
-        <Icon className="text-primary-400" size={24} />
+    <div className="overflow-hidden">
+      <div
+        className="flex gap-3"
+        style={{
+          animation: `${animName} ${duration}s linear infinite`,
+          width: 'max-content',
+          willChange: 'transform'
+        }}
+      >
+        {doubled.map((r, i) => (
+          <ReviewCard
+            key={`${r.id}-${i}`}
+            showAuthor
+            showGame
+            className="w-72 shrink-0"
+            review={r}
+          />
+        ))}
       </div>
-      <Heading level="h3" size="lg" variant="primary">
-        <AnimatedCounter duration={2000} suffix={stat.suffix} targetNumber={stat.value} />
-      </Heading>
-      <Text color="muted" size="sm">
-        {stat.label}
-      </Text>
     </div>
   )
 }
 
-/**
- * Hero Section Component
- *
- * Sección principal con reviews, stats y CTAs
- */
-export function HeroSection() {
+// ── Hero Section (Server Component) ───────────────────────────────────────
+
+export async function HeroSection() {
+  const res = await PublicService.getRecentReviews(32).catch(() => ({ data: null, error: null }))
+  const all = (res.data ?? []) as Review[]
+
+  // Divide en 4 filas con desplazamientos para variedad visual
+  const half = Math.max(4, Math.floor(all.length / 2))
+  const rows: Review[][] =
+    all.length >= 8
+      ? [
+          all.slice(0, half),
+          all.slice(Math.floor(half / 2), Math.floor(half / 2) + half),
+          all.slice(half),
+          all.slice(Math.floor(all.length / 4), Math.floor(all.length / 4) + half)
+        ].map(r => (r.length >= 4 ? r : all.slice(0, half)))
+      : []
+
   return (
     <section
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-20"
+      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-6 py-24"
       id="hero"
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0 -z-10">
-        <div className="bg-primary-300/12 dark:bg-primary-300/16 absolute top-20 left-1/4 h-80 w-80 rounded-full blur-3xl" />
-        <div className="bg-secondary-300/10 dark:bg-secondary-300/14 absolute right-1/4 bottom-20 h-80 w-80 rounded-full blur-3xl" />
-        <div className="from-primary-300/8 to-secondary-300/6 dark:from-primary-300/10 dark:to-secondary-300/8 absolute top-1/2 left-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-linear-to-r blur-2xl" />
-      </div>
+      {/* ── Grid inclinado de reviews — solo si hay datos ── */}
+      {rows.length > 0 && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 flex flex-col justify-center gap-4 overflow-hidden opacity-50"
+          style={{ transform: 'rotate(-8deg) scale(1.2)', transformOrigin: 'center' }}
+        >
+          <GridRow reviews={rows[0]} speed={28} />
+          <GridRow reverse reviews={rows[1]} speed={22} />
+          <GridRow reviews={rows[2]} speed={32} />
+          <GridRow reverse reviews={rows[3]} speed={18} />
+        </div>
+      )}
 
-      <div className="mx-auto max-w-7xl">
-        {/* Main Content */}
-        <div className="mb-16 space-y-12 text-center">
-          <div className="space-y-6">
-            <Heading level="h1" size="xl" variant="gradient">
-              TU VOZ IMPORTA EN RANK.
-            </Heading>
+      {/* ── Gradiente sobre el grid ── */}
+      <div
+        aria-hidden="true"
+        className="from-background via-background/50 to-background pointer-events-none absolute inset-0 bg-linear-to-b"
+      />
 
-            <Text className="mx-auto max-w-3xl" size="xl">
-              Comparte tus reseñas de juegos, descubre nuevos títulos y conecta con gamers
-              apasionados. Opiniones verificadas, comunidad activa y todo lo que necesitas para tu
-              experiencia gaming.
-            </Text>
-          </div>
+      {/* ── Blobs decorativos ── */}
+      <div
+        aria-hidden="true"
+        className="bg-primary-300/18 dark:bg-primary-400/12 pointer-events-none absolute top-1/4 left-1/4 h-96 w-96 rounded-full blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="bg-secondary-300/14 dark:bg-secondary-400/10 pointer-events-none absolute right-1/4 bottom-1/4 h-80 w-80 rounded-full blur-3xl"
+      />
 
-          {/* CTAs */}
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button href="/register" size="m" variant="filled">
-              Escribir mi Primera Reseña
-            </Button>
-            <Button href="/reviews" size="m" variant="outlined">
-              Explorar Reseñas
-            </Button>
-          </div>
+      {/* ── Contenido principal ── */}
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center gap-8 text-center">
+        <div className="bg-primary-400/10 border-primary-400/20 inline-flex items-center gap-2 rounded-full border px-4 py-2">
+          <span className="bg-primary-400 h-2 w-2 animate-pulse rounded-full" />
+          <Text size="xs" weight="medium">
+            Reseñas de juegos
+          </Text>
         </div>
 
-        {/* Stats Section */}
-        <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-          {stats.map(stat => (
-            <StatItem key={stat.label} stat={stat} />
-          ))}
-        </div>
+        <Heading level="h1" size="lg" variant="gradient">
+          LA COMUNIDAD GAMER EN ESPAÑOL
+        </Heading>
 
-        {/* Reviews Section */}
-        <div className="space-y-8">
-          <div className="text-center">
-            <Heading className="mb-4" level="h2" size="lg" variant="primary">
-              LO QUE DICEN NUESTROS GAMERS
-            </Heading>
-            <Text color="muted" size="m">
-              Reviews reales de nuestra comunidad
-            </Text>
-          </div>
+        <Text className="max-w-2xl font-light" color="muted" size="lg">
+          Reseñas escritas por la comunidad hispanohablante. Un formato para comparar títulos,
+          descubrir nuevos juegos y compartir tu opinión.
+        </Text>
 
-          {/* Reviews Carousel */}
-          <div className="scrollbar-hide flex gap-6 overflow-x-auto pb-4">
-            {userReviews.map(review => (
-              <TestimonialCard key={review.id} review={review} />
-            ))}
-          </div>
-
-          {/* CTA to Reviews */}
-          <div className="text-center">
-            <Button href="/reviews" size="m" variant="text">
-              Ver todas las reviews
-            </Button>
-          </div>
+        <div className="flex w-full max-w-lg flex-col items-center gap-4 sm:flex-row">
+          <Button className="w-full md:flex-1" href="/register" size="m" variant="filled">
+            Escribir mi Primera Reseña
+          </Button>
+          <Button className="w-full md:flex-1" href="/#sobrenosotros" size="m" variant="outlined">
+            Conocenos
+          </Button>
         </div>
       </div>
     </section>

@@ -1,0 +1,41 @@
+<svg
+  aria-label=".RANK"
+  height="24"
+  role="img"
+  viewBox="0 0 83 24"
+  width="83"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <style>
+      @media (prefers-color-scheme: light) {
+        #grad-start { stop-color: #8b5cf6; }
+        #grad-end   { stop-color: #059669; }
+      }
+      @media (prefers-color-scheme: dark) {
+        #grad-start { stop-color: #c4b5fd; }
+        #grad-end   { stop-color: #6ee7b7; }
+      }
+    </style>
+    <linearGradient id="rank-grad" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop id="grad-start" offset="0%"   stop-color="#8b5cf6" />
+      <stop id="grad-end"   offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+
+  <!-- Pixel cuadrado que reemplaza al "." -->
+  <rect fill="url(#rank-grad)" height="9" rx="1" width="9" x="0" y="7" />
+  <!-- Núcleo interior con menor opacidad -->
+  <rect fill="url(#rank-grad)" height="4" opacity="0.35" rx="1" width="4" x="3" y="10" />
+
+  <!-- Texto RANK -->
+  <text
+    fill="url(#rank-grad)"
+    font-family="Montserrat, sans-serif"
+    font-size="24"
+    font-weight="600"
+    letter-spacing="-1"
+    x="15"
+    y="23"
+  >RANK</text>
+</svg>

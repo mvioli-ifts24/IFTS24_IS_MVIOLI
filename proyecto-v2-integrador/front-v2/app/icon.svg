@@ -1,0 +1,26 @@
+<svg
+  height="32"
+  viewBox="0 0 32 32"
+  width="32"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <style>
+      @media (prefers-color-scheme: light) {
+        #fav-start { stop-color: #8b5cf6; }
+        #fav-end   { stop-color: #059669; }
+      }
+      @media (prefers-color-scheme: dark) {
+        #fav-start { stop-color: #c4b5fd; }
+        #fav-end   { stop-color: #6ee7b7; }
+      }
+    </style>
+    <linearGradient id="fav-grad" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop id="fav-start" offset="0%"   stop-color="#8b5cf6" />
+      <stop id="fav-end"   offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+
+  <rect fill="url(#fav-grad)" height="22" rx="3" width="22" x="5" y="5" />
+  <rect fill="url(#fav-grad)" height="9" opacity="0.35" rx="1" width="9" x="12" y="12" />
+</svg>

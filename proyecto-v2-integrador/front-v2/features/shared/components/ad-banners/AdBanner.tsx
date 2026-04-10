@@ -1,10 +1,10 @@
 'use client'
 
 import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react'
+import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { useAuthStore } from '@/features/auth/store/auth.store'
-import { BannersService } from '@/features/shared/services/banners.service'
+import { PublicService } from '@/features/shared/services/public.service'
 import { type Banner } from '@/features/shared/types/media.types'
 import { Button } from '@/ui'
 
@@ -20,7 +20,6 @@ export type AdBannerProps = {
 }
 
 export function AdBanner({ className, mode = 'carousel', orientation }: AdBannerProps) {
-  const token = useAuthStore(state => state.token)
   const [banners, setBanners] = useState<Banner[]>([])
   // virtualIdx: 0 = clon del último, 1..N = slides reales, N+1 = clon del primero
   const [virtualIdx, setVirtualIdx] = useState(1)
@@ -39,9 +38,7 @@ export function AdBanner({ className, mode = 'carousel', orientation }: AdBanner
           : Math.min(virtualIdx - 1, banners.length - 1)
 
   useEffect(() => {
-    if (!token) return
-
-    BannersService.getAll(token).then(res => {
+    PublicService.getBanners().then(res => {
       if (res.data) {
         const filtered = res.data.filter(b =>
           orientation === 'horizontal' ? b.image_url_horizontal : b.image_url_vertical
@@ -51,7 +48,7 @@ export function AdBanner({ className, mode = 'carousel', orientation }: AdBanner
         setVirtualIdx(1)
       }
     })
-  }, [token, orientation])
+  }, [orientation])
 
   useEffect(() => {
     if (orientation !== 'horizontal') return
@@ -127,7 +124,7 @@ export function AdBanner({ className, mode = 'carousel', orientation }: AdBanner
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img alt={banner.name} className="block aspect-4/1 w-full object-cover" src={imgUrl} />
         <span className="absolute top-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] leading-none text-white/70">
-          Publicidad
+          Publicidad de muestra (no real)
         </span>
         <div className="absolute right-0 bottom-0 left-0 h-1 bg-black/20">
           <div
@@ -174,14 +171,16 @@ export function AdBanner({ className, mode = 'carousel', orientation }: AdBanner
               const isActive = i === virtualIdx
               const content = (
                 <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     alt={b.name}
                     className="block h-full w-full object-cover"
+                    height={200}
+                    loading="eager"
                     src={b.image_url_horizontal}
+                    width={800}
                   />
                   <span className="absolute top-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] leading-none text-white/70">
-                    Publicidad
+                    Publicidad de muestra (no real)
                   </span>
                 </>
               )
@@ -247,7 +246,7 @@ export function AdBanner({ className, mode = 'carousel', orientation }: AdBanner
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img alt={banner.name} className="block aspect-1/2 w-full object-cover" src={imgUrl} />
       <span className="absolute top-2 right-2 rounded bg-black/50 px-1.5 py-0.5 text-[10px] leading-none text-white/70">
-        Publicidad
+        Publicidad de muestra (no real)
       </span>
       <div className="absolute right-0 bottom-0 left-0 h-1 bg-black/20">
         <div

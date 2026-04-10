@@ -163,6 +163,21 @@ html {
   }
 }
 
+@keyframes grid-scroll-left {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes grid-scroll-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
 .review-highlight {
   animation: review-highlight 1.2s linear;
 }
